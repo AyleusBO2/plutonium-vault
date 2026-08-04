@@ -1,0 +1,392 @@
+/* ---------- BODY GLOW ---------- */
+
+body::before {
+    content: "";
+
+    position: fixed;
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,122,0,.07),
+            transparent 65%
+        );
+
+    animation: backgroundGlow 16s ease-in-out infinite;
+
+    z-index: -1;
+}
+
+@keyframes backgroundGlow {
+
+    0% {
+
+        transform:
+            translate(-20%,-15%)
+            scale(1);
+
+    }
+
+    50% {
+
+        transform:
+            translate(20%,10%)
+            scale(1.25);
+
+    }
+
+    100% {
+
+        transform:
+            translate(-20%,-15%)
+            scale(1);
+
+    }
+
+}
+
+/* ---------- FEATURED PANEL SCAN ---------- */
+
+.featured-hero::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -120%;
+
+    width: 70%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,122,0,.14),
+            transparent
+        );
+
+    animation:
+        featuredScan 6s linear infinite;
+
+}
+
+@keyframes featuredScan {
+
+    from {
+
+        left:-120%;
+
+    }
+
+    to {
+
+        left:150%;
+
+    }
+
+}
+
+/* ---------- CARD FADE ---------- */
+
+@keyframes cardFadeIn {
+
+    from {
+
+        opacity:0;
+
+        transform:
+            translateY(12px);
+
+    }
+
+    to {
+
+        opacity:1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+/* ---------- PAGE FADE ---------- */
+
+body {
+    animation: pageFade .45s ease;
+}
+
+@keyframes pageFade {
+
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+/* ---------- FLOATING PARTICLES ---------- */
+
+.particles {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.particles span {
+    position: absolute;
+    bottom: -40px;
+
+    width: 5px;
+    height: 5px;
+
+    background: #ff7a00;
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 8px rgba(255, 122, 0, 0.8),
+        0 0 18px rgba(255, 122, 0, 0.4);
+
+    opacity: 0;
+
+    animation: particleRise 14s linear infinite;
+}
+
+.particles span:nth-child(1) {
+    left: 8%;
+    animation-delay: 0s;
+}
+
+.particles span:nth-child(2) {
+    left: 20%;
+    animation-delay: 3s;
+    animation-duration: 18s;
+}
+
+.particles span:nth-child(3) {
+    left: 34%;
+    animation-delay: 6s;
+    width: 3px;
+    height: 3px;
+}
+
+.particles span:nth-child(4) {
+    left: 48%;
+    animation-delay: 1s;
+    animation-duration: 16s;
+}
+
+.particles span:nth-child(5) {
+    left: 62%;
+    animation-delay: 8s;
+    width: 4px;
+    height: 4px;
+}
+
+.particles span:nth-child(6) {
+    left: 74%;
+    animation-delay: 4s;
+    animation-duration: 20s;
+}
+
+.particles span:nth-child(7) {
+    left: 86%;
+    animation-delay: 10s;
+    width: 3px;
+    height: 3px;
+}
+
+.particles span:nth-child(8) {
+    left: 94%;
+    animation-delay: 2s;
+    animation-duration: 17s;
+}
+
+@keyframes particleRise {
+    0% {
+        transform: translateY(0) translateX(0) scale(0.7);
+        opacity: 0;
+    }
+
+    15% {
+        opacity: 0.8;
+    }
+
+    70% {
+        opacity: 0.45;
+    }
+
+    100% {
+        transform: translateY(-115vh) translateX(45px) scale(1.2);
+        opacity: 0;
+    }
+}
+
+/* ---------- BOOT SCREEN ---------- */
+
+.boot-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(circle at center, rgba(255, 122, 0, 0.1), transparent 45%),
+        #050505;
+
+    transition:
+        opacity 0.55s ease,
+        visibility 0.55s ease;
+}
+
+.boot-screen.boot-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.boot-content {
+    width: min(720px, calc(100% - 40px));
+    padding: 45px;
+
+    background: rgba(10, 10, 10, 0.92);
+
+    border-top: 3px solid #ff7a00;
+    border-bottom: 3px solid #ff7a00;
+
+    box-shadow:
+        0 0 45px rgba(255, 122, 0, 0.2);
+
+    text-align: left;
+}
+
+.boot-small {
+    color: #777777;
+    font-size: 11px;
+    letter-spacing: 3px;
+    margin-bottom: 18px;
+}
+
+.boot-content h1 {
+    color: #ff7a00;
+    font-size: clamp(32px, 6vw, 58px);
+    letter-spacing: 5px;
+
+    text-shadow:
+        0 0 18px rgba(255, 122, 0, 0.7);
+
+    margin-bottom: 30px;
+}
+
+.boot-terminal {
+    min-height: 130px;
+    padding: 20px;
+
+    background: #080808;
+    border-left: 3px solid #ff7a00;
+
+    color: #bbbbbb;
+    font-size: 13px;
+    line-height: 2;
+}
+
+.boot-terminal p {
+    opacity: 0;
+    animation: terminalLine 0.3s ease forwards;
+}
+
+.boot-terminal p:nth-child(1) {
+    animation-delay: 0.15s;
+}
+
+.boot-terminal p:nth-child(2) {
+    animation-delay: 0.45s;
+}
+
+.boot-terminal p:nth-child(3) {
+    animation-delay: 0.75s;
+}
+
+.boot-terminal p:nth-child(4) {
+    animation-delay: 1.05s;
+    color: #ff7a00;
+}
+
+.boot-bar {
+    height: 6px;
+    margin-top: 28px;
+
+    background: #242424;
+    overflow: hidden;
+}
+
+.boot-progress {
+    width: 0;
+    height: 100%;
+
+    background: #ff7a00;
+
+    box-shadow:
+        0 0 14px rgba(255, 122, 0, 0.8);
+
+    animation: bootProgress 1.55s ease forwards;
+}
+
+.boot-status {
+    margin-top: 18px;
+
+    color: #ff7a00;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-align: right;
+
+    opacity: 0;
+    animation: terminalLine 0.3s ease 1.25s forwards;
+}
+
+@keyframes terminalLine {
+    from {
+        opacity: 0;
+        transform: translateX(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes bootProgress {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .boot-content {
+        padding: 28px 22px;
+    }
+
+    .boot-terminal {
+        font-size: 10px;
+    }
+}
