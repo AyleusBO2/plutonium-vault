@@ -1,0 +1,104 @@
+/* ---------- INSTALL GUIDE ---------- */
+
+.guide-section {
+    margin: 55px 0;
+    padding: 40px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 122, 0, 0.06),
+            transparent 50%
+        ),
+        #111111;
+
+    border-left: 4px solid #ff7a00;
+    border-bottom: 1px solid #303030;
+}
+
+.guide-section h2 {
+    margin-top: 8px;
+}
+
+.guide-path {
+    margin: 24px 0;
+    padding: 18px;
+
+    overflow-wrap: anywhere;
+
+    color: #ffb15f;
+    background: #080808;
+
+    border: 1px solid #333333;
+    border-left: 4px solid #ff7a00;
+
+    font-family: Consolas, monospace;
+    font-size: 14px;
+
+    box-shadow:
+        inset 0 0 18px rgba(255, 122, 0, 0.04);
+}
+
+.guide-steps {
+    margin: 25px 0 0 24px;
+
+    color: #b3b3b3;
+    line-height: 2;
+}
+
+.guide-steps li {
+    margin-bottom: 10px;
+    padding-left: 8px;
+}
+
+.guide-steps strong {
+    color: white;
+}
+
+.guide-steps code {
+    padding: 3px 6px;
+
+    color: #ffb15f;
+    background: #080808;
+
+    font-family: Consolas, monospace;
+}
+
+.guide-fixes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 17px;
+
+    margin-top: 28px;
+}
+
+.guide-fixes div {
+    padding: 22px;
+
+    background: #161616;
+    border-top: 3px solid #ff7a00;
+}
+
+.guide-fixes h3 {
+    margin-bottom: 11px;
+
+    color: white;
+    font-size: 13px;
+    letter-spacing: 1px;
+}
+
+.guide-fixes p {
+    color: #8f8f8f;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+@media (max-width: 700px) {
+    .guide-section {
+        padding: 28px 22px;
+    }
+
+    .guide-fixes {
+        grid-template-columns: 1fr;
+    }
+}
