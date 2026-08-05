@@ -90,3 +90,108 @@ a {
     text-shadow:
         0 0 10px rgba(30, 167, 255, 0.35);
 }
+
+/* ---------- DISCORD COMMUNITY SECTION ---------- */
+
+.discord-section {
+    margin: 70px 0;
+    padding: 3px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #5865f2,
+            transparent
+        );
+
+    box-shadow:
+        0 0 28px rgba(88, 101, 242, 0.25);
+}
+
+.discord-section-content {
+    padding: 46px 38px;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(88, 101, 242, 0.12),
+            transparent 55%
+        ),
+        #101010;
+}
+
+.discord-section h2 {
+    margin: 10px 0 18px;
+
+    color: white;
+    font-size: clamp(27px, 4vw, 42px);
+    letter-spacing: 2px;
+
+    text-shadow:
+        0 0 18px rgba(88, 101, 242, 0.4);
+}
+
+.discord-description {
+    max-width: 720px;
+    margin: 0 auto;
+
+    color: #999999;
+    line-height: 1.8;
+}
+
+.discord-features {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    margin: 28px 0;
+}
+
+.discord-features span {
+    padding: 9px 13px;
+
+    color: #b8beff;
+    background: rgba(88, 101, 242, 0.09);
+
+    border: 1px solid rgba(88, 101, 242, 0.55);
+
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.discord-btn {
+    background:
+        linear-gradient(
+            to bottom,
+            #7289ff,
+            #5865f2
+        );
+}
+
+.discord-btn:hover {
+    background:
+        linear-gradient(
+            to bottom,
+            #8d9cff,
+            #6875ff
+        );
+
+    box-shadow:
+        0 0 26px rgba(88, 101, 242, 0.55);
+}
+
+@media (max-width: 600px) {
+    .discord-section-content {
+        padding: 36px 22px;
+    }
+
+    .discord-btn {
+        display: block;
+        width: 100%;
+    }
+}
