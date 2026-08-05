@@ -42,3 +42,102 @@
         max-width: 320px;
     }
 }
+
+/* ---------- FIX EMBLEM CARD SIZE ---------- */
+
+.emblem-grid,
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 30px;
+    max-width: 1100px;
+    margin: 40px auto 0;
+}
+
+.emblem-preview {
+    height: 260px;
+    padding: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #101010;
+    border-bottom: 1px solid #343434;
+}
+
+.emblem-preview img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+    display: block;
+}
+
+.card {
+    width: 100%;
+    max-width: 330px;
+    margin: 0 auto;
+}
+
+@media (max-width: 950px) {
+    .emblem-grid,
+    .card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 620px) {
+    .emblem-grid,
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        max-width: 360px;
+    }
+}
+
+/* ---------- FINAL EMBLEM GRID OVERRIDE ---------- */
+
+.featured .emblem-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 30px !important;
+
+    width: min(1100px, 100%) !important;
+    margin: 40px auto 0 !important;
+}
+
+.featured .emblem-grid .card {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+}
+
+.featured .emblem-grid .emblem-preview {
+    height: 240px !important;
+    padding: 24px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.featured .emblem-grid .emblem-preview img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+}
+
+@media (max-width: 900px) {
+    .featured .emblem-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .featured .emblem-grid {
+        grid-template-columns: 1fr !important;
+    }
+}

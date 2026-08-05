@@ -43,9 +43,11 @@ function setupSearchAndFilters() {
                 series.includes(searchText) ||
                 category.includes(searchText);
 
-            const matchesCategory =
-                activeCategory === "all" ||
-                category === activeCategory;
+            const categoryList = category.split(" ");
+
+const matchesCategory =
+    activeCategory === "all" ||
+    categoryList.includes(activeCategory);
 
             const shouldShow = matchesSearch && matchesCategory;
 

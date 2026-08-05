@@ -13,6 +13,39 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="css/style.css">
+
+    <style>
+    .featured .card-grid {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 280px)) !important;
+        justify-content: center !important;
+        align-items: start !important;
+        gap: 30px !important;
+        width: 100% !important;
+        max-width: 1050px !important;
+        margin: 40px auto 0 !important;
+    }
+
+    .featured .card-grid .card {
+        width: 280px !important;
+        max-width: 280px !important;
+        margin: 0 !important;
+    }
+
+    .featured .emblem-preview {
+        height: 250px !important;
+        padding: 22px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .featured .emblem-preview img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+    }
+</style>
 </head>
 
 <body>
@@ -36,12 +69,12 @@
 </header>
 
 <nav>
-
     <a href="index.html">Home</a>
     <a href="callingcards.html">Calling Cards</a>
     <a href="emblems.html" class="active">Emblems</a>
     <a href="creators.html">Creators</a>
-
+    <a href="install.html">Install Guide</a>
+    <a href="about.html">About</a>
 </nav>
 
 <main>
@@ -67,14 +100,25 @@
 
         </div>
 
-        <div class="filter-buttons">
+     <div class="filter-buttons">
 
-            <button class="filter-btn active-filter">ALL</button>
-            <button class="filter-btn">ANIME</button>
-            <button class="filter-btn">MUSIC</button>
-            <button class="filter-btn">CARS</button>
+    <button class="filter-btn active-filter" data-filter="all">
+        ALL
+    </button>
 
-        </div>
+    <button class="filter-btn" data-filter="anime">
+        ANIME
+    </button>
+
+    <button class="filter-btn" data-filter="music">
+        MUSIC
+    </button>
+
+    <button class="filter-btn" data-filter="cars">
+        CARS
+    </button>
+
+</div>   
 
     </section>
 
@@ -82,10 +126,11 @@
 
         <h2>ALL EMBLEMS</h2>
 
-        <div class="card-grid">
+         <div class="card-grid emblem-grid">
 
             <!-- Pain -->
-            <div class="card emblem-card">
+            <!-- Pain -->
+<div class="card" data-category="anime">
                 <div class="emblem-preview">
                     <img src="images/emblems/Pain.png" alt="Pain Emblem">
                 </div>
@@ -101,7 +146,8 @@
             </div>
 
             <!-- Madara -->
-            <div class="card emblem-card">
+            <!-- Pain -->
+<div class="card" data-category="anime">
                 <div class="emblem-preview">
                     <img src="images/emblems/Madara.png" alt="Madara Emblem">
                 </div>
@@ -109,15 +155,17 @@
                 <h3>Madara</h3>
                 <p>Naruto</p>
 
-                <a href="downloads/emblems/pain-emblem.zip"
+             <a href="downloads/emblems/madara-emblem.zip"
    class="card-btn"
    download>
     DOWNLOAD
-</a>
+</a>   
+
             </div>
 
             <!-- Gojo -->
-            <div class="card emblem-card">
+            <!-- Pain -->
+<div class="card" data-category="anime">
                 <div class="emblem-preview">
                     <img src="images/emblems/Gojo.png" alt="Gojo Emblem">
                 </div>
@@ -134,7 +182,8 @@
             </div>
 
             <!-- Touka -->
-            <div class="card emblem-card">
+            <!-- Pain -->
+<div class="card" data-category="anime">
                 <div class="emblem-preview">
                     <img src="images/emblems/Touka.png" alt="Touka Kirishima Emblem">
                 </div>
@@ -150,7 +199,8 @@
             </div>
 
             <!-- Playboi Carti -->
-            <div class="card emblem-card">
+            <!-- Playboi Carti -->
+<div class="card" data-category="music">
                 <div class="emblem-preview">
                     <img src="images/emblems/playboi-carti.png" alt="Playboi Carti Emblem">
                 </div>
@@ -166,7 +216,8 @@
             </div>
 
             <!-- Makima -->
-            <div class="card emblem-card">
+            <!-- Makima -->
+<div class="card" data-category="anime">
                 <div class="emblem-preview">
                     <img src="images/emblems/Makima.png" alt="Makima Emblem">
                 </div>
@@ -182,7 +233,8 @@
             </div>
 
             <!-- Itachi -->
-            <div class="card emblem-card">
+            <!-- Itachi -->
+<div class="card" data-category="anime">
                 <div class="emblem-preview">
                     <img src="images/emblems/Itachi.png" alt="Itachi Emblem">
                 </div>
@@ -202,6 +254,48 @@
     </section>
 
 </main>
+
+<footer class="vault-footer">
+
+    <div class="vault-footer-line"></div>
+
+    <div class="vault-footer-main">
+
+        <h2>PLUTONIUM VAULT</h2>
+
+        <p class="vault-footer-tagline">
+            THE HOME OF
+            <span>BLACK OPS II CUSTOM CONTENT</span>
+        </p>
+
+        <div class="vault-footer-creators">
+
+            <span class="created-label">CREATED BY</span>
+
+            <div class="creator-name-links">
+                <a href="ayleus.html">AYLEUS</a>
+                <span>•</span>
+                <a href="uzi.html">UZI</a>
+            </div>
+
+        </div>
+
+        <nav class="vault-footer-links">
+            <a href="index.html">HOME</a>
+            <a href="callingcards.html">CALLING CARDS</a>
+            <a href="emblems.html">EMBLEMS</a>
+            <a href="creators.html">CREATORS</a>
+            <a href="install.html">INSTALL GUIDE</a>
+            <a href="about.html">ABOUT</a>
+        </nav>
+
+    </div>
+
+    <div class="vault-footer-bottom">
+        © 2026 PLUTONIUM VAULT
+    </div>
+
+</footer>
 
 <script src="js/script.js"></script>
 
