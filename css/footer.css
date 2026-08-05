@@ -1,0 +1,155 @@
+/* ---------- BO2 VAULT FOOTER ---------- */
+
+.vault-footer {
+    margin-top: 90px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 122, 0, 0.05),
+            transparent 45%
+        ),
+        #080808;
+
+    text-align: center;
+}
+
+.vault-footer-line {
+    height: 3px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #ff7a00,
+            transparent
+        );
+
+    box-shadow:
+        0 0 18px rgba(255, 122, 0, 0.65);
+}
+
+.vault-footer-main {
+    width: min(1000px, calc(100% - 40px));
+    margin: auto;
+    padding: 52px 20px 44px;
+}
+
+.vault-footer-main h2 {
+    margin-bottom: 10px;
+
+    color: #ff7a00;
+    font-size: clamp(27px, 4vw, 40px);
+    letter-spacing: 3px;
+
+    text-shadow:
+        0 0 18px rgba(255, 122, 0, 0.45);
+}
+
+.vault-footer-main > p {
+    color: #777777;
+
+    font-size: 11px;
+    letter-spacing: 3px;
+}
+
+.vault-footer-creators {
+    margin-top: 25px;
+
+    color: #666666;
+
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.vault-footer-creators a {
+    color: #ff7a00;
+    text-decoration: none;
+
+    transition:
+        color 0.25s,
+        text-shadow 0.25s;
+}
+
+.vault-footer-creators a:hover {
+    color: #ffad59;
+
+    text-shadow:
+        0 0 12px rgba(255, 122, 0, 0.7);
+}
+
+.vault-footer-creators span {
+    margin: 0 9px;
+    color: #444444;
+}
+
+.vault-footer-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 28px;
+
+    margin-top: 32px;
+}
+
+.vault-footer-links a {
+    position: relative;
+
+    padding-bottom: 7px;
+
+    color: #aaaaaa;
+
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-decoration: none;
+
+    transition: color 0.25s;
+}
+
+.vault-footer-links a::after {
+    content: "";
+
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+
+    width: 0;
+    height: 2px;
+
+    background: #ff7a00;
+
+    transform: translateX(-50%);
+
+    transition: width 0.25s;
+}
+
+.vault-footer-links a:hover {
+    color: white;
+}
+
+.vault-footer-links a:hover::after {
+    width: 100%;
+}
+
+.vault-footer-bottom {
+    padding: 18px;
+
+    border-top: 1px solid #222222;
+
+    color: #444444;
+
+    font-size: 9px;
+    letter-spacing: 2px;
+}
+
+/* ---------- MOBILE FOOTER ---------- */
+
+@media (max-width: 600px) {
+    .vault-footer-main {
+        padding: 42px 18px 36px;
+    }
+
+    .vault-footer-links {
+        gap: 20px;
+    }
+}
