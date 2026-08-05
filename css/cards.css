@@ -195,3 +195,39 @@
 
     box-shadow:none;
 }
+
+/* ===== Card Meta ===== */
+
+.card-meta{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin:14px 20px 0;
+
+    padding-top:12px;
+
+    border-top:1px solid rgba(255,255,255,.08);
+
+    font-size:10px;
+
+    letter-spacing:1px;
+
+    color:#9b9b9b;
+}
+
+.card-meta span:first-child{
+
+    color:#ffb347;
+
+    font-weight:600;
+
+}
+
+.card-meta span:last-child{
+
+    color:#d4d4d4;
+
+}
