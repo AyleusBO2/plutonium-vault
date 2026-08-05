@@ -144,3 +144,54 @@
         gap: 20px;
     }
 }
+
+/* ===== Card Status Badges ===== */
+
+.card-status{
+    display:inline-block;
+
+    margin:12px 20px 0;
+
+    padding:7px 12px;
+
+    border-radius:4px;
+
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+}
+
+.card-status.ready{
+    background:#1d5e27;
+    color:#7dff93;
+
+    border:1px solid #2aff5d;
+
+    box-shadow:0 0 10px rgba(42,255,93,.25);
+}
+
+.card-status.coming-soon{
+    background:#5c3d08;
+    color:#ffcb6b;
+
+    border:1px solid #ff9800;
+
+    box-shadow:0 0 10px rgba(255,152,0,.25);
+}
+
+.disabled-btn{
+
+    background:#303030 !important;
+
+    color:#8d8d8d !important;
+
+    border:none;
+
+    pointer-events:none;
+
+    cursor:not-allowed;
+
+    box-shadow:none;
+}
