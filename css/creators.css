@@ -62,8 +62,8 @@
 }
 
 .creator-directory-avatar {
-    width: 105px;
-    height: 105px;
+    width: 130px;
+    height: 130px;
 
     display: flex;
     justify-content: center;
@@ -71,21 +71,28 @@
 
     margin-bottom: 26px;
 
-    background:
-        linear-gradient(
-            135deg,
-            #ff8a1c,
-            #bd4800
-        );
+    background: #111111;
 
-    border: 2px solid #ffaf5c;
-
-    color: white;
-    font-size: 48px;
-    font-weight: bold;
+    border: 2px solid #ff7a00;
+    border-radius: 12px;
 
     box-shadow:
-        0 0 25px rgba(255, 122, 0, 0.38);
+        0 0 18px rgba(255, 122, 0, 0.35);
+
+    overflow: hidden;
+}
+
+.creator-directory-avatar img {
+    width: 90%;
+    height: 90%;
+
+    object-fit: contain;
+
+    transition: 0.3s ease;
+}
+
+.creator-directory-card:hover .creator-directory-avatar img {
+    transform: scale(1.08);
 }
 
 .creator-directory-info {
