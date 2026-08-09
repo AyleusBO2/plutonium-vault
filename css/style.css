@@ -243,3 +243,41 @@ a {
     display: inline-block;
     margin-top: 28px;
 }
+
+/* ---------- HERO ---------- */
+
+.hero {
+
+    text-align: center;
+
+    padding: 70px 20px;
+
+    margin-bottom: 60px;
+
+    border-bottom: 1px solid #222;
+
+}
+
+.hero h2 {
+
+    font-size: 40px;
+
+    margin-bottom: 20px;
+
+    color: #ff7a00;
+
+    text-shadow: 0 0 12px rgba(255,122,0,.5);
+
+}
+
+.hero p {
+
+    color: #bbbbbb;
+
+    font-size: 20px;
+
+    max-width: 700px;
+
+    margin: auto;
+
+}
