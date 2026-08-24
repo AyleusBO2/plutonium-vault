@@ -55,6 +55,7 @@ nav a {
 
     color: white;
     text-decoration: none;
+    font-family: inherit;
     font-weight: bold;
 
     transition: 0.25s;
@@ -132,4 +133,8 @@ nav a:hover::before {
     nav a {
         font-size: 12px;
     }
+}
+
+nav a {
+    font-family: "Orbitron", sans-serif !important;
 }
