@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Vault - Plutonium Vault</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="particles" aria-hidden="true">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+<header>
+    <h1>PLUTONIUM VAULT</h1>
+    <p>MY VAULT</p>
+</header>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="callingcards.html">Calling Cards</a>
+    <a href="emblems.html">Emblems</a>
+    <a href="creators.html">Creators</a>
+    <a href="my-vault.html" class="active">
+        My Vault
+        <span class="my-vault-count">0</span>
+    </a>
+    <a href="install.html">Install Guide</a>
+    <a href="about.html">About</a>
+</nav>
+
+<main>
+
+    <section class="vault-page-header">
+
+        <p class="menu-label">PERSONAL COLLECTION</p>
+
+        <h2>MY VAULT</h2>
+
+        <p class="vault-page-description">
+            Your saved Black Ops II Plutonium content.
+            Items saved here are stored on this device.
+        </p>
+
+        <div class="vault-page-stats">
+
+            <div class="vault-page-stat">
+                <span>TOTAL SAVED</span>
+                <strong id="vault-total-count">0</strong>
+            </div>
+
+            <div class="vault-page-stat">
+                <span>CALLING CARDS</span>
+                <strong id="vault-calling-card-count">0</strong>
+            </div>
+
+            <div class="vault-page-stat">
+                <span>EMBLEMS</span>
+                <strong id="vault-emblem-count">0</strong>
+            </div>
+
+        </div>
+
+        <div class="vault-toolbar">
+
+    <div class="vault-search-wrap">
+
+        <input
+            type="search"
+            id="vault-search"
+            placeholder="SEARCH MY VAULT..."
+            aria-label="Search My Vault"
+        >
+
+    </div>
+
+
+    <div class="vault-filter-buttons">
+
+        <button
+            type="button"
+            class="vault-filter-btn active"
+            data-vault-filter="all"
+        >
+            ALL
+        </button>
+
+        <button
+            type="button"
+            class="vault-filter-btn"
+            data-vault-filter="calling-card"
+        >
+            CALLING CARDS
+        </button>
+
+        <button
+            type="button"
+            class="vault-filter-btn"
+            data-vault-filter="emblem"
+        >
+            EMBLEMS
+        </button>
+
+    </div>
+
+
+    <button
+        type="button"
+        id="vault-clear-btn"
+        class="vault-clear-btn"
+    >
+        CLEAR MY VAULT
+    </button>
+
+</div>
+
+    </section>
+
+
+    <section
+        id="vault-empty-state"
+        class="vault-empty-state"
+        hidden
+    >
+
+        <p class="menu-label">VAULT EMPTY</p>
+
+        <h2>NO SAVED CONTENT</h2>
+
+        <p>
+            Save Calling Cards and Emblems throughout
+            Plutonium Vault and they will appear here.
+        </p>
+
+        <div class="vault-empty-actions">
+
+            <a href="callingcards.html" class="card-btn">
+                BROWSE CALLING CARDS
+            </a>
+
+            <a href="emblems.html" class="secondary-btn">
+                BROWSE EMBLEMS
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <section
+        id="vault-calling-cards-section"
+        class="vault-content-section"
+        hidden
+    >
+
+        <div class="vault-section-heading">
+
+            <div>
+                <p class="menu-label">SAVED CONTENT</p>
+                <h2>CALLING CARDS</h2>
+            </div>
+
+            <span
+                class="vault-section-count"
+                id="vault-calling-card-label"
+            >
+                0 ITEMS
+            </span>
+
+        </div>
+
+        <div
+            id="vault-calling-cards"
+            class="vault-grid"
+        ></div>
+
+    </section>
+
+
+    <section
+        id="vault-emblems-section"
+        class="vault-content-section"
+        hidden
+    >
+
+        <div class="vault-section-heading">
+
+            <div>
+                <p class="menu-label">SAVED CONTENT</p>
+                <h2>EMBLEMS</h2>
+            </div>
+
+            <span
+                class="vault-section-count"
+                id="vault-emblem-label"
+            >
+                0 ITEMS
+            </span>
+
+        </div>
+
+        <div
+            id="vault-emblems"
+            class="vault-grid"
+        ></div>
+
+    </section>
+
+</main>
+
+
+<footer class="vault-footer">
+
+    <div class="vault-footer-line"></div>
+
+    <div class="vault-footer-main">
+
+        <h2>PLUTONIUM VAULT</h2>
+
+        <p class="vault-footer-tagline">
+            THE HOME OF
+            <span>BLACK OPS II CUSTOM CONTENT</span>
+        </p>
+
+        <nav class="vault-footer-links">
+            <a href="index.html">HOME</a>
+            <a href="callingcards.html">CALLING CARDS</a>
+            <a href="emblems.html">EMBLEMS</a>
+            <a href="creators.html">CREATORS</a>
+            <a href="my-vault.html">MY VAULT</a>
+            <a href="install.html">INSTALL GUIDE</a>
+            <a href="about.html">ABOUT</a>
+        </nav>
+
+    </div>
+
+    <div class="vault-footer-bottom">
+        © 2026 PLUTONIUM VAULT
+    </div>
+
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/script.js"></script>
+
+</body>
+
+</html>

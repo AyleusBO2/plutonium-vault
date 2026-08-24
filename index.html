@@ -71,6 +71,13 @@
     <a href="creators.html">Creators</a>
     <a href="install.html">Install Guide</a>
     <a href="about.html">About</a>
+    <button
+    type="button"
+    class="vault-global-search-btn"
+    id="vault-global-search-btn"
+>
+    SEARCH
+</button>
 
       <a href=https://discord.gg/gS8MHbvuse
        target="_blank"
@@ -80,6 +87,68 @@
 
 
 </nav>
+
+<!-- GLOBAL VAULT SEARCH -->
+<div
+    class="vault-search-overlay"
+    id="vault-search-overlay"
+    aria-hidden="true"
+>
+
+    <div class="vault-search-panel">
+
+        <div class="vault-search-header">
+
+            <div>
+                <p>◈ GLOBAL VAULT SEARCH</p>
+                <h2>SEARCH THE VAULT</h2>
+            </div>
+
+            <button
+                type="button"
+                class="vault-search-close"
+                id="vault-search-close"
+                aria-label="Close search"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="vault-search-input-wrap">
+
+            <input
+                type="search"
+                id="vault-global-search-input"
+                placeholder="SEARCH CONTENT, SERIES, CREATOR..."
+                autocomplete="off"
+            >
+
+            <span class="vault-search-key">
+                ESC TO CLOSE
+            </span>
+
+        </div>
+
+
+        <div
+            class="vault-search-status"
+            id="vault-search-status"
+        >
+            TYPE TO SEARCH THE VAULT
+        </div>
+
+
+        <div
+            class="vault-search-results"
+            id="vault-search-results"
+        >
+        </div>
+
+    </div>
+
+</div>
 
    <main>
 
@@ -105,6 +174,42 @@
         </div>
 
         </section>
+
+    <!-- VAULT STATUS BAR -->
+<div class="vault-status-bar">
+
+    <div class="vault-status-item vault-online">
+        <span class="vault-status-dot"></span>
+        <span>VAULT ONLINE</span>
+    </div>
+
+    <div class="vault-status-divider"></div>
+
+    <div class="vault-status-item">
+        <span class="vault-status-value" id="status-total-content">0</span>
+        <span>CONTENT ITEMS</span>
+    </div>
+
+    <div class="vault-status-divider"></div>
+
+    <div class="vault-status-item">
+        <span class="vault-status-value" id="status-total-downloads">0</span>
+        <span>DOWNLOADS</span>
+    </div>
+
+    <div class="vault-status-divider"></div>
+
+    <div class="vault-status-item vault-latest">
+        <span>LATEST DROP:</span>
+        <span
+    class="vault-status-value"
+    id="status-latest-drop"
+>
+    L. LAWLIET
+</span>
+    </div>
+
+</div> 
 
     <section class="featured-hero" id="featured-showcase">
 
@@ -160,62 +265,93 @@
 
 </section>
 
-<section class="latest-uploads">
+<!-- LIVE VAULT STATISTICS -->
+ <div class="vault-stats-heading">
+    <p>◈ LIVE VAULT STATISTICS</p>
+    <h2>VAULT ACTIVITY</h2>
+</div>
 
-    <div class="section-heading">
+<section class="vault-live-stats">
 
-        <p class="menu-label">RECENTLY ADDED</p>
+    <div class="vault-live-stat">
+        <p>TOTAL CONTENT</p>
+        <h3 id="stat-total-content">0</h3>
+    </div>
 
-        <h2>LATEST UPLOADS</h2>
+    <div class="vault-live-stat">
+        <p>CALLING CARDS</p>
+        <h3 id="stat-calling-cards">0</h3>
+    </div>
+
+    <div class="vault-live-stat">
+        <p>EMBLEMS</p>
+        <h3 id="stat-emblems">0</h3>
+    </div>
+
+    <div class="vault-live-stat">
+        <p>TOTAL DOWNLOADS</p>
+        <h3 id="stat-total-downloads">0</h3>
+    </div>
+
+</section>
+
+
+<section class="recent-releases" id="recent-releases">
+
+    <div class="recent-releases-heading">
+
+        <div>
+            <p class="menu-label">★ RECENTLY ADDED</p>
+            <h2>LATEST VAULT DROPS</h2>
+        </div>
+
+        <div class="recent-view-links">
+
+    <a href="callingcards.html">
+        CALLING CARDS →
+    </a>
+
+    <a href="emblems.html">
+        EMBLEMS →
+    </a>
+
+</div>
 
     </div>
 
-    <div class="latest-grid">
+    <div
+        class="recent-releases-grid"
+        id="recent-releases-grid"
+    >
+    </div>
 
-        <a href="callingcards.html" class="latest-item">
+</section> 
 
-            <span class="latest-badge">NEW</span>
+<section class="trending-vault" id="trending-vault">
 
-            <div>
-                <h3>Makima</h3>
-                <p>Chainsaw Man Calling Card</p>
-            </div>
+    <div class="trending-heading">
 
-        </a>
+        <div>
+            <p class="menu-label">
+                🔥 LIVE DOWNLOAD RANKINGS
+            </p>
 
-        <a href="callingcards.html" class="latest-item">
+            <h2>
+                TRENDING IN THE VAULT
+            </h2>
+        </div>
 
-            <span class="latest-badge">NEW</span>
+        <div class="trending-live-badge">
+            LIVE
+        </div>
 
-            <div>
-                <h3>Itachi</h3>
-                <p>Naruto Calling Card</p>
-            </div>
+    </div>
 
-        </a>
 
-        <a href="emblems.html" class="latest-item">
-
-            <span class="latest-badge">NEW</span>
-
-            <div>
-                <h3>Makima</h3>
-                <p>Chainsaw Man Emblem</p>
-            </div>
-
-        </a>
-
-        <a href="emblems.html" class="latest-item">
-
-            <span class="latest-badge">NEW</span>
-
-            <div>
-                <h3>Itachi</h3>
-                <p>Naruto Emblem</p>
-            </div>
-
-        </a>
-
+    <div
+        class="trending-grid"
+        id="trending-grid"
+    >
     </div>
 
 </section>
@@ -288,113 +424,7 @@
 </section>
 
 </section>
-
-<!-- Discord Section -->
-<section class="discord-section">
-    ...
-</section>
-    
-        
-<section class="stats">
-
-    <div class="stat-box">
-        <h3>19</h3>
-<p>CALLING CARDS</p>
-    </div>
-
-    <div class="stat-box">
-        <h3>21</h3>
-        <p>EMBLEMS</p>
-    </div>
-
-    <div class="stat-box">
-        <h3>6</h3>
-        <p>CREATORS</p>
-    </div>
-
-</section>
-
- <section class="featured">
-
-    <h2>FEATURED CALLING CARDS</h2>
-
-    <div class="card-grid">
-
-    <div class="card">
-
-    <div class="preview">
-        <img src="images/callingcards/pain.gif" alt="Pain Calling Card">
-    </div>
-
-    <h3>Pain</h3>
-
-    <p>Naruto</p>
-
-    <a href="callingcards.html" class="card-btn">VIEW COLLECTION</a>
-
-</div>
-
-        <div class="card">
-
-    <div class="preview">
-        <img src="images/callingcards/madara.gif" alt="Madara Calling Card">
-    </div>
-
-    <h3>Madara</h3>
-
-    <p>Naruto</p>
-
-    <a href="callingcards.html" class="card-btn">VIEW COLLECTION</a>
-
-
-</div>
-
-    <div class="card">
-
-    <div class="preview">
-        <img src="images/callingcards/gojo.gif" alt="Gojo Calling Card">
-    </div>
-
-    <h3>Gojo</h3>
-
-    <p>Jujutsu Kaisen</p>
-
-    <a href="callingcards.html" class="card-btn">VIEW COLLECTION</a>
-
-</div>
-
-      <div class="card">
-
-    <div class="preview">
-        <img src="images/callingcards/touka.gif" alt="Touka Calling Card">
-    </div>
-
-    <h3>Touka Kirishima</h3>
-
-    <p>Tokyo Ghoul</p>
-
-    <a href="callingcards.html" class="card-btn">VIEW COLLECTION</a>
-
-</div>
-
-<div class="card">
-
-    <div class="preview">
-        <img src="images/callingcards/playboi-carti.gif" alt="Playboi Carti Calling Card">
-    </div>
-
-    <h3>Playboi Carti</h3>
-
-    <p>Music</p>
-
-    <a href="callingcards.html" class="card-btn">VIEW COLLECTION</a>
-
-</div>
-
-
-</div>
-
-</section>   
+ 
 
 </main>
 
@@ -438,10 +468,91 @@
     </div>
 
     <div class="vault-footer-bottom">
+
+    <div>
         © 2026 PLUTONIUM VAULT
     </div>
 
+    <button
+        type="button"
+        class="vault-build-button"
+        id="vault-build-button"
+    >
+        PLUTONIUM VAULT // BUILD
+        <span id="vault-build-number">1.1.0</span>
+    </button>
+
+</div>
+
 </footer>
+
+<!-- =====================================================
+     VAULT CHANGELOG
+     ===================================================== -->
+
+<div class="vault-changelog-overlay" id="vault-changelog">
+
+    <div class="vault-changelog-panel">
+
+        <button
+            class="vault-changelog-close"
+            id="vault-changelog-close"
+            type="button"
+        >
+            ×
+        </button>
+
+        <div class="vault-changelog-label">
+            ◇ VAULT SYSTEM UPDATE
+        </div>
+
+        <h2>
+            CHANGELOG
+        </h2>
+
+        <div class="vault-changelog-version">
+            BUILD <span>1.1.0</span>
+        </div>
+
+        <div class="vault-changelog-date">
+            AUGUST 2026
+        </div>
+
+        <div class="vault-changelog-section">
+
+            <h3>NEW</h3>
+
+            <p>+ Global Vault Search</p>
+            <p>+ Ctrl + K search shortcut</p>
+            <p>+ Live Vault statistics</p>
+            <p>+ Latest Vault Drops</p>
+            <p>+ Trending download rankings</p>
+
+        </div>
+
+        <div class="vault-changelog-section">
+
+            <h3>IMPROVED</h3>
+
+            <p>+ Homepage visual overhaul</p>
+            <p>+ Smoother animations</p>
+            <p>+ Improved content cards</p>
+            <p>+ Updated Vault navigation</p>
+
+        </div>
+
+        <div class="vault-changelog-section">
+
+            <h3>FIXED</h3>
+
+            <p>+ General layout improvements</p>
+            <p>+ Search result styling</p>
+
+        </div>
+
+    </div>
+
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/script.js"></script>

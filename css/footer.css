@@ -1,21 +1,312 @@
-/* ---------- BO2 VAULT FOOTER ---------- */
+/* =========================================================
+   PLUTONIUM VAULT — PREMIUM BO2 FOOTER
+   ========================================================= */
 
 .vault-footer {
-    margin-top: 90px;
+    position: relative;
+    margin-top: 100px;
+    overflow: hidden;
 
     background:
+        radial-gradient(
+            ellipse at 50% 0%,
+            rgba(255, 122, 0, 0.10),
+            transparent 48%
+        ),
         linear-gradient(
             180deg,
-            rgba(255, 122, 0, 0.05),
-            transparent 45%
-        ),
-        #080808;
+            #0c0c0c,
+            #050505 70%
+        );
 
     text-align: center;
 }
 
+
+/* =========================================================
+   TOP ORANGE ENERGY LINE
+   ========================================================= */
+
 .vault-footer-line {
-    height: 3px;
+    position: relative;
+
+    height: 2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent 5%,
+            rgba(255, 122, 0, 0.25) 20%,
+            #ff7a00 50%,
+            rgba(255, 122, 0, 0.25) 80%,
+            transparent 95%
+        );
+
+    box-shadow:
+        0 0 12px rgba(255, 122, 0, 0.55),
+        0 0 30px rgba(255, 122, 0, 0.16);
+}
+
+
+/* MOVING ENERGY FLASH */
+
+.vault-footer-line::after {
+    content: "";
+
+    position: absolute;
+
+    top: -1px;
+    left: -20%;
+
+    width: 18%;
+    height: 4px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #ffffff,
+            #ff7a00,
+            transparent
+        );
+
+    filter: blur(0.5px);
+
+    box-shadow:
+        0 0 12px #ff7a00;
+
+    animation:
+        footerEnergySweep 5s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes footerEnergySweep {
+
+    0%,
+    65% {
+        left: -20%;
+        opacity: 0;
+    }
+
+    70% {
+        opacity: 1;
+    }
+
+    95% {
+        opacity: 1;
+    }
+
+    100% {
+        left: 105%;
+        opacity: 0;
+    }
+
+}
+
+
+/* =========================================================
+   FOOTER CONTENT
+   ========================================================= */
+
+.vault-footer-main {
+    position: relative;
+
+    width: min(
+        1000px,
+        calc(100% - 40px)
+    );
+
+    margin: auto;
+
+    padding:
+        58px 20px
+        48px;
+}
+
+
+/* SUBTLE VERTICAL GLOW */
+
+.vault-footer-main::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 50%;
+
+    width: 450px;
+    height: 180px;
+
+    transform:
+        translateX(-50%);
+
+    background:
+        radial-gradient(
+            ellipse,
+            rgba(255, 122, 0, 0.07),
+            transparent 70%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.vault-footer-main h2 {
+    position: relative;
+
+    margin-bottom: 11px;
+
+    color: #ff7a00;
+
+    font-size:
+        clamp(
+            27px,
+            4vw,
+            40px
+        );
+
+    letter-spacing: 4px;
+
+    text-shadow:
+        0 0 12px
+        rgba(255, 122, 0, 0.45),
+        0 0 32px
+        rgba(255, 122, 0, 0.12);
+
+    transition:
+        text-shadow 0.3s ease;
+}
+
+
+.vault-footer:hover
+.vault-footer-main h2 {
+
+    text-shadow:
+        0 0 14px
+        rgba(255, 122, 0, 0.65),
+        0 0 38px
+        rgba(255, 122, 0, 0.20);
+}
+
+
+/* TAGLINE */
+
+.vault-footer-main > p {
+    position: relative;
+
+    color: #696969;
+
+    font-size: 10px;
+    letter-spacing: 3.5px;
+}
+
+
+/* =========================================================
+   CREATORS
+   ========================================================= */
+
+.vault-footer-creators {
+    position: relative;
+
+    margin-top: 27px;
+
+    color: #555555;
+
+    font-size: 9px;
+    letter-spacing: 2px;
+}
+
+
+.vault-footer-creators a {
+    color: #ff7a00;
+
+    text-decoration: none;
+
+    transition:
+        color 0.2s ease,
+        text-shadow 0.2s ease;
+}
+
+
+.vault-footer-creators a:hover {
+    color: #ffffff;
+
+    text-shadow:
+        0 0 10px
+        rgba(255, 122, 0, 0.8),
+        0 0 20px
+        rgba(255, 122, 0, 0.35);
+}
+
+
+.vault-footer-creators span {
+    margin: 0 10px;
+
+    color: #343434;
+}
+
+
+/* =========================================================
+   FOOTER LINKS
+   ========================================================= */
+
+.vault-footer-links {
+    position: relative;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 32px;
+
+    margin-top: 35px;
+}
+
+
+.vault-footer-links a {
+    position: relative;
+
+    padding:
+        8px 2px
+        10px;
+
+    color: #888888;
+
+    font-size: 9px;
+    font-weight: 600;
+
+    letter-spacing: 1.8px;
+
+    text-decoration: none;
+
+    transition:
+        color 0.22s ease,
+        text-shadow 0.22s ease,
+        transform 0.22s ease;
+}
+
+
+/* UNDERLINE */
+
+.vault-footer-links a::after {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    bottom: 3px;
+
+    width: 0;
+    height: 1px;
 
     background:
         linear-gradient(
@@ -25,131 +316,291 @@
             transparent
         );
 
+    transform:
+        translateX(-50%);
+
     box-shadow:
-        0 0 18px rgba(255, 122, 0, 0.65);
-}
-
-.vault-footer-main {
-    width: min(1000px, calc(100% - 40px));
-    margin: auto;
-    padding: 52px 20px 44px;
-}
-
-.vault-footer-main h2 {
-    margin-bottom: 10px;
-
-    color: #ff7a00;
-    font-size: clamp(27px, 4vw, 40px);
-    letter-spacing: 3px;
-
-    text-shadow:
-        0 0 18px rgba(255, 122, 0, 0.45);
-}
-
-.vault-footer-main > p {
-    color: #777777;
-
-    font-size: 11px;
-    letter-spacing: 3px;
-}
-
-.vault-footer-creators {
-    margin-top: 25px;
-
-    color: #666666;
-
-    font-size: 10px;
-    letter-spacing: 2px;
-}
-
-.vault-footer-creators a {
-    color: #ff7a00;
-    text-decoration: none;
+        0 0 8px
+        rgba(255, 122, 0, 0.7);
 
     transition:
-        color 0.25s,
-        text-shadow 0.25s;
+        width 0.25s ease;
 }
 
-.vault-footer-creators a:hover {
-    color: #ffad59;
+
+.vault-footer-links a:hover {
+    color: #ffffff;
+
+    transform:
+        translateY(-2px);
 
     text-shadow:
-        0 0 12px rgba(255, 122, 0, 0.7);
+        0 0 10px
+        rgba(255, 122, 0, 0.25);
 }
 
-.vault-footer-creators span {
-    margin: 0 9px;
-    color: #444444;
+
+.vault-footer-links a:hover::after {
+    width: 120%;
 }
 
-.vault-footer-links {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 28px;
 
-    margin-top: 32px;
-}
+/* =========================================================
+   BOTTOM BAR
+   ========================================================= */
 
-.vault-footer-links a {
+.vault-footer-bottom {
     position: relative;
 
-    padding-bottom: 7px;
+    padding: 20px;
 
-    color: #aaaaaa;
+    border-top:
+        1px solid #1e1e1e;
 
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    text-decoration: none;
+    background:
+        rgba(0, 0, 0, 0.20);
 
-    transition: color 0.25s;
+    color: #414141;
+
+    font-size: 8px;
+
+    letter-spacing: 2.2px;
 }
 
-.vault-footer-links a::after {
+
+/* SMALL ORANGE CENTRE MARK */
+
+.vault-footer-bottom::before {
     content: "";
 
     position: absolute;
-    left: 50%;
-    bottom: 0;
 
-    width: 0;
-    height: 2px;
+    top: -1px;
+    left: 50%;
+
+    width: 45px;
+    height: 1px;
+
+    transform:
+        translateX(-50%);
 
     background: #ff7a00;
 
-    transform: translateX(-50%);
-
-    transition: width 0.25s;
+    box-shadow:
+        0 0 9px
+        rgba(255, 122, 0, 0.55);
 }
 
-.vault-footer-links a:hover {
-    color: white;
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .vault-footer {
+        margin-top: 70px;
+    }
+
+
+    .vault-footer-main {
+        padding:
+            45px 18px
+            38px;
+    }
+
+
+    .vault-footer-main h2 {
+        letter-spacing: 2px;
+    }
+
+
+    .vault-footer-main > p {
+        line-height: 1.8;
+    }
+
+
+    .vault-footer-creators {
+        line-height: 2;
+    }
+
+
+    .vault-footer-links {
+        gap:
+            14px
+            22px;
+    }
+
 }
 
-.vault-footer-links a:hover::after {
-    width: 100%;
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (
+    prefers-reduced-motion:
+    reduce
+) {
+
+    .vault-footer-line::after {
+        animation: none;
+    }
+
 }
 
-.vault-footer-bottom {
-    padding: 18px;
+#vault-build-button {
+    appearance: none;
+    background: transparent;
+    border: none;
+    color: #666;
+    font-family: inherit;
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    margin-top: 10px;
+    cursor: pointer;
+}
 
-    border-top: 1px solid #222222;
+#vault-build-button:hover {
+    color: #ff7a00;
+}
 
-    color: #444444;
+#vault-build-number {
+    color: #888;
+}
 
-    font-size: 9px;
+/* =========================================================
+   VAULT CHANGELOG
+   ========================================================= */
+
+.vault-changelog-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    padding: 30px;
+
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(6px);
+}
+
+.vault-changelog-overlay.active {
+    display: flex;
+}
+
+.vault-changelog-panel {
+    position: relative;
+
+    width: min(650px, 100%);
+    max-height: 80vh;
+    overflow-y: auto;
+
+    padding: 38px 42px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 122, 0, 0.06),
+            transparent 35%
+        ),
+        #111;
+
+    border: 1px solid #333;
+    border-top: 3px solid #ff7a00;
+
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.8),
+        0 0 30px rgba(255, 122, 0, 0.12);
+}
+
+.vault-changelog-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+
+    width: 38px;
+    height: 38px;
+
+    background: #151515;
+    border: 1px solid #333;
+
+    color: #777;
+    font-family: inherit;
+    font-size: 18px;
+
+    cursor: pointer;
+}
+
+.vault-changelog-close:hover {
+    color: #ff7a00;
+    border-color: #ff7a00;
+}
+
+.vault-changelog-label {
+    margin-bottom: 8px;
+
+    color: #ff7a00;
+
+    font-size: 8px;
     letter-spacing: 2px;
 }
 
-/* ---------- MOBILE FOOTER ---------- */
+.vault-changelog-panel h2 {
+    margin: 0 0 20px;
 
-@media (max-width: 600px) {
-    .vault-footer-main {
-        padding: 42px 18px 36px;
-    }
+    color: #fff;
 
-    .vault-footer-links {
-        gap: 20px;
-    }
+    font-size: 32px;
+    letter-spacing: 2px;
+}
+
+.vault-changelog-version {
+    color: #888;
+
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.vault-changelog-version span {
+    color: #ff7a00;
+}
+
+.vault-changelog-date {
+    margin-top: 6px;
+    margin-bottom: 30px;
+
+    color: #555;
+
+    font-size: 8px;
+    letter-spacing: 1.5px;
+}
+
+.vault-changelog-section {
+    margin-top: 24px;
+    padding-top: 18px;
+
+    border-top: 1px solid #292929;
+}
+
+.vault-changelog-section h3 {
+    margin: 0 0 14px;
+
+    color: #ff7a00;
+
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+.vault-changelog-section p {
+    margin: 9px 0;
+
+    color: #aaa;
+
+    font-size: 10px;
+    line-height: 1.5;
+    letter-spacing: 0.5px;
 }
