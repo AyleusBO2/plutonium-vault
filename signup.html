@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account - Plutonium Vault</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+
+    <main class="auth-page">
+
+        <section class="auth-panel">
+
+            <div class="auth-label">
+                ◆ VAULT REGISTRATION
+            </div>
+
+            <h1>CREATE ACCOUNT</h1>
+
+            <p class="auth-description">
+                Create your Plutonium Vault account.
+            </p>
+
+            <form id="signup-form">
+
+                <div class="auth-field">
+                    <label for="signup-username">USERNAME</label>
+
+                    <input
+                        type="text"
+                        id="signup-username"
+                        autocomplete="username"
+                        placeholder="Choose a username"
+                        minlength="3"
+                        maxlength="24"
+                        required
+                    >
+                </div>
+
+                <div class="auth-field">
+                    <label for="signup-email">EMAIL</label>
+
+                    <input
+                        type="email"
+                        id="signup-email"
+                        autocomplete="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+                </div>
+
+                <div class="auth-field">
+                    <label for="signup-password">PASSWORD</label>
+
+                    <input
+                        type="password"
+                        id="signup-password"
+                        autocomplete="new-password"
+                        placeholder="Create a password"
+                        minlength="6"
+                        required
+                    >
+                </div>
+
+                <div class="auth-field">
+                    <label for="signup-confirm-password">
+                        CONFIRM PASSWORD
+                    </label>
+
+                    <input
+                        type="password"
+                        id="signup-confirm-password"
+                        autocomplete="new-password"
+                        placeholder="Confirm your password"
+                        minlength="6"
+                        required
+                    >
+                </div>
+
+                <div
+                    id="signup-message"
+                    class="auth-message"
+                    aria-live="polite"
+                ></div>
+
+                <button
+                    type="submit"
+                    class="auth-submit"
+                    id="signup-button"
+                >
+                    CREATE ACCOUNT
+                </button>
+
+            </form>
+
+            <div class="auth-footer">
+                <span>ALREADY HAVE AN ACCOUNT?</span>
+                <a href="login.html">LOGIN</a>
+            </div>
+
+            <a href="index.html" class="auth-back">
+                ← RETURN TO VAULT
+            </a>
+
+        </section>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/auth.js"></script>
+
+</body>
+</html>

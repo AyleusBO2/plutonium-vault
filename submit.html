@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Submit Content - Plutonium Vault</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+
+    <style>
+        .submit-panel {
+            width: min(900px, 92%);
+            margin: 60px auto;
+            padding: 45px;
+            background: #111;
+            border: 1px solid #2b2b2b;
+            border-top: 3px solid #ff7a00;
+        }
+
+        .submit-label {
+            color: #ff7a00;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+        }
+
+        .submit-panel h1 {
+            margin: 0 0 10px;
+            color: #ff7a00;
+            font-size: 44px;
+            letter-spacing: 3px;
+        }
+
+        .submit-description {
+            color: #999;
+            margin-bottom: 35px;
+        }
+
+        .submit-form {
+            display: grid;
+            gap: 22px;
+        }
+
+        .submit-field {
+            display: grid;
+            gap: 8px;
+        }
+
+        .submit-field label {
+            color: #aaa;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .submit-field input,
+        .submit-field select,
+        .submit-field textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 15px;
+            background: #0b0b0b;
+            border: 1px solid #333;
+            color: white;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .submit-field input:focus,
+        .submit-field select:focus,
+        .submit-field textarea:focus {
+            border-color: #ff7a00;
+            box-shadow: 0 0 12px rgba(255, 122, 0, .2);
+        }
+
+        .submit-field textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        .submit-file {
+            padding: 25px;
+            border: 1px dashed #444;
+            background: #0b0b0b;
+        }
+
+        .submit-file small {
+            display: block;
+            margin-top: 8px;
+            color: #777;
+        }
+
+        .submit-button {
+            margin-top: 10px;
+            padding: 17px 30px;
+            background: transparent;
+            border: 2px solid #ff7a00;
+            color: #ff7a00;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .submit-button:hover {
+            background: #ff7a00;
+            color: #111;
+            box-shadow: 0 0 25px rgba(255, 122, 0, .35);
+        }
+
+        .submit-button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .submit-message {
+            min-height: 20px;
+            color: #ff7a00;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .submit-back {
+            display: inline-block;
+            margin-top: 25px;
+            color: #777;
+            text-decoration: none;
+            letter-spacing: 2px;
+            font-size: 12px;
+        }
+
+        .submit-back:hover {
+            color: #ff7a00;
+        }
+    </style>
+</head>
+
+<body>
+
+<main>
+
+    <section class="submit-panel">
+
+        <div class="submit-label">
+            ◆ PLUTONIUM VAULT
+        </div>
+
+        <h1>SUBMIT CONTENT</h1>
+
+        <p class="submit-description">
+            Submit your custom content to Plutonium Vault for review.
+        </p>
+
+        <form
+            id="submit-content-form"
+            class="submit-form"
+        >
+
+            <div class="submit-field">
+
+                <label for="submit-type">
+                    CONTENT TYPE
+                </label>
+
+                <select id="submit-type" required>
+
+                    <option value="calling-card">
+                        CALLING CARD
+                    </option>
+
+                    <option value="emblem">
+                        EMBLEM
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="submit-field">
+
+                <label for="submit-title">
+                    TITLE
+                </label>
+
+                <input
+                    type="text"
+                    id="submit-title"
+                    maxlength="80"
+                    placeholder="ENTER CONTENT TITLE..."
+                    required
+                >
+
+            </div>
+
+
+            <div class="submit-field">
+
+                <label for="submit-description">
+                    DESCRIPTION
+                </label>
+
+                <textarea
+                    id="submit-description"
+                    maxlength="500"
+                    placeholder="DESCRIBE YOUR CONTENT..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <div class="submit-field submit-file">
+
+                <label for="submit-preview">
+                    PREVIEW IMAGE
+                </label>
+
+                <input
+                    type="file"
+                    id="submit-preview"
+                    accept="image/png,image/jpeg,image/webp,image/gif"
+                    required
+                >
+
+                <small>
+                    PNG, JPG, WEBP or GIF.
+                </small>
+
+            </div>
+
+
+            <div class="submit-field submit-file">
+
+                <label for="submit-download">
+                    CONTENT FILE
+                </label>
+
+                <input
+                    type="file"
+                    id="submit-download"
+                    required
+                >
+
+                <small>
+                    Upload the file users will download.
+                </small>
+
+            </div>
+
+
+            <div
+                id="submit-message"
+                class="submit-message"
+                aria-live="polite"
+            ></div>
+
+
+            <button
+                type="submit"
+                id="submit-content-button"
+                class="submit-button"
+            >
+                SUBMIT FOR REVIEW
+            </button>
+
+        </form>
+
+
+        <a
+            href="index.html"
+            class="submit-back"
+        >
+            ← RETURN TO VAULT
+        </a>
+
+    </section>
+
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="js/auth.js"></script>
+
+<script>
+
+const form =
+    document.getElementById(
+        "submit-content-form"
+    );
+
+const message =
+    document.getElementById(
+        "submit-message"
+    );
+
+const submitButton =
+    document.getElementById(
+        "submit-content-button"
+    );
+
+
+form?.addEventListener(
+    "submit",
+    async event => {
+
+        event.preventDefault();
+
+        message.textContent = "";
+
+        submitButton.disabled = true;
+
+        submitButton.textContent =
+            "SUBMITTING...";
+
+
+        try {
+
+            const {
+                data: {
+                    user
+                },
+                error: userError
+            } =
+                await vaultSupabase
+                    .auth
+                    .getUser();
+
+
+            if (
+                userError ||
+                !user
+            ) {
+
+                throw new Error(
+                    "YOU MUST BE LOGGED IN TO SUBMIT CONTENT"
+                );
+
+            }
+
+
+            const type =
+                document
+                    .getElementById(
+                        "submit-type"
+                    )
+                    .value;
+
+
+            const title =
+                document
+                    .getElementById(
+                        "submit-title"
+                    )
+                    .value
+                    .trim();
+
+
+            const description =
+                document
+                    .getElementById(
+                        "submit-description"
+                    )
+                    .value
+                    .trim();
+
+
+            const previewFile =
+                document
+                    .getElementById(
+                        "submit-preview"
+                    )
+                    .files[0];
+
+
+            const downloadFile =
+                document
+                    .getElementById(
+                        "submit-download"
+                    )
+                    .files[0];
+
+
+            if (
+                !previewFile ||
+                !downloadFile
+            ) {
+
+                throw new Error(
+                    "PLEASE SELECT BOTH FILES"
+                );
+
+            }
+
+
+            const safeTitle =
+                title
+                    .toLowerCase()
+                    .replace(
+                        /[^a-z0-9]+/g,
+                        "-"
+                    )
+                    .replace(
+                        /^-|-$/g,
+                        ""
+                    );
+
+
+            /*
+             * PREVIEW UPLOAD
+             */
+
+            const previewExtension =
+                previewFile.name
+                    .split(".")
+                    .pop()
+                    .toLowerCase();
+
+
+            const previewPath =
+                `${user.id}/${Date.now()}-${safeTitle}.${previewExtension}`;
+
+
+            const {
+                error:
+                    previewUploadError
+            } =
+                await vaultSupabase
+                    .storage
+                    .from("submissions")
+                    .upload(
+                        previewPath,
+                        previewFile,
+                        {
+                            upsert: false,
+                            contentType:
+                                previewFile.type
+                        }
+                    );
+
+
+            if (
+                previewUploadError
+            ) {
+
+                throw previewUploadError;
+
+            }
+
+
+            const {
+                data:
+                    previewUrlData
+            } =
+                vaultSupabase
+                    .storage
+                    .from("submissions")
+                    .getPublicUrl(
+                        previewPath
+                    );
+
+
+            const previewUrl =
+                previewUrlData.publicUrl;
+
+
+            /*
+             * DOWNLOAD FILE UPLOAD
+             */
+
+            const downloadExtension =
+                downloadFile.name
+                    .split(".")
+                    .pop()
+                    .toLowerCase();
+
+
+            const downloadPath =
+                `${user.id}/${Date.now()}-${safeTitle}-download.${downloadExtension}`;
+
+
+            const {
+                error:
+                    downloadUploadError
+            } =
+                await vaultSupabase
+                    .storage
+                    .from("submissions")
+                    .upload(
+                        downloadPath,
+                        downloadFile,
+                        {
+                            upsert: false,
+                            contentType:
+                                downloadFile.type ||
+                                "application/octet-stream"
+                        }
+                    );
+
+
+            if (
+                downloadUploadError
+            ) {
+
+                throw downloadUploadError;
+
+            }
+
+
+            const {
+                data:
+                    downloadUrlData
+            } =
+                vaultSupabase
+                    .storage
+                    .from("submissions")
+                    .getPublicUrl(
+                        downloadPath
+                    );
+
+
+            const downloadUrl =
+                downloadUrlData.publicUrl;
+
+
+            /*
+             * CREATE SUBMISSION
+             */
+
+            const {
+                error:
+                    submissionError
+            } =
+                await vaultSupabase
+                    .from("submissions")
+                    .insert({
+
+                        user_id:
+                            user.id,
+
+                        title:
+                            title,
+
+                        type:
+                            type,
+
+                        description:
+                            description,
+
+                        preview_url:
+                            previewUrl,
+
+                        download_url:
+                            downloadUrl,
+
+                        status:
+                            "pending"
+
+                    });
+
+
+            if (
+                submissionError
+            ) {
+
+                throw submissionError;
+
+            }
+
+
+            message.textContent =
+                "SUBMISSION SENT FOR REVIEW";
+
+            form.reset();
+
+
+        } catch (error) {
+
+            console.error(
+                "Submission error:",
+                error
+            );
+
+            message.textContent =
+                error.message
+                    ? error.message.toUpperCase()
+                    : "UNABLE TO SUBMIT CONTENT";
+
+
+        } finally {
+
+            submitButton.disabled =
+                false;
+
+            submitButton.textContent =
+                "SUBMIT FOR REVIEW";
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>

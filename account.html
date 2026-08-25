@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Account - Plutonium Vault</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+
+    <main class="auth-page">
+
+        <section class="auth-panel">
+
+            <div class="auth-label">
+                ◆ VAULT PROFILE
+            </div>
+
+            <h1>MY ACCOUNT</h1>
+
+            <p class="auth-description">
+                Manage your Plutonium Vault profile.
+            </p>
+
+            <div class="account-profile">
+
+                <div class="account-avatar-wrap">
+
+                    <img
+                        id="account-avatar"
+                        class="account-avatar"
+                        src=""
+                        alt="Profile picture"
+                    >
+
+                    <div
+                        id="account-avatar-fallback"
+                        class="account-avatar-fallback"
+                    >
+                        ?
+                    </div>
+
+                </div>
+
+                <div class="account-avatar-actions">
+
+    <input
+        type="file"
+        id="avatar-file-input"
+        accept="image/jpeg,image/png,image/webp"
+        hidden
+    >
+
+    <button
+        type="button"
+        id="change-avatar-button"
+        class="account-secondary-btn"
+    >
+        CHANGE PROFILE PICTURE
+    </button>
+
+</div>
+
+<div class="account-identity">
+    <div id="account-display-username" class="account-display-username">
+        USERNAME
+    </div>
+
+    <div id="account-role-badge" class="account-role-badge">
+        USER
+    </div>
+
+    <button
+    type="button"
+    id="edit-username-button"
+    class="account-edit-username-btn"
+>
+    EDIT USERNAME
+</button>
+
+<button
+    type="button"
+    id="change-password-button"
+    class="account-edit-username-btn"
+>
+    CHANGE PASSWORD
+</button>
+
+</div>
+
+
+                <div class="account-info">
+
+                   
+
+                    <div class="account-row">
+                        <span>EMAIL</span>
+                        <strong id="account-email">LOADING...</strong>
+                    </div>
+
+                    <div class="account-row">
+                        <span>EMAIL STATUS</span>
+                        <strong id="account-email-status">LOADING...</strong>
+                    </div>
+
+                    
+
+                    <div class="account-row">
+                        <span>JOINED</span>
+                        <strong id="account-created">LOADING...</strong>
+                    </div>
+
+                    <div class="account-row">
+    <span>VAULT DOWNLOADS</span>
+    <strong id="account-downloads">0</strong>
+</div>
+
+<a href="my-vault.html" class="account-row account-saved-link">
+    <span>SAVED ITEMS</span>
+    <strong id="account-saved-items">0</strong>
+</a>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="account-message"
+                class="auth-message"
+                aria-live="polite"
+            ></div>
+
+
+            <button
+                type="button"
+                class="auth-submit"
+                id="logout-button"
+            >
+                LOG OUT
+            </button>
+
+            <a
+    href="admin.html"
+    id="admin-panel-link"
+    class="auth-submit"
+    style="display: none; text-align: center; text-decoration: none;"
+>
+    ADMIN PANEL
+</a>
+
+
+            <a href="index.html" class="auth-back">
+                ← RETURN TO VAULT
+            </a>
+
+        </section>
+
+    </main>
+
+
+
+<!-- =========================
+     EDIT USERNAME MODAL
+========================= -->
+
+<div
+    id="username-modal"
+    class="account-modal"
+    aria-hidden="true"
+>
+    <div class="account-modal-panel">
+
+        <button
+            type="button"
+            id="username-modal-close"
+            class="account-modal-close"
+            aria-label="Close"
+        >
+            ×
+        </button>
+
+        <div class="account-modal-label">
+            ♦ VAULT PROFILE
+        </div>
+
+        <h2>EDIT USERNAME</h2>
+
+        <p>
+            Choose a new username for your Plutonium Vault account.
+        </p>
+
+        <label for="username-modal-input">
+            USERNAME
+        </label>
+
+        <input
+            type="text"
+            id="username-modal-input"
+            maxlength="24"
+            autocomplete="off"
+        >
+
+        <div
+            id="username-modal-message"
+            class="account-modal-message"
+        ></div>
+
+        <div class="account-modal-actions">
+
+            <button
+                type="button"
+                id="username-modal-cancel"
+                class="account-modal-secondary"
+            >
+                CANCEL
+            </button>
+
+            <button
+                type="button"
+                id="username-modal-save"
+                class="account-modal-primary"
+            >
+                SAVE USERNAME
+            </button>
+
+        </div>
+
+    </div>
+            </div>
+
+    </div>
+</div>
+
+
+    <!-- =========================
+     CHANGE PASSWORD MODAL
+========================= -->
+
+<div
+    id="password-modal"
+    class="account-modal"
+    aria-hidden="true"
+>
+    <div class="account-modal-panel">
+
+        <button
+            type="button"
+            id="password-modal-close"
+            class="account-modal-close"
+            aria-label="Close"
+        >
+            ×
+        </button>
+
+        <div class="account-modal-label">
+            ♦ VAULT SECURITY
+        </div>
+
+        <h2>CHANGE PASSWORD</h2>
+
+        <p>
+            Enter and confirm your new Plutonium Vault password.
+        </p>
+
+        <label for="password-modal-input">
+            NEW PASSWORD
+        </label>
+
+        <input
+            type="password"
+            id="password-modal-input"
+            autocomplete="new-password"
+        >
+
+        <label
+            for="password-modal-confirm"
+            style="margin-top: 16px;"
+        >
+            CONFIRM PASSWORD
+        </label>
+
+        <input
+            type="password"
+            id="password-modal-confirm"
+            autocomplete="new-password"
+        >
+
+        <div
+            id="password-modal-message"
+            class="account-modal-message"
+        ></div>
+
+        <div class="account-modal-actions">
+
+            <button
+                type="button"
+                id="password-modal-cancel"
+                class="account-modal-secondary"
+            >
+                CANCEL
+            </button>
+
+            <button
+                type="button"
+                id="password-modal-save"
+                class="account-modal-primary"
+            >
+                UPDATE PASSWORD
+            </button>
+
+        </div>
+
+    </div>
+</div>
+  
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+
+</body>
+</html>

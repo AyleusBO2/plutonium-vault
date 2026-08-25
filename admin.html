@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Panel - Plutonium Vault</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <main class="admin-page">
+
+        <section class="admin-panel">
+
+            <div class="admin-label">
+                ◆ PLUTONIUM VAULT ADMIN
+            </div>
+
+            <h1>ADMIN PANEL</h1>
+
+            <p class="admin-description">
+                Moderation and management dashboard.
+            </p>
+
+            <!-- ACCESS STATUS -->
+            <div
+                id="admin-status"
+                class="admin-status"
+            >
+                CHECKING ACCESS...
+            </div>
+
+            <!-- DASHBOARD -->
+            <div
+                id="admin-dashboard"
+                class="admin-dashboard"
+                style="display: none;"
+            >
+
+                <div class="admin-grid">
+
+                    <div class="admin-card">
+                        <span>PENDING</span>
+                        <strong id="pending-count">0</strong>
+                    </div>
+
+                    <div class="admin-card">
+                        <span>USERS</span>
+                        <strong id="user-count">0</strong>
+                    </div>
+
+                    <div class="admin-card">
+                        <span>PUBLISHED</span>
+                        <strong id="published-count">0</strong>
+                    </div>
+
+                    <div class="admin-card">
+                        <span>BANNED</span>
+                        <strong id="banned-count">0</strong>
+                    </div>
+
+                </div>
+
+                <div class="admin-sections">
+
+                    <button
+    type="button"
+    class="admin-section-btn"
+    id="admin-submissions-button"
+>
+    SUBMISSIONS
+</button>
+
+                    <button
+    type="button"
+    class="admin-section-btn"
+    id="admin-users-button"
+>
+    USERS
+</button>
+
+ <button
+    type="button"
+    class="admin-section-btn"
+    id="admin-content-button"
+>
+    CONTENT
+</button>                   
+
+<button
+    type="button"
+    class="admin-section-btn"
+    id="admin-audit-button"
+>
+    AUDIT LOG
+</button>                   
+
+                </div>
+
+                <div class="admin-welcome">
+                    <p>
+                        ADMIN ACCESS GRANTED
+                    </p>
+
+                    <span id="admin-username">
+                        LOADING...
+                    </span>
+                </div>
+
+                <!-- USERS PANEL -->
+<section
+    id="admin-users-panel"
+    class="admin-users-panel"
+    style="display: none;"
+>
+
+    <div class="admin-users-header">
+
+        <div>
+            <p class="admin-label">
+                ◆ USER MANAGEMENT
+            </p>
+
+            <h2>USERS</h2>
+        </div>
+
+  <div class="admin-user-filters">
+
+    <input
+        type="search"
+        id="admin-user-search"
+        placeholder="SEARCH USERS..."
+        autocomplete="off"
+    >
+
+    <select id="admin-user-filter">
+        <option value="all">ALL USERS</option>
+        <option value="active">ACTIVE</option>
+        <option value="banned">BANNED</option>
+        <option value="admin">ADMINS</option>
+        <option value="user">USERS</option>
+    </select>
+
+</div>
+
+    </div>
+
+    <div
+        id="admin-users-list"
+        class="admin-users-list"
+    >
+        <p class="admin-loading">
+            LOADING USERS...
+        </p>
+    </div>
+
+</section>
+
+<!-- USER MANAGEMENT MODAL -->
+<div
+    id="admin-user-modal"
+    class="admin-user-modal"
+    style="display: none;"
+>
+
+    <div class="admin-user-modal-box">
+
+        <button
+            type="button"
+            id="admin-user-modal-close"
+            class="admin-user-modal-close"
+        >
+            ×
+        </button>
+
+        <p class="admin-label">
+            ◆ USER MANAGEMENT
+        </p>
+
+        <h2 id="manage-user-name">
+            USER
+        </h2>
+
+        <div class="admin-user-details">
+
+            <p>
+                ROLE:
+                <strong id="manage-user-role">
+                    USER
+                </strong>
+            </p>
+
+            <p>
+                STATUS:
+                <strong id="manage-user-status">
+                    ACTIVE
+                </strong>
+            </p>
+
+        </div>
+
+        <div
+    id="admin-ban-info"
+    class="admin-ban-info"
+    style="display: none;"
+>
+    <div>
+        <span>BAN REASON</span>
+        <strong id="manage-ban-reason">
+            —
+        </strong>
+    </div>
+
+    <div>
+        <span>BAN UNTIL</span>
+        <strong id="manage-ban-until">
+            PERMANENT
+        </strong>
+    </div>
+</div>
+
+        <div class="admin-user-actions">
+
+            <button
+                type="button"
+                id="admin-ban-user"
+                class="admin-action-danger"
+            >
+                BAN USER
+            </button>
+
+            <button
+                type="button"
+                id="admin-unban-user"
+                class="admin-action-success"
+            >
+                UNBAN USER
+            </button>
+
+        </div>
+
+        <div
+            id="admin-ban-fields"
+            class="admin-ban-fields"
+        >
+
+            <label for="admin-ban-reason">
+                BAN REASON
+            </label>
+
+            <textarea
+                id="admin-ban-reason"
+                placeholder="ENTER BAN REASON..."
+                rows="4"
+            ></textarea>
+
+            <label for="admin-ban-until">
+                BAN UNTIL
+            </label>
+
+            <input
+                type="datetime-local"
+                id="admin-ban-until"
+            >
+
+            <button
+                type="button"
+                id="admin-confirm-ban"
+                class="admin-action-danger"
+            >
+                CONFIRM BAN
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- SUBMISSIONS PANEL -->
+
+<section
+    id="admin-submissions-panel"
+    class="admin-submissions-panel"
+    style="display: none;"
+>
+
+    <div class="admin-section-heading">
+
+        <div class="admin-label">
+            ◆ CONTENT SUBMISSIONS
+        </div>
+
+        <h2>SUBMISSIONS</h2>
+
+        <p>
+            Review and manage community content submissions.
+        </p>
+
+    </div>
+
+    <div class="admin-submission-toolbar">
+
+        <input
+            type="search"
+            id="admin-submission-search"
+            placeholder="SEARCH SUBMISSIONS..."
+            autocomplete="off"
+        >
+
+        <select id="admin-submission-filter">
+
+            <option value="all">
+                ALL
+            </option>
+
+            <option value="pending">
+                PENDING
+            </option>
+
+            <option value="approved">
+                APPROVED
+            </option>
+
+            <option value="rejected">
+                REJECTED
+            </option>
+
+        </select>
+
+    </div>
+
+    <div
+        id="admin-submissions-list"
+        class="admin-submissions-list"
+    >
+
+        <p class="admin-loading">
+            NO SUBMISSIONS YET
+        </p>
+
+    </div>
+
+</section>
+
+<!-- CONTENT PANEL -->
+
+<section
+    id="admin-content-panel"
+    class="admin-content-panel"
+    style="display: none;"
+>
+
+    <div class="admin-section-heading">
+
+        <div class="admin-label">
+            ◆ PUBLISHED CONTENT
+        </div>
+
+        <h2>CONTENT</h2>
+
+        <p>
+            View and manage published community content.
+        </p>
+
+    </div>
+
+    <div class="admin-content-toolbar">
+
+        <input
+            type="search"
+            id="admin-content-search"
+            placeholder="SEARCH CONTENT..."
+            autocomplete="off"
+        >
+
+        <select id="admin-content-filter">
+
+            <option value="all">
+                ALL CONTENT
+            </option>
+
+            <option value="calling-card">
+                CALLING CARDS
+            </option>
+
+            <option value="emblem">
+                EMBLEMS
+            </option>
+
+        </select>
+
+    </div>
+
+    <div
+        id="admin-content-list"
+        class="admin-content-list"
+    >
+
+        <p class="admin-loading">
+            NO PUBLISHED CONTENT YET
+        </p>
+
+    </div>
+
+    </section>
+
+    <!-- AUDIT LOG PANEL -->
+
+<section
+    id="admin-audit-panel"
+    class="admin-audit-panel"
+    style="display: none;"
+>
+
+    <div class="admin-section-heading">
+
+        <div class="admin-label">
+            ◆ ADMIN ACTIVITY
+        </div>
+
+        <h2>AUDIT LOG</h2>
+
+        <p>
+            Track administrative actions across Plutonium Vault.
+        </p>
+
+    </div>
+
+    <div class="admin-audit-toolbar">
+
+        <input
+            type="search"
+            id="admin-audit-search"
+            placeholder="SEARCH AUDIT LOG..."
+            autocomplete="off"
+        >
+
+        <select id="admin-audit-filter">
+
+            <option value="all">
+                ALL ACTIONS
+            </option>
+
+            <option value="approved">
+                APPROVED
+            </option>
+
+            <option value="rejected">
+                REJECTED
+            </option>
+
+            <option value="banned">
+                BANNED
+            </option>
+
+            <option value="unbanned">
+                UNBANNED
+            </option>
+
+            <option value="removed">
+                REMOVED
+            </option>
+
+            <option value="restored">
+                RESTORED
+            </option>
+
+        </select>
+
+    </div>
+
+    <div
+        id="admin-audit-list"
+        class="admin-audit-list"
+    >
+        <p class="admin-loading">
+            NO AUDIT LOG ENTRIES YET
+        </p>
+    </div>
+
+
+</section>
+
+                <a
+                    href="index.html"
+                    class="admin-back"
+                >
+                    ← RETURN TO VAULT
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- SUBMISSION VIEW MODAL -->
+<div
+    id="admin-submission-modal"
+    class="admin-submission-modal"
+    style="display: none;"
+>
+    <div class="admin-submission-modal-content">
+
+        <button
+            type="button"
+            id="admin-submission-modal-close"
+            class="admin-submission-modal-close"
+        >
+            ×
+        </button>
+
+        <p class="admin-label">◆ SUBMISSION DETAILS</p>
+
+        <h2 id="admin-submission-view-title">
+            SUBMISSION
+        </h2>
+
+        <div class="admin-submission-view-preview">
+            <img
+                id="admin-submission-view-image"
+                src=""
+                alt=""
+            >
+        </div>
+
+        <div class="admin-submission-view-details">
+
+            <div>
+                <span>TYPE</span>
+                <strong id="admin-submission-view-type">
+                    —
+                </strong>
+            </div>
+
+            <div>
+                <span>STATUS</span>
+                <strong id="admin-submission-view-status">
+                    —
+                </strong>
+            </div>
+
+            <div>
+                <span>SUBMITTED</span>
+                <strong id="admin-submission-view-date">
+                    —
+                </strong>
+            </div>
+
+        </div>
+
+       <div class="admin-submission-view-description">
+    <span>DESCRIPTION</span>
+    <p id="admin-submission-view-description-text">
+        —
+    </p>
+</div> 
+
+        <a
+            id="admin-submission-view-download"
+            href="#"
+            target="_blank"
+            rel="noopener"
+            class="admin-submission-download"
+        >
+            DOWNLOAD
+        </a>
+
+        <div
+    id="admin-submission-view-reason"
+    class="admin-submission-view-reason"
+    style="display: none;"
+>
+    <span>REJECTION REASON</span>
+    <p id="admin-submission-view-reason-text">
+        —
+    </p>
+</div>
+
+
+    </div>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+
+</body>
+
+</html>

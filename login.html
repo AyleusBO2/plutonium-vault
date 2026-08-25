@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login - Plutonium Vault</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+
+    <main class="auth-page">
+
+        <section class="auth-panel">
+
+            <div class="auth-label">
+                ◆ VAULT ACCOUNT
+            </div>
+
+            <h1>LOGIN</h1>
+
+            <p class="auth-description">
+                Sign in to your Plutonium Vault account.
+            </p>
+
+            <form id="login-form">
+
+                <div class="auth-field">
+                    <label for="login-email">EMAIL</label>
+
+                    <input
+                        type="email"
+                        id="login-email"
+                        autocomplete="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+                </div>
+
+                <div class="auth-field">
+                    <label for="login-password">PASSWORD</label>
+
+                    <input
+                        type="password"
+                        id="login-password"
+                        autocomplete="current-password"
+                        placeholder="Enter your password"
+                        required
+                    >
+                </div>
+
+                <div
+                    id="login-message"
+                    class="auth-message"
+                    aria-live="polite"
+                ></div>
+
+                <button
+                    type="submit"
+                    class="auth-submit"
+                    id="login-button"
+                >
+                    LOGIN
+                </button>
+
+            </form>
+
+            <div class="auth-footer">
+                <span>DON'T HAVE AN ACCOUNT?</span>
+                <a href="signup.html">CREATE ACCOUNT</a>
+            </div>
+
+            <a href="index.html" class="auth-back">
+                ← RETURN TO VAULT
+            </a>
+
+        </section>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/auth.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,747 @@
+/* =========================================================
+   PLUTONIUM VAULT — AUTH PAGES
+   ========================================================= */
+
+.auth-page {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px 20px;
+
+    background:
+        radial-gradient(
+            circle at top,
+            rgba(255, 122, 0, 0.10),
+            transparent 38%
+        ),
+        linear-gradient(
+            180deg,
+            #0b0b0b,
+            #050505
+        );
+}
+
+
+.auth-panel {
+    width: min(520px, 100%);
+
+    padding: 40px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 122, 0, 0.08),
+            transparent 45%
+        ),
+        #101010;
+
+    border: 1px solid #2f2f2f;
+    border-top: 3px solid #ff7a00;
+
+    box-shadow:
+        0 20px 70px rgba(0, 0, 0, 0.65),
+        0 0 28px rgba(255, 122, 0, 0.10);
+}
+
+
+.auth-label {
+    margin-bottom: 8px;
+
+    color: #ff7a00;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 2px;
+}
+
+
+.auth-panel h1 {
+    margin: 0 0 12px;
+
+    color: #ff7a00;
+
+    font-size: 38px;
+    letter-spacing: 2px;
+
+    text-shadow:
+        0 0 16px rgba(255, 122, 0, 0.35);
+}
+
+
+.auth-description {
+    margin-bottom: 30px;
+
+    color: #8a8a8a;
+
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+
+.auth-field {
+    margin-bottom: 20px;
+}
+
+
+.auth-field label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #888;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+}
+
+
+.auth-field input {
+    width: 100%;
+
+    padding: 15px 16px;
+
+    color: #fff;
+    background: #090909;
+
+    border: 1px solid #333;
+    border-left: 3px solid #ff7a00;
+
+    outline: none;
+
+    font-family: inherit;
+    font-size: 11px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.auth-field input:focus {
+    background: #111;
+
+    border-color: #ff7a00;
+
+    box-shadow:
+        0 0 16px rgba(255, 122, 0, 0.15);
+}
+
+
+.auth-field input::placeholder {
+    color: #555;
+}
+
+
+.auth-submit {
+    width: 100%;
+
+    margin-top: 6px;
+    padding: 14px 18px;
+
+    color: #fff;
+    background: #ff7a00;
+
+    border: 1px solid #ff8f2b;
+
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.auth-submit:hover {
+    transform: translateY(-2px);
+
+    background: #ff8f1f;
+
+    box-shadow:
+        0 0 20px rgba(255, 122, 0, 0.35);
+}
+
+
+.auth-message {
+    min-height: 18px;
+
+    margin: 4px 0 12px;
+
+    color: #ff9d3d;
+
+    font-size: 9px;
+    line-height: 1.5;
+}
+
+
+.auth-footer {
+    margin-top: 24px;
+
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    color: #666;
+
+    font-size: 8px;
+    letter-spacing: 1px;
+}
+
+
+.auth-footer a {
+    color: #ff7a00;
+    text-decoration: none;
+}
+
+
+.auth-footer a:hover {
+    text-shadow:
+        0 0 10px rgba(255, 122, 0, 0.45);
+}
+
+
+.auth-back {
+    display: block;
+
+    margin-top: 24px;
+
+    color: #777;
+
+    text-align: center;
+    text-decoration: none;
+
+    font-size: 8px;
+    letter-spacing: 1.4px;
+}
+
+
+.auth-back:hover {
+    color: #ff7a00;
+}
+
+
+@media (max-width: 600px) {
+
+    .auth-panel {
+        padding: 30px 22px;
+    }
+
+    .auth-panel h1 {
+        font-size: 30px;
+    }
+
+}
+
+/* =========================================================
+   PLUTONIUM VAULT — ACCOUNT PROFILE
+   ========================================================= */
+
+.account-profile {
+    margin-top: 10px;
+}
+
+
+/* PROFILE PICTURE */
+
+.account-avatar-wrap {
+    width: 150px;
+    height: 150px;
+
+    margin: 0 auto 30px;
+
+    position: relative;
+
+    border: 2px solid #ff7a00;
+
+    background: #090909;
+
+    box-shadow:
+        0 0 20px rgba(255, 122, 0, 0.18);
+}
+
+
+.account-avatar {
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    object-fit: cover;
+}
+
+
+.account-avatar-fallback {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #ff7a00;
+
+    font-size: 58px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 122, 0, 0.12),
+            transparent 70%
+        ),
+        #090909;
+}
+
+
+/* ACCOUNT INFORMATION */
+
+.account-info {
+    margin-bottom: 25px;
+
+    border-top: 1px solid #2c2c2c;
+}
+
+
+.account-row {
+    min-height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 14px 4px;
+
+    border-bottom: 1px solid #252525;
+}
+
+
+.account-row span {
+    color: #666;
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+}
+
+
+.account-row strong {
+    color: #ddd;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+
+/* ROLE */
+
+#account-role {
+    color: #ff7a00;
+}
+
+
+/* VERIFIED EMAIL */
+
+.account-verified {
+    color: #5fd38d !important;
+}
+
+
+/* ACCOUNT PAGE MOBILE */
+
+@media (max-width: 600px) {
+
+    .account-row {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 7px;
+    }
+
+    .account-row strong {
+        text-align: left;
+    }
+
+}
+
+/* =========================================================
+   ACCOUNT AVATAR CONTROLS
+   ========================================================= */
+
+.account-avatar-actions {
+    margin-top: -14px;
+    margin-bottom: 30px;
+
+    display: flex;
+    justify-content: center;
+}
+
+
+.account-secondary-btn {
+    padding: 11px 16px;
+
+    color: #ff7a00;
+    background:
+        rgba(255, 122, 0, 0.04);
+
+    border: 1px solid
+        rgba(255, 122, 0, 0.45);
+
+    font-family: inherit;
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 1.2px;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.account-secondary-btn:hover {
+    color: #ffffff;
+
+    background:
+        rgba(255, 122, 0, 0.10);
+
+    border-color: #ff7a00;
+
+    box-shadow:
+        0 0 16px
+        rgba(255, 122, 0, 0.18);
+
+    transform:
+        translateY(-1px);
+}
+
+
+.account-secondary-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* =========================
+   ACCOUNT PROFILE IDENTITY
+========================= */
+
+.account-identity {
+    text-align: center;
+    margin-top: 16px;
+    margin-bottom: 24px;
+}
+
+.account-display-username {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-shadow: 0 0 12px rgba(255, 122, 0, 0.15);
+}
+
+.account-role-badge {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 5px 12px;
+
+    color: #ff7a00;
+    background: rgba(255, 122, 0, 0.06);
+
+    border: 1px solid rgba(255, 122, 0, 0.45);
+
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* =========================
+   EDIT USERNAME BUTTON
+========================= */
+
+.account-edit-username-btn {
+    display: block;
+    margin: 14px auto 0;
+    padding: 8px 16px;
+
+    background: transparent;
+    color: #888888;
+
+    border: 1px solid #333333;
+
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.account-edit-username-btn:hover {
+    color: #ff7a00;
+    border-color: #ff7a00;
+
+    background: rgba(255, 122, 0, 0.05);
+
+    box-shadow:
+        0 0 12px rgba(255, 122, 0, 0.12);
+}
+
+/* =========================
+   ACCOUNT MODAL
+========================= */
+
+.account-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.78);
+    backdrop-filter: blur(6px);
+}
+
+.account-modal.active {
+    display: flex;
+}
+
+.account-modal-panel {
+    position: relative;
+
+    width: min(460px, 100%);
+    padding: 36px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 122, 0, 0.05),
+            transparent 40%
+        ),
+        #111111;
+
+    border: 1px solid #333333;
+    border-top: 3px solid #ff7a00;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.65),
+        0 0 30px rgba(255, 122, 0, 0.08);
+}
+
+.account-modal-label {
+    color: #ff7a00;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.account-modal-panel h2 {
+    margin: 0 0 10px;
+
+    color: #ff7a00;
+    font-size: 28px;
+    letter-spacing: 2px;
+
+    text-shadow:
+        0 0 12px rgba(255, 122, 0, 0.22);
+}
+
+.account-modal-panel p {
+    margin: 0 0 26px;
+
+    color: #888888;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.account-modal-panel label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #777777;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.account-modal-panel input {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 13px 14px;
+
+    color: #ffffff;
+    background: #090909;
+
+    border: 1px solid #333333;
+    border-left: 3px solid #ff7a00;
+
+    font-family: inherit;
+    font-size: 12px;
+
+    outline: none;
+
+    transition: 0.2s ease;
+}
+
+.account-modal-panel input:focus {
+    border-color: #ff7a00;
+
+    box-shadow:
+        0 0 16px rgba(255, 122, 0, 0.12);
+}
+
+.account-modal-message {
+    min-height: 17px;
+    margin-top: 10px;
+
+    color: #ff7a00;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.account-modal-actions {
+    display: flex;
+    gap: 10px;
+
+    margin-top: 18px;
+}
+
+.account-modal-primary,
+.account-modal-secondary {
+    flex: 1;
+
+    padding: 12px;
+
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.account-modal-primary {
+    color: #ffffff;
+    background: #ff7a00;
+
+    border: 1px solid #ff7a00;
+}
+
+.account-modal-primary:hover {
+    background: #ff8d1c;
+
+    box-shadow:
+        0 0 18px rgba(255, 122, 0, 0.28);
+}
+
+.account-modal-secondary {
+    color: #888888;
+    background: transparent;
+
+    border: 1px solid #333333;
+}
+
+.account-modal-secondary:hover {
+    color: #ffffff;
+    border-color: #666666;
+}
+
+.account-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+
+    padding: 0;
+
+    color: #666666;
+    background: transparent;
+    border: 0;
+
+    font-size: 24px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.account-modal-close:hover {
+    color: #ff7a00;
+}
+
+/* SAVED ITEMS - CLICKABLE VAULT LINK */
+.account-saved-link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.account-saved-link:hover {
+    background: rgba(255, 122, 0, 0.06);
+    border-color: #ff7a00;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.account-saved-link:hover span {
+    color: #ff7a00;
+}
+
+.account-saved-link:hover strong {
+    color: #ff9d3d;
+    text-shadow: 0 0 8px rgba(255, 122, 0, 0.5);
+}
+
+/* =========================================
+   BANNED ACCOUNT MESSAGE
+========================================= */
+
+.auth-message.banned-message {
+    color: #ff5555;
+    border: 1px solid rgba(255, 85, 85, 0.35);
+    background: rgba(255, 50, 50, 0.06);
+    padding: 14px 16px;
+    margin-top: 15px;
+    line-height: 1.5;
+    font-weight: 700;
+}

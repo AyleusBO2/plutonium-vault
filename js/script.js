@@ -13,6 +13,48 @@ const supabaseClient = window.supabase
     )
     : null;
 
+    /* ---------- PROFILE NAV ---------- */
+
+async function setupProfileNav() {
+
+    const profileLink =
+        document.getElementById("profile-nav-link");
+
+    if (!profileLink || !supabaseClient) {
+        return;
+    }
+
+    const {
+        data: {
+            user
+        }
+    } = await supabaseClient.auth.getUser();
+
+    // User is not logged in
+    if (!user) {
+        profileLink.textContent = "◉ PROFILE";
+        return;
+    }
+
+    // Get the user's Vault profile
+    const {
+        data: profile,
+        error
+    } = await supabaseClient
+        .from("profiles")
+        .select("username")
+        .eq("id", user.id)
+        .single();
+
+    if (error || !profile) {
+        profileLink.textContent = "◉ PROFILE";
+        return;
+    }
+
+    profileLink.textContent =
+        "◉ " + (profile.username || "PROFILE");
+}
+
     /* ---------- SHARED VAULT DATA ---------- */
 
 let vaultArchiveDataPromise = null;
@@ -113,6 +155,7 @@ async function getVaultDownloadData() {
 /* ---------- PAGE SETUP ---------- */
 
 document.addEventListener("DOMContentLoaded", () => {
+    setupProfileNav();
     setupSiteWideVaultNav();
     setupSearchAndFilters();
     setupFeaturedShowcase();
@@ -2689,6 +2732,68 @@ function setupFeaturedShowcase() {
     startRotation();
 }
 
+/* ---------- USER DOWNLOAD HISTORY ---------- */
+
+async function recordUserDownload(downloadID) {
+
+    if (!supabaseClient || !downloadID) {
+        return;
+    }
+
+    try {
+
+        const {
+            data: { user },
+            error: userError
+        } = await supabaseClient.auth.getUser();
+
+        // Visitors can still download normally.
+        // We only track personal stats for logged-in accounts.
+        if (userError || !user) {
+            return;
+        }
+
+        const contentType =
+            downloadID.endsWith("-calling-card")
+                ? "calling-card"
+                : "emblem";
+
+        const { error } =
+            await supabaseClient
+                .from("user_downloads")
+                .insert({
+                    user_id: user.id,
+                    content_id: downloadID,
+                    content_type: contentType
+                });
+
+        /*
+            23505 = already downloaded.
+
+            The database intentionally counts each
+            piece of content once per account.
+        */
+        if (
+            error &&
+            error.code !== "23505"
+        ) {
+            console.error(
+                "Unable to record user download:",
+                error
+            );
+        }
+
+    } catch (error) {
+
+        console.error(
+            "User download tracking error:",
+            error
+        );
+
+    }
+
+}
+
 
 /* ---------- DOWNLOAD COUNTERS ---------- */
 
@@ -2754,6 +2859,8 @@ async function setupDownloadCounters() {
                 console.error(error);
                 return;
             }
+
+            await recordUserDownload(downloadID);
 
             const element = document.querySelector(
                 `[data-count-id="${downloadID}"]`
@@ -2997,7 +3104,7 @@ function setupMyVault() {
 
         button.addEventListener(
             "click",
-            () => {
+            async () => {
 
                 const existingIndex =
                     savedItems.findIndex(
@@ -3060,6 +3167,57 @@ function setupMyVault() {
                     "plutoniumVaultSaved",
                     JSON.stringify(savedItems)
                 );
+
+               // Sync My Vault with logged-in account
+if (supabaseClient) {
+
+    const {
+        data: { user }
+    } = await supabaseClient.auth.getUser();
+
+    if (user) {
+
+        if (existingIndex === -1) {
+
+            const { error } =
+                await supabaseClient
+                    .from("saved_items")
+                    .insert({
+                        user_id: user.id,
+                        item_id: itemID
+                    });
+
+            if (
+                error &&
+                error.code !== "23505"
+            ) {
+                console.error(
+                    "Unable to save item to account:",
+                    error
+                );
+            }
+
+        } else {
+
+            const { error } =
+                await supabaseClient
+                    .from("saved_items")
+                    .delete()
+                    .eq("user_id", user.id)
+                    .eq("item_id", itemID);
+
+            if (error) {
+                console.error(
+                    "Unable to remove saved item:",
+                    error
+                );
+            }
+
+        }
+
+    }
+
+} 
 
                 updateVaultCount();
             }
