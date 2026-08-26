@@ -38,13 +38,14 @@ async function setupProfileNav() {
 
     // Get the user's Vault profile
     const {
-        data: profile,
-        error
-    } = await supabaseClient
-        .from("profiles")
-        .select("username")
-        .eq("id", user.id)
-        .single();
+    data: profile,
+    error: profileError
+} = await supabaseClient
+    .from("profiles")
+    .select("id, username")
+    .ilike("username", creatorUsername)
+    .limit(1)
+    .maybeSingle();
 
     if (error || !profile) {
         profileLink.textContent = "◉ PROFILE";
@@ -169,6 +170,9 @@ document.addEventListener("DOMContentLoaded", () => {
     setupLiveVaultStats();
     setupGlobalVaultSearch();
     setupVaultChangelog();
+    setupCreatorProfile();
+    setupCreatorDirectory();
+    setupGlobalRelatedContent();
 });
 
 /* =========================================================
@@ -3941,3 +3945,615 @@ window.addEventListener("load", () => {
         );
     }, 1900);
 });
+
+// =========================================================
+// CREATOR PROFILE - APPROVED SUBMISSIONS
+// =========================================================
+
+async function setupCreatorProfile() {
+
+    const creatorProfile =
+        document.querySelector("#creator-profile");
+
+    if (!creatorProfile) {
+        return;
+    }
+
+    const creatorUsername =
+        creatorProfile.dataset.creator;
+
+    if (!creatorUsername) {
+        return;
+    }
+
+    // Find the creator's Supabase profile
+    const {
+        data: profile,
+        error: profileError
+    } = await supabaseClient
+    .from("profiles")
+        .select("id, username")
+        .ilike("username", creatorUsername)
+        .single();
+
+    if (profileError || !profile) {
+        console.error(
+            "Creator profile error:",
+            profileError
+        );
+        return;
+    }
+
+    // Get approved submissions from this creator
+    const {
+        data: submissions,
+        error: submissionsError
+    } = await supabaseClient
+    .from("submissions")
+    .select(`
+    id,
+    title,
+    type,
+    description,
+    preview_url,
+    created_at
+`)  
+        .eq("user_id", profile.id)
+        .eq("status", "approved")
+        .order("created_at", {
+            ascending: false
+        });
+
+    if (submissionsError) {
+        console.error(
+            "Creator submissions error:",
+            submissionsError
+        );
+        return;
+    }
+
+    if (!submissions || submissions.length === 0) {
+        return;
+    }
+
+    const callingCardGrid =
+        creatorProfile.querySelector(
+            ".creator-calling-card-grid"
+        );
+
+    const emblemGrid =
+        creatorProfile.querySelector(
+            ".creator-emblem-grid"
+        );
+
+    let callingCardCount = 0;
+    let emblemCount = 0;
+
+    submissions.forEach((submission) => {
+
+        const item =
+            document.createElement("a");
+
+        item.className =
+            "creator-work-item";
+
+        item.href =
+    `content.html?id=${encodeURIComponent(
+        submission.id
+    )}`;
+
+    
+
+        const image =
+            document.createElement("img");
+
+        image.src =
+            submission.preview_url;
+
+        image.alt =
+            submission.title;
+
+        const content =
+            document.createElement("div");
+
+        const title =
+            document.createElement("h3");
+
+        title.textContent =
+            submission.title;
+
+        const description =
+            document.createElement("p");
+
+        description.textContent =
+            submission.description || "";
+
+        const view =
+            document.createElement("span");
+
+        view.textContent =
+    "VIEW DETAILS →";
+
+        content.appendChild(title);
+        content.appendChild(description);
+        content.appendChild(view);
+
+        item.appendChild(image);
+        item.appendChild(content);
+
+        if (
+            submission.type ===
+            "calling-card"
+        ) {
+
+            if (callingCardGrid) {
+                callingCardGrid.appendChild(item);
+            }
+
+            callingCardCount++;
+
+        } else if (
+            submission.type ===
+            "emblem"
+        ) {
+
+            if (emblemGrid) {
+                item.classList.add(
+                    "emblem-work"
+                );
+
+                emblemGrid.appendChild(item);
+            }
+
+            emblemCount++;
+        }
+
+    });
+
+    // Update creator statistics
+    const statNumbers =
+        creatorProfile.querySelectorAll(
+            ".creator-profile-stats strong"
+        );
+
+    if (statNumbers.length >= 3) {
+
+        const currentCallingCards =
+            parseInt(
+                statNumbers[0].textContent
+            ) || 0;
+
+        const currentEmblems =
+            parseInt(
+                statNumbers[1].textContent
+            ) || 0;
+
+        statNumbers[0].textContent =
+            currentCallingCards +
+            callingCardCount;
+
+        statNumbers[1].textContent =
+            currentEmblems +
+            emblemCount;
+
+        statNumbers[2].textContent =
+            (
+                currentCallingCards +
+                currentEmblems +
+                callingCardCount +
+                emblemCount
+            );
+    }
+
+}
+
+// =========================================================
+// CREATOR DIRECTORY - LIVE STATS
+// =========================================================
+
+async function setupCreatorDirectory() {
+
+    const creatorCards =
+        document.querySelectorAll(
+            ".creator-directory-card"
+        );
+
+    if (!creatorCards.length || !supabaseClient) {
+        return;
+    }
+
+    const creatorNames = [
+        "ayleus",
+        "uzi",
+        "ren",
+        "k2",
+        "dre",
+        "slowder"
+    ];
+
+    const {
+        data: profiles,
+        error: profileError
+    } = await supabaseClient
+        .from("profiles")
+        .select("id, username")
+        .in("username", [
+            "Ayleus",
+            "Uzi",
+            "Ren",
+            "K2",
+            "Dre",
+            "Slowder"
+        ]);
+
+    if (profileError || !profiles) {
+        console.error(
+            "Creator directory profile error:",
+            profileError
+        );
+        return;
+    }
+
+    const profileMap = {};
+
+    profiles.forEach(profile => {
+
+        profileMap[
+            profile.username
+                .trim()
+                .toLowerCase()
+        ] = profile.id;
+
+    });
+
+    const creatorIds =
+        profiles.map(profile => profile.id);
+
+    if (!creatorIds.length) {
+        return;
+    }
+
+    const {
+        data: submissions,
+        error: submissionError
+    } = await supabaseClient
+        .from("submissions")
+        .select("user_id, type")
+        .eq("status", "approved")
+        .in("user_id", creatorIds);
+
+    if (submissionError) {
+        console.error(
+            "Creator directory submission error:",
+            submissionError
+        );
+        return;
+    }
+
+    creatorCards.forEach(card => {
+
+        const heading =
+            card.querySelector(
+                ".creator-directory-info h2"
+            );
+
+        if (!heading) {
+            return;
+        }
+
+        const username =
+            heading.textContent
+                .trim()
+                .toLowerCase();
+
+        if (!creatorNames.includes(username)) {
+            return;
+        }
+
+        const userId =
+            profileMap[username];
+
+        if (!userId) {
+            return;
+        }
+
+        const creatorSubmissions =
+            submissions.filter(
+                submission =>
+                    submission.user_id === userId
+            );
+
+        const submittedCallingCards =
+            creatorSubmissions.filter(
+                submission =>
+                    submission.type ===
+                    "calling-card"
+            ).length;
+
+        const submittedEmblems =
+            creatorSubmissions.filter(
+                submission =>
+                    submission.type ===
+                    "emblem"
+            ).length;
+
+        /*
+         * READ THE EXISTING DIRECTORY NUMBERS
+         * AND ADD APPROVED SUBMISSIONS TO THEM.
+         */
+
+        const numbers =
+            card.querySelectorAll(
+                ".creator-directory-stats strong"
+            );
+
+        if (numbers.length >= 3) {
+
+            const existingCallingCards =
+                Number(numbers[0].textContent) || 0;
+
+            const existingEmblems =
+                Number(numbers[1].textContent) || 0;
+
+            const existingTotal =
+                Number(numbers[2].textContent) || 0;
+
+            const newCallingCards =
+                existingCallingCards +
+                submittedCallingCards;
+
+            const newEmblems =
+                existingEmblems +
+                submittedEmblems;
+
+            const newTotal =
+                existingTotal +
+                submittedCallingCards +
+                submittedEmblems;
+
+            numbers[0].textContent =
+                newCallingCards;
+
+            numbers[1].textContent =
+                newEmblems;
+
+            numbers[2].textContent =
+                newTotal;
+        }
+
+    });
+
+}
+
+/* =========================================================
+   GLOBAL RELATED CONTENT
+   Updates existing calling-card / emblem pages
+   ========================================================= */
+
+function escapeVaultHTML(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+async function setupGlobalRelatedContent() {
+
+    const container =
+        document.querySelector(".related-grid");
+
+    if (!container) {
+        return;
+    }
+
+    /* Don't interfere with dynamic community content.html */
+    if (
+        window.location.pathname
+            .toLowerCase()
+            .endsWith("content.html")
+    ) {
+        return;
+    }
+
+    if (!supabaseClient) {
+        return;
+    }
+
+    /* Current page */
+    const currentPage =
+        window.location.pathname
+            .split("/")
+            .pop()
+            .toLowerCase();
+
+    /* Work out whether this is a calling card or emblem page */
+    const isEmblemPage =
+        document.querySelector(
+            ".emblem-preview"
+        ) !== null;
+
+    const contentType =
+        isEmblemPage
+            ? "emblem"
+            : "calling-card";
+
+    try {
+
+        /* Get newest approved community uploads */
+        const {
+            data: submissions,
+            error
+        } = await supabaseClient
+            .from("submissions")
+            .select(`
+                id,
+                title,
+                type,
+                preview_url,
+                created_at
+            `)
+            .eq("status", "approved")
+            .eq("type", contentType)
+            .order("created_at", {
+                ascending: false
+            })
+            .limit(10);
+
+        if (error) {
+            console.error(
+                "Global related content error:",
+                error
+            );
+            return;
+        }
+
+        /*
+         * Convert community submissions
+         * into the same card format.
+         */
+        const communityCards =
+            (submissions || [])
+                .filter(submission => {
+
+                    /*
+                     * Don't show the current page
+                     * if this page is a community item.
+                     */
+                    return true;
+
+                })
+                .map(submission => ({
+                    url:
+                        `content.html?id=${encodeURIComponent(
+                            submission.id
+                        )}`,
+
+                    image:
+                        submission.preview_url,
+
+                    title:
+                        submission.title,
+
+                    series:
+    "Community"
+    }));
+
+
+        /*
+         * Existing Vault content.
+         * These are used after community uploads.
+         */
+        const existingCallingCards = [
+            {
+                url: "rias-gremory.html",
+                image: "images/callingcards/Rias Gremory.gif",
+                title: "Rias Gremory",
+                series: "High School DxD"
+            },
+            {
+                url: "gojo.html",
+                image: "images/callingcards/gojo.gif",
+                title: "Gojo",
+                series: "Jujutsu Kaisen"
+            },
+            {
+                url: "itachi.html",
+                image: "images/callingcards/itachi.gif",
+                title: "Itachi",
+                series: "Naruto"
+            },
+            {
+                url: "madara.html",
+                image: "images/callingcards/madara.gif",
+                title: "Madara",
+                series: "Naruto"
+            },
+            {
+                url: "makima.html",
+                image: "images/callingcards/Makima.gif",
+                title: "Makima",
+                series: "Chainsaw Man"
+            },
+            {
+                url: "touka.html",
+                image: "images/callingcards/touka.gif",
+                title: "Touka Kirishima",
+                series: "Tokyo Ghoul"
+            }
+        ];
+
+
+        const existingEmblems = [];
+
+
+        const existingContent =
+            contentType === "calling-card"
+                ? existingCallingCards
+                : existingEmblems;
+
+
+        /*
+         * Remove the current page from
+         * the existing Vault recommendations.
+         */
+        const filteredExisting =
+            existingContent.filter(item =>
+                item.url.toLowerCase() !== currentPage
+            );
+
+
+        /*
+         * Community uploads FIRST.
+         * Existing Vault content fills the rest.
+         */
+        const related = [
+            ...communityCards,
+            ...filteredExisting
+        ].slice(0, 3);
+
+
+        if (related.length === 0) {
+            return;
+        }
+
+
+        /*
+         * Render exactly the same
+         * related-item layout.
+         */
+        container.innerHTML =
+            related.map(item => `
+                <a
+                    href="${escapeVaultHTML(item.url)}"
+                    class="related-item"
+                >
+                    <img
+                        src="${escapeVaultHTML(item.image)}"
+                        alt="${escapeVaultHTML(item.title)}"
+                    >
+
+                    <div>
+                        <h3>
+                            ${escapeVaultHTML(item.title)}
+                        </h3>
+
+                        <p>
+                            ${escapeVaultHTML(item.series)}
+                        </p>
+                    </div>
+                </a>
+            `).join("");
+
+    } catch (error) {
+
+        console.error(
+            "Global related content error:",
+            error
+        );
+
+    }
+
+}

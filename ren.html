@@ -39,7 +39,11 @@
 
 <main>
 
-    <section class="creator-profile-page">
+    <section
+    class="creator-profile-page"
+    id="creator-profile"
+    data-creator="Ren"
+>
 
         <div class="creator-profile-header">
 
@@ -95,7 +99,7 @@
 
     <h2>CALLING CARDS</h2>
 
-    <div class="creator-work-grid">
+    <div class="creator-work-grid creator-calling-card-grid">
 
         <a href="attack-on-titan.html" class="creator-work-item">
 
@@ -163,7 +167,7 @@
 
             <h2>EMBLEMS</h2>
 
-            <div class="creator-work-grid">
+            <div class="creator-work-grid creator-emblem-grid">
 
                 <a href="2b-emblem.html" class="creator-work-item emblem-work">
                     <img src="images/emblems/2B.png" alt="2B Emblem">
@@ -283,6 +287,7 @@
 
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/script.js"></script>
 
 </body>
