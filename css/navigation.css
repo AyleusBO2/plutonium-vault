@@ -38,14 +38,20 @@ nav {
 
     display: flex;
     justify-content: center;
-    gap: 32px;
+    align-items: center;
+    gap: clamp(12px, 1.7vw, 28px);
 
-    padding: 18px;
+    padding: 18px 20px;
 
     background: rgba(18, 18, 18, 0.92);
     backdrop-filter: blur(10px);
 
     border-bottom: 2px solid #222222;
+}
+
+nav a {
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 nav a {

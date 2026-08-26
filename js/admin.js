@@ -1071,21 +1071,43 @@ function renderAdminSubmissions(submissions) {
         VIEW
     </button>
 
-    <button
-        type="button"
-        class="admin-submission-approve"
-        data-submission-id="${submission.id}"
-    >
-        APPROVE
-    </button>
+    ${
+        status !== "approved"
+            ? `
+                <button
+                    type="button"
+                    class="admin-submission-approve"
+                    data-submission-id="${submission.id}"
+                >
+                    APPROVE
+                </button>
+            `
+            : ""
+    }
+
+    ${
+        status !== "rejected"
+            ? `
+                <button
+                    type="button"
+                    class="admin-submission-reject"
+                    data-submission-id="${submission.id}"
+                >
+                    REJECT
+                </button>
+            `
+            : ""
+    }
 
     <button
-        type="button"
-        class="admin-submission-reject"
-        data-submission-id="${submission.id}"
-    >
-        REJECT
-    </button>
+    type="button"
+    class="admin-submission-delete"
+    data-submission-id="${submission.id}"
+    title="Delete submission"
+    aria-label="Delete submission"
+>
+    🗑️
+</button>
 
 </div> 
 
@@ -2612,6 +2634,79 @@ adminContentFilter?.addEventListener(
     filterAdminContent
 );
 
+adminSubmissionsList?.addEventListener(
+    "click",
+    async event => {
+
+        const deleteButton =
+            event.target.closest(
+                ".admin-submission-delete"
+            );
+
+        if (!deleteButton) {
+            return;
+        }
+
+        const submissionId =
+            deleteButton.dataset.submissionId;
+
+        if (!submissionId) {
+            return;
+        }
+
+        const submission =
+            adminSubmissions.find(
+                item =>
+                    String(item.id) ===
+                    String(submissionId)
+            );
+
+        if (!submission) {
+            return;
+        }
+
+        const confirmed =
+            await showAdminDeleteConfirm(
+                `You are about to permanently delete "${submission.title || "this submission"}".`
+            );
+
+        if (!confirmed) {
+            return;
+        }
+
+        deleteButton.disabled = true;
+        deleteButton.textContent = "…";
+
+        const {
+            error
+        } = await vaultSupabase
+            .from("submissions")
+            .delete()
+            .eq("id", submissionId);
+
+        if (error) {
+
+            console.error(
+                "Unable to delete submission:",
+                error
+            );
+
+            alert(
+                "Unable to delete submission.\n\n" +
+                error.message
+            );
+
+            deleteButton.disabled = false;
+            deleteButton.textContent = "…";
+
+            return;
+        }
+
+        await loadAdminSubmissions();
+        await loadAdminSubmissionStats();
+    }
+);
+
 /* =========================================
    ADMIN AUDIT LOG
 ========================================= */
@@ -2695,14 +2790,15 @@ async function loadAdminAuditLog() {
         return;
     }
 
-    adminAuditList.innerHTML =
-        `<p class="admin-loading">
+    adminAuditList.innerHTML = `
+        <p class="admin-loading">
             LOADING AUDIT LOG...
-        </p>`;
+        </p>
+    `;
 
     const {
-        data,
-        error
+        data: auditEntries,
+        error: auditError
     } = await vaultSupabase
         .from("audit_logs")
         .select(`
@@ -2720,23 +2816,71 @@ async function loadAdminAuditLog() {
         })
         .limit(100);
 
-    if (error) {
+    if (auditError) {
 
         console.error(
             "Unable to load audit log:",
-            error
+            auditError
         );
 
-        adminAuditList.innerHTML =
-            `<p class="admin-loading">
+        adminAuditList.innerHTML = `
+            <p class="admin-loading">
                 UNABLE TO LOAD AUDIT LOG
-            </p>`;
+            </p>
+        `;
 
         return;
     }
 
+    const adminIds = [
+        ...new Set(
+            (auditEntries || [])
+                .map(entry => entry.admin_id)
+                .filter(Boolean)
+        )
+    ];
+
+    let profileMap = {};
+
+    if (adminIds.length > 0) {
+
+        const {
+            data: profiles,
+            error: profileError
+        } = await vaultSupabase
+            .from("profiles")
+            .select("id, username")
+            .in("id", adminIds);
+
+        if (profileError) {
+
+            console.error(
+                "Unable to load audit admin usernames:",
+                profileError
+            );
+
+        } else {
+
+            profileMap = Object.fromEntries(
+                (profiles || []).map(profile => [
+                    profile.id,
+                    profile.username
+                ])
+            );
+
+        }
+    }
+
+    const entriesWithAdmins =
+        (auditEntries || []).map(entry => ({
+            ...entry,
+            admin_username:
+                profileMap[entry.admin_id] ||
+                "UNKNOWN ADMIN"
+        }));
+
     renderAdminAuditLog(
-        data || []
+        entriesWithAdmins
     );
 }
 
@@ -2827,6 +2971,10 @@ function renderAdminAuditLog(entries) {
                         .toUpperCase()
                     : "SYSTEM";
 
+                    const adminName =
+    entry.admin_username ||
+    "UNKNOWN ADMIN";
+
             const actionClass =
                 action.includes("APPROVED")
                     ? "approved"
@@ -2859,22 +3007,241 @@ function renderAdminAuditLog(entries) {
                         </strong>
 
                         <small>
-                            ${type}
-                            &nbsp; • &nbsp;
-                            ${target}
-                        </small>
+    ${type}
+    &nbsp; • &nbsp;
+    ${target}
+    &nbsp; • &nbsp;
+    BY ${adminName.toUpperCase()}
+</small>
 
                     </div>
 
-                    <div class="admin-audit-date">
-                        ${date}
-                    </div>
+                    <div class="admin-audit-right">
+
+    <div class="admin-audit-date">
+        ${date}
+    </div>
+
+    <button
+        type="button"
+        class="admin-audit-delete"
+        data-audit-id="${entry.id}"
+        title="Delete audit entry"
+        aria-label="Delete audit entry"
+    >
+        🗑️
+    </button>
+
+</div>
 
                 </div>
             `;
 
         }).join("");
 }
+
+function showAdminDeleteConfirm(title) {
+
+    return new Promise(resolve => {
+
+        const overlay =
+            document.createElement("div");
+
+        overlay.className =
+            "admin-decision-overlay";
+
+        overlay.innerHTML = `
+            <div class="admin-decision-modal">
+
+                <button
+                    type="button"
+                    class="admin-decision-close"
+                    data-delete-action="cancel"
+                >
+                    ×
+                </button>
+
+                <div class="admin-decision-icon reject">
+                    🗑️
+                </div>
+
+                <p class="admin-label">
+                    ◆ PERMANENT DELETE
+                </p>
+
+                <h2>
+                    Delete this entry?
+                </h2>
+
+                <p class="admin-decision-description">
+                    ${title}
+                    <br><br>
+                    This cannot be undone.
+                </p>
+
+                <div class="admin-decision-actions">
+
+                    <button
+                        type="button"
+                        class="admin-decision-cancel"
+                        data-delete-action="cancel"
+                    >
+                        CANCEL
+                    </button>
+
+                    <button
+                        type="button"
+                        class="admin-decision-confirm reject"
+                        data-delete-action="confirm"
+                    >
+                        DELETE PERMANENTLY
+                    </button>
+
+                </div>
+
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+
+        requestAnimationFrame(() => {
+            overlay.classList.add("visible");
+        });
+
+        const finish = result => {
+
+            overlay.classList.remove("visible");
+
+            setTimeout(() => {
+                overlay.remove();
+            }, 180);
+
+            resolve(result);
+        };
+
+        overlay
+            .querySelectorAll(
+                '[data-delete-action="cancel"]'
+            )
+            .forEach(button => {
+
+                button.addEventListener(
+                    "click",
+                    () => finish(false)
+                );
+
+            });
+
+        overlay
+            .querySelector(
+                '[data-delete-action="confirm"]'
+            )
+            .addEventListener(
+                "click",
+                () => finish(true)
+            );
+
+        overlay.addEventListener(
+            "click",
+            event => {
+
+                if (event.target === overlay) {
+                    finish(false);
+                }
+
+            }
+        );
+
+    });
+}
+
+adminAuditList?.addEventListener(
+    "click",
+    async event => {
+
+        const deleteButton =
+            event.target.closest(
+                ".admin-audit-delete"
+            );
+
+        if (!deleteButton) {
+            return;
+        }
+
+        const auditId =
+            deleteButton.dataset.auditId;
+
+        if (!auditId) {
+            return;
+        }
+
+        const confirmed =
+            await showAdminDeleteConfirm(
+                "You are about to permanently remove this Audit Log entry."
+            );
+
+        if (!confirmed) {
+            return;
+        }
+
+        deleteButton.disabled = true;
+
+        const originalText =
+            deleteButton.textContent;
+
+        deleteButton.textContent = "…";
+
+        const {
+    data: deletedRows,
+    error
+} = await vaultSupabase
+    .from("audit_logs")
+    .delete()
+    .eq("id", auditId)
+    .select("id");
+
+        if (error) {
+
+            console.error(
+                "Unable to delete audit entry:",
+                error
+            );
+
+            alert(
+                "Unable to delete audit entry.\n\n" +
+                error.message
+            );
+
+            deleteButton.disabled = false;
+            deleteButton.textContent =
+                originalText;
+
+            return;
+        }
+
+        if (!deletedRows || deletedRows.length === 0) {
+
+    console.error(
+        "Audit log delete matched 0 rows.",
+        {
+            auditId,
+            deletedRows
+        }
+    );
+
+    alert(
+        "The delete request ran, but Supabase did not delete the audit entry."
+    );
+
+    deleteButton.disabled = false;
+    deleteButton.textContent = originalText;
+
+    return;
+}
+
+        await loadAdminAuditLog();
+    }
+);
 
 
 /* ---------- OPEN AUDIT LOG ---------- */

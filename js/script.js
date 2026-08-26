@@ -168,8 +168,11 @@ document.addEventListener("DOMContentLoaded", () => {
     setupRecentReleases();
     setupTrendingVault();
     setupLiveVaultStats();
+    ensureGlobalSearchOverlay();
     setupGlobalVaultSearch();
     setupVaultChangelog();
+    setupCommunityCallingCardArchive();
+    setupCommunityEmblemArchive();
     setupCreatorProfile();
     setupCreatorDirectory();
     setupGlobalRelatedContent();
@@ -274,7 +277,75 @@ function setupVaultChangelog() {
    GLOBAL VAULT SEARCH
    ========================================================= */
 
-function setupGlobalVaultSearch() {
+function ensureGlobalSearchOverlay() {
+
+    // Don't create another one if this page already has it
+    if (document.querySelector("#vault-search-overlay")) {
+        return;
+    }
+
+    const overlay = document.createElement("div");
+
+    overlay.id = "vault-search-overlay";
+    overlay.className = "vault-search-overlay";
+
+    overlay.innerHTML = `
+
+    <div class="vault-search-panel">
+
+        <div class="vault-search-header">
+
+            <div>
+                <p>◈ GLOBAL VAULT SEARCH</p>
+                <h2>SEARCH THE VAULT</h2>
+            </div>
+
+            <button
+                type="button"
+                class="vault-search-close"
+                id="vault-search-close"
+                aria-label="Close search"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <div class="vault-search-input-wrap">
+
+            <input
+                type="search"
+                id="vault-global-search-input"
+                placeholder="SEARCH CONTENT, SERIES, CREATOR..."
+                autocomplete="off"
+            >
+
+            <span class="vault-search-key">
+                ESC TO CLOSE
+            </span>
+
+        </div>
+
+        <div
+            class="vault-search-status"
+            id="vault-search-status"
+        >
+            TYPE TO SEARCH THE VAULT
+        </div>
+
+        <div
+            class="vault-search-results"
+            id="vault-search-results"
+        >
+        </div>
+
+    </div>
+`; 
+
+    document.body.appendChild(overlay);
+}
+
+   function setupGlobalVaultSearch() {
 
     const openButton =
         document.querySelector(
@@ -499,13 +570,147 @@ async function loadSearchContent() {
                     type: "EMBLEM"
                 });
 
-            });
+                    });
+
+
+        /* =====================================================
+           APPROVED COMMUNITY SUBMISSIONS
+           ===================================================== */
+
+        if (supabaseClient) {
+
+            const {
+                data: submissions,
+                error: submissionError
+            } = await supabaseClient
+                .from("submissions")
+                .select(`
+                    id,
+                    user_id,
+                    title,
+                    description,
+                    type,
+                    preview_url
+                `)
+                .eq("status", "approved");
+
+            if (submissionError) {
+
+                console.error(
+                    "Unable to index community submissions:",
+                    submissionError
+                );
+
+            } else if (
+                submissions &&
+                submissions.length
+            ) {
+
+                /*
+                 * Get creator usernames
+                 */
+                const userIds = [
+                    ...new Set(
+                        submissions
+                            .map(
+                                item =>
+                                    item.user_id
+                            )
+                            .filter(Boolean)
+                    )
+                ];
+
+                let creatorMap = {};
+
+                if (userIds.length) {
+
+                    const {
+                        data: profiles,
+                        error: profileError
+                    } = await supabaseClient
+                        .from("profiles")
+                        .select(
+                            "id, username"
+                        )
+                        .in(
+                            "id",
+                            userIds
+                        );
+
+                    if (
+                        !profileError &&
+                        profiles
+                    ) {
+
+                        creatorMap =
+                            Object.fromEntries(
+                                profiles.map(
+                                    profile => [
+                                        profile.id,
+                                        profile.username
+                                    ]
+                                )
+                            );
+                    }
+                }
+
+                /*
+                 * Add every approved submission
+                 * to global search
+                 */
+                submissions.forEach(
+                    submission => {
+
+                        if (
+                            !submission.title ||
+                            !submission.preview_url
+                        ) {
+                            return;
+                        }
+
+                        const creator =
+                            creatorMap[
+                                submission.user_id
+                            ] ||
+                            "Community";
+
+                        searchItems.push({
+
+                            name:
+                                submission.title,
+
+                            series:
+                                submission.description ||
+                                "Community",
+
+                            creator:
+                                creator,
+
+                            image:
+                                submission.preview_url,
+
+                            url:
+                                `content.html?id=${encodeURIComponent(
+                                    submission.id
+                                )}`,
+
+                            type:
+                                submission.type ===
+                                "calling-card"
+                                    ? "CALLING CARD"
+                                    : "EMBLEM"
+
+                        });
+                    }
+                );
+            }
+        }
 
 
         searchLoaded = true;
 
         status.textContent =
-            `${searchItems.length} VAULT ITEMS INDEXED`;
+            `${searchItems.length} VAULT ITEMS INDEXED`;    
 
 
     } catch (error) {
@@ -898,73 +1103,180 @@ function setupSiteWideVaultNav() {
         return;
     }
 
-    const existingVaultLink =
+    /*
+     * Admin keeps its own navbar.
+     */
+    const currentPage =
+        window.location.pathname
+            .split("/")
+            .pop()
+            .toLowerCase();
+
+    if (
+        currentPage === "admin.html" ||
+        currentPage.includes("admin")
+    ) {
+        return;
+    }
+
+    /*
+     * Build one identical navbar
+     * across the whole public site.
+     */
+    nav.innerHTML = `
+
+        <a
+            href="index.html"
+            data-nav-page="index.html"
+        >
+            Home
+        </a>
+
+        <a
+            href="callingcards.html"
+            data-nav-page="callingcards.html"
+        >
+            Calling Cards
+        </a>
+
+        <a
+            href="emblems.html"
+            data-nav-page="emblems.html"
+        >
+            Emblems
+        </a>
+
+        <a
+            href="creators.html"
+            data-nav-page="creators.html"
+        >
+            Creators
+        </a>
+
+        <a
+            href="install.html"
+            data-nav-page="install.html"
+        >
+            Install Guide
+        </a>
+
+        <a
+            href="about.html"
+            data-nav-page="about.html"
+        >
+            About
+        </a>
+
+        <button
+    type="button"
+    id="vault-global-search-btn"
+    class="vault-global-search-btn"
+>
+    SEARCH
+</button>
+
+        <a
+            href="my-vault.html"
+            class="my-vault-nav-link"
+            data-nav-page="my-vault.html"
+        >
+            MY VAULT
+            <span class="my-vault-count">
+                0
+            </span>
+        </a>
+
+        <a
+            href="https://discord.gg/gS8MHbvuse"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            Discord
+        </a>
+
+        <a
+            href="submit.html"
+            data-nav-page="submit.html"
+        >
+            Submit Content
+        </a>
+
+        <a
+            href="profile.html"
+            id="profile-nav-link"
+            class="profile-nav-link"
+            data-nav-page="profile.html"
+        >
+            ◉ PROFILE
+        </a>
+
+    `;
+
+    /*
+     * Highlight current section.
+     */
+    let activePage =
+        currentPage || "index.html";
+
+    /*
+     * Creator profile pages count
+     * as the Creators section.
+     */
+    const creatorPages = [
+        "ayleus.html",
+        "uzi.html",
+        "ren.html",
+        "k2.html",
+        "dre.html",
+        "slowder.html"
+    ];
+
+    if (
+        creatorPages.includes(
+            activePage
+        )
+    ) {
+        activePage =
+            "creators.html";
+    }
+
+    /*
+     * Individual original calling-card
+     * pages count as Calling Cards.
+     *
+     * content.html is handled below
+     * according to its content type later.
+     */
+    const pageLink =
+        nav.querySelector(
+            `[data-nav-page="${activePage}"]`
+        );
+
+    if (pageLink) {
+        pageLink.classList.add(
+            "active"
+        );
+    }
+
+    /*
+     * My Vault badge.
+     */
+    const vaultLink =
         nav.querySelector(
             'a[href="my-vault.html"]'
         );
 
-    /*
-        If this page already has a My Vault
-        link, don't create another one.
-    */
-    if (existingVaultLink) {
-
+    if (vaultLink) {
         ensureVaultCountBadge(
-            existingVaultLink
+            vaultLink
         );
-
-        markVaultNavActive(
-            existingVaultLink
-        );
-
-        return;
     }
 
-
-    const vaultLink =
-        document.createElement("a");
-
-    vaultLink.href =
-        "my-vault.html";
-
-    vaultLink.className =
-        "my-vault-nav-link";
-
-    vaultLink.innerHTML = `
-        MY VAULT
-        <span class="my-vault-count">0</span>
-    `;
-
-
-    const discordLink =
-    Array.from(
-        nav.querySelectorAll("a")
-    ).find(link =>
-        link.textContent
-            .trim()
-            .toLowerCase() === "discord"
-    );
-
-if (discordLink) {
-
-    nav.insertBefore(
-        vaultLink,
-        discordLink
-    );
-
-} else {
-
-    nav.appendChild(
-        vaultLink
-    );
-
-}
-
-
-    markVaultNavActive(
-        vaultLink
-    );
-
+    /*
+     * Update Profile text/login state
+     * now that the new link exists.
+     */
+    setupProfileNav();
 }
 
 
@@ -1083,104 +1395,276 @@ const RECENT_CONTENT = [
 ];
 
 
-function setupRecentReleases() {
+async function setupRecentReleases() {
 
     const grid =
         document.querySelector(
             "#recent-releases-grid"
         );
 
-        const latestDropElement =
-    document.querySelector(
-        "#status-latest-drop"
-    );
+    const latestDropElement =
+        document.querySelector(
+            "#status-latest-drop"
+        );
 
     if (!grid) {
         return;
     }
 
+    let approvedContent = [];
+
+    /*
+     * GET NEW APPROVED COMMUNITY CONTENT
+     */
+    if (supabaseClient) {
+
+        const {
+            data: submissions,
+            error
+        } = await supabaseClient
+            .from("submissions")
+            .select(`
+                id,
+                user_id,
+                title,
+                type,
+                description,
+                preview_url,
+                created_at
+            `)
+            .eq("status", "approved")
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            )
+            .limit(6);
+
+        if (error) {
+
+            console.error(
+                "Unable to load latest approved content:",
+                error
+            );
+
+        } else if (
+            submissions &&
+            submissions.length
+        ) {
+
+            /*
+             * GET CREATOR USERNAMES
+             */
+            const userIds = [
+                ...new Set(
+                    submissions
+                        .map(
+                            item =>
+                                item.user_id
+                        )
+                        .filter(Boolean)
+                )
+            ];
+
+            let creatorMap = {};
+
+            if (userIds.length) {
+
+                const {
+                    data: profiles,
+                    error: profileError
+                } = await supabaseClient
+                    .from("profiles")
+                    .select(
+                        "id, username"
+                    )
+                    .in(
+                        "id",
+                        userIds
+                    );
+
+                if (
+                    !profileError &&
+                    profiles
+                ) {
+
+                    creatorMap =
+                        Object.fromEntries(
+                            profiles.map(
+                                profile => [
+                                    profile.id,
+                                    profile.username
+                                ]
+                            )
+                        );
+                }
+            }
+
+            approvedContent =
+                submissions.map(
+                    submission => ({
+
+                        name:
+                            submission.title ||
+                            "Untitled",
+
+                        series:
+                            "Community",
+
+                        type:
+                            submission.type,
+
+                        creator:
+                            creatorMap[
+                                submission.user_id
+                            ] ||
+                            "Community",
+
+                        image:
+                            submission.preview_url ||
+                            "",
+
+                        url:
+                            `content.html?id=${encodeURIComponent(
+                                submission.id
+                            )}`,
+
+                        isCommunity: true
+                    })
+                );
+        }
+    }
+
+    /*
+     * APPROVED CONTENT FIRST,
+     * THEN FILL EMPTY SLOTS WITH
+     * EXISTING RECENT CONTENT
+     */
+    const usedNames =
+        new Set(
+            approvedContent.map(
+                item =>
+                    `${item.type}:${item.name}`
+                        .toLowerCase()
+            )
+        );
+
+    const fallbackContent =
+        RECENT_CONTENT.filter(
+            item =>
+                !usedNames.has(
+                    `${item.type}:${item.name}`
+                        .toLowerCase()
+                )
+        );
+
+    const recentContent = [
+        ...approvedContent,
+        ...fallbackContent
+    ].slice(0, 6);
+
+    /*
+     * UPDATE TOP "LATEST DROP"
+     */
     if (
-    latestDropElement &&
-    RECENT_CONTENT.length > 0
-) {
+        latestDropElement &&
+        recentContent.length
+    ) {
 
-    latestDropElement.textContent =
-        RECENT_CONTENT[0].name.toUpperCase();
-
-}
+        latestDropElement.textContent =
+            recentContent[0]
+                .name
+                .toUpperCase();
+    }
 
     grid.innerHTML = "";
 
-    RECENT_CONTENT
-        .slice(0, 6)
-        .forEach((item) => {
+    recentContent.forEach(item => {
 
-            const card =
-                document.createElement("article");
+        const card =
+            document.createElement(
+                "article"
+            );
 
-            card.className =
-                `recent-release-card recent-${item.type}`;
+        card.className =
+            `recent-release-card recent-${item.type}`;
 
-            const typeLabel =
-                item.type === "calling-card"
-                    ? "CALLING CARD"
-                    : "EMBLEM";
+        const typeLabel =
+            item.type ===
+            "calling-card"
+                ? "CALLING CARD"
+                : "EMBLEM";
 
-            card.innerHTML = `
+        card.innerHTML = `
 
-                <span class="recent-new-badge">
-                    NEW
-                </span>
+            <span class="recent-new-badge">
+                NEW
+            </span>
 
-                <a
-                    href="${item.url}"
-                    class="recent-release-preview"
+            <a
+                href="${escapeVaultHTML(
+                    item.url
+                )}"
+                class="recent-release-preview"
+            >
+
+                <img
+                    src="${escapeVaultHTML(
+                        item.image
+                    )}"
+                    alt="${escapeVaultHTML(
+                        item.name
+                    )}"
                 >
-                    <img
-                        src="${item.image}"
-                        alt="${item.name}"
-                    >
-                </a>
 
-                <div class="recent-release-content">
+            </a>
 
-                    <div class="recent-release-meta">
+            <div class="recent-release-content">
 
-                        <span>
-                            ${typeLabel}
-                        </span>
+                <div class="recent-release-meta">
 
-                        <span>
-                            ${item.series}
-                        </span>
+                    <span>
+                        ${typeLabel}
+                    </span>
 
-                    </div>
-
-                    <h3>
-                        ${item.name}
-                    </h3>
-
-                    <p>
-                        CREATED BY
-                        <strong>
-                            ${item.creator}
-                        </strong>
-                    </p>
-
-                    <a
-                        href="${item.url}"
-                        class="recent-release-btn"
-                    >
-                        VIEW →
-                    </a>
+                    <span>
+                        ${escapeVaultHTML(
+                            item.series
+                        )}
+                    </span>
 
                 </div>
-            `;
 
-            grid.appendChild(card);
+                <h3>
+                    ${escapeVaultHTML(
+                        item.name
+                    )}
+                </h3>
 
-        });
+                <p>
+                    CREATED BY
+                    <strong>
+                        ${escapeVaultHTML(
+                            item.creator
+                        )}
+                    </strong>
+                </p>
 
+                <a
+                    href="${escapeVaultHTML(
+                        item.url
+                    )}"
+                    class="recent-release-btn"
+                >
+                    VIEW →
+                </a>
+
+            </div>
+        `;
+
+        grid.appendChild(card);
+    });
 }
 
 /* =========================================================
@@ -1694,35 +2178,22 @@ async function setupTrendingVault() {
 async function setupLiveVaultStats() {
 
     const totalElement =
-        document.querySelector(
-            "#stat-total-content"
-        );
+        document.querySelector("#stat-total-content");
 
     const callingCardsElement =
-        document.querySelector(
-            "#stat-calling-cards"
-        );
+        document.querySelector("#stat-calling-cards");
 
     const emblemsElement =
-        document.querySelector(
-            "#stat-emblems"
-        );
+        document.querySelector("#stat-emblems");
 
     const downloadsElement =
-        document.querySelector(
-            "#stat-total-downloads"
-        );
+        document.querySelector("#stat-total-downloads");
 
-        const statusTotalElement =
-    document.querySelector(
-        "#status-total-content"
-    );
+    const statusTotalElement =
+        document.querySelector("#status-total-content");
 
-const statusDownloadsElement =
-    document.querySelector(
-        "#status-total-downloads"
-    );
-
+    const statusDownloadsElement =
+        document.querySelector("#status-total-downloads");
 
     if (
         !totalElement ||
@@ -1734,25 +2205,23 @@ const statusDownloadsElement =
     }
 
     [
-    totalElement,
-    callingCardsElement,
-    emblemsElement,
-    downloadsElement
-].forEach(element => {
+        totalElement,
+        callingCardsElement,
+        emblemsElement,
+        downloadsElement
+    ].forEach(element => {
 
-    if (element) {
-        element.classList.add(
+        element?.classList.add(
             "vault-stat-loading"
         );
-    }
 
-});
-
+    });
 
     try {
 
-        /* LOAD BOTH ARCHIVES */
-
+        /*
+         * LOAD ORIGINAL STATIC ARCHIVES
+         */
         const [
             callingCardsResponse,
             emblemsResponse
@@ -1760,7 +2229,6 @@ const statusDownloadsElement =
             fetch("callingcards.html"),
             fetch("emblems.html")
         ]);
-
 
         if (
             !callingCardsResponse.ok ||
@@ -1771,7 +2239,6 @@ const statusDownloadsElement =
             );
         }
 
-
         const [
             callingCardsHTML,
             emblemsHTML
@@ -1780,10 +2247,8 @@ const statusDownloadsElement =
             emblemsResponse.text()
         ]);
 
-
         const parser =
             new DOMParser();
-
 
         const callingCardsDocument =
             parser.parseFromString(
@@ -1797,7 +2262,6 @@ const statusDownloadsElement =
                 "text/html"
             );
 
-
         const callingCardCards =
             Array.from(
                 callingCardsDocument
@@ -1805,7 +2269,6 @@ const statusDownloadsElement =
                         ".card-grid .card"
                     )
             );
-
 
         const emblemCards =
             Array.from(
@@ -1815,19 +2278,63 @@ const statusDownloadsElement =
                     )
             );
 
-
-        /* CONTENT COUNTS */
-
-        const callingCardCount =
+        /*
+         * ORIGINAL CONTENT COUNTS
+         */
+        const originalCallingCards =
             callingCardCards.length;
 
-        const emblemCount =
+        const originalEmblems =
             emblemCards.length;
+
+        /*
+         * LOAD APPROVED COMMUNITY CONTENT
+         */
+        let approvedSubmissions = [];
+
+        if (supabaseClient) {
+
+            const {
+                data,
+                error
+            } = await supabaseClient
+                .from("submissions")
+                .select("id, type")
+                .eq("status", "approved");
+
+            if (error) {
+                throw error;
+            }
+
+            approvedSubmissions =
+                data || [];
+        }
+
+        const communityCallingCards =
+            approvedSubmissions.filter(
+                item =>
+                    item.type ===
+                    "calling-card"
+            ).length;
+
+        const communityEmblems =
+            approvedSubmissions.filter(
+                item =>
+                    item.type ===
+                    "emblem"
+            ).length;
+
+        const callingCardCount =
+            originalCallingCards +
+            communityCallingCards;
+
+        const emblemCount =
+            originalEmblems +
+            communityEmblems;
 
         const totalContent =
             callingCardCount +
             emblemCount;
-
 
         totalElement.textContent =
             totalContent;
@@ -1838,18 +2345,20 @@ const statusDownloadsElement =
         emblemsElement.textContent =
             emblemCount;
 
-            if (statusTotalElement) {
-    statusTotalElement.textContent =
-        totalContent;
-}
+        if (statusTotalElement) {
+            statusTotalElement.textContent =
+                totalContent;
+        }
 
-
-        /* BUILD CURRENT DOWNLOAD ID LIST */
-
+        /*
+         * BUILD ALL DOWNLOAD IDS
+         */
         const contentIDs =
             new Set();
 
-
+        /*
+         * ORIGINAL CALLING CARDS
+         */
         callingCardCards.forEach(card => {
 
             const detailsLink =
@@ -1861,7 +2370,6 @@ const statusDownloadsElement =
                 return;
             }
 
-
             const pageID =
                 detailsLink
                     .getAttribute("href")
@@ -1871,14 +2379,14 @@ const statusDownloadsElement =
                     )
                     .toLowerCase();
 
-
             contentIDs.add(
                 `${pageID}-calling-card`
             );
-
         });
 
-
+        /*
+         * ORIGINAL EMBLEMS
+         */
         emblemCards.forEach(card => {
 
             const downloadButton =
@@ -1890,92 +2398,88 @@ const statusDownloadsElement =
                 return;
             }
 
-
             contentIDs.add(
                 downloadButton.dataset.download
             );
-
         });
 
+        /*
+         * COMMUNITY CONTENT
+         */
+        approvedSubmissions.forEach(
+            submission => {
 
-        /* TOTAL DOWNLOADS */
+                if (
+                    submission.type ===
+                    "calling-card"
+                ) {
 
-        if (!supabaseClient) {
+                    contentIDs.add(
+                        `submission-${submission.id}`
+                    );
 
-            downloadsElement.textContent =
-                "0";
+                } else if (
+                    submission.type ===
+                    "emblem"
+                ) {
 
-            return;
+                    contentIDs.add(
+                        `community-${submission.id}`
+                    );
+                }
+            }
+        );
 
-        }
+        /*
+         * TOTAL DOWNLOADS
+         */
+        let totalDownloads = 0;
 
+        if (supabaseClient) {
 
-        const {
-            data,
-            error
-        } =
-            await supabaseClient
+            const {
+                data,
+                error
+            } = await supabaseClient
                 .from("downloads")
                 .select("id, count");
 
+            if (error) {
+                throw error;
+            }
 
-        if (error) {
-            throw error;
+            totalDownloads =
+                (data || []).reduce(
+                    (total, item) => {
+
+                        if (
+                            !contentIDs.has(
+                                item.id
+                            )
+                        ) {
+                            return total;
+                        }
+
+                        return (
+                            total +
+                            (
+                                Number(
+                                    item.count
+                                ) || 0
+                            )
+                        );
+                    },
+                    0
+                );
         }
-
-
-        const totalDownloads =
-            data.reduce(
-                (total, item) => {
-
-                    if (
-                        !contentIDs.has(
-                            item.id
-                        )
-                    ) {
-                        return total;
-                    }
-
-
-                    return (
-                        total +
-                        (
-                            Number(
-                                item.count
-                            ) || 0
-                        )
-                    );
-
-                },
-                0
-            );
-
 
         downloadsElement.textContent =
             totalDownloads;
 
-            /* REMOVE LOADING STATE */
-
-[
-    totalElement,
-    callingCardsElement,
-    emblemsElement,
-    downloadsElement
-].forEach(element => {
-
-    if (element) {
-        element.classList.remove(
-            "vault-stat-loading"
-        );
-    }
-
-});
-
-            if (statusDownloadsElement) {
-    statusDownloadsElement.textContent =
-        totalDownloads;
-}
-
+        if (statusDownloadsElement) {
+            statusDownloadsElement.textContent =
+                totalDownloads;
+        }
 
     } catch (error) {
 
@@ -1984,8 +2488,21 @@ const statusDownloadsElement =
             error
         );
 
-    }
+    } finally {
 
+        [
+            totalElement,
+            callingCardsElement,
+            emblemsElement,
+            downloadsElement
+        ].forEach(element => {
+
+            element?.classList.remove(
+                "vault-stat-loading"
+            );
+
+        });
+    }
 }
 
 
@@ -2844,7 +3361,13 @@ async function setupDownloadCounters() {
 
     downloadButtons.forEach(button => {
 
-        button.addEventListener("click", async () => {
+    if (button.dataset.downloadCounterBound === "true") {
+        return;
+    }
+
+    button.dataset.downloadCounterBound = "true";
+
+    button.addEventListener("click", async () => {
 
             const downloadID =
                 button.dataset.download;
@@ -3064,7 +3587,7 @@ if (isEmblem) {
 
 
         button.textContent =
-            "♡ SAVE";
+    "♡ ADD TO MY VAULT";
 
 
         card.appendChild(
@@ -3947,6 +4470,563 @@ window.addEventListener("load", () => {
 });
 
 // =========================================================
+// COMMUNITY CALLING CARDS - MAIN CALLING CARD ARCHIVE
+// =========================================================
+
+async function setupCommunityCallingCardArchive() {
+
+    const communityGrid =
+        document.getElementById(
+            "approved-calling-cards"
+        );
+
+    if (!communityGrid || !supabaseClient) {
+        return;
+    }
+
+    const {
+        data: submissions,
+        error: submissionError
+    } = await supabaseClient
+        .from("submissions")
+        .select(`
+            id,
+            user_id,
+            title,
+            description,
+            preview_url,
+            download_url,
+            created_at
+        `)
+        .eq("status", "approved")
+        .eq("type", "calling-card")
+        .order("created_at", {
+            ascending: false
+        });
+
+    if (submissionError) {
+
+        console.error(
+            "Unable to load community calling cards:",
+            submissionError
+        );
+
+        return;
+    }
+
+    if (
+        !submissions ||
+        submissions.length === 0
+    ) {
+        return;
+    }
+
+    const userIds = [
+        ...new Set(
+            submissions
+                .map(item => item.user_id)
+                .filter(Boolean)
+        )
+    ];
+
+    let creatorMap = {};
+
+    if (userIds.length > 0) {
+
+        const {
+            data: profiles,
+            error: profileError
+        } = await supabaseClient
+            .from("profiles")
+            .select("id, username")
+            .in("id", userIds);
+
+        if (!profileError && profiles) {
+
+            creatorMap =
+                Object.fromEntries(
+                    profiles.map(profile => [
+                        profile.id,
+                        profile.username
+                    ])
+                );
+        }
+    }
+
+    submissions.forEach(submission => {
+
+        if (
+            communityGrid.querySelector(
+                `[data-community-id="${submission.id}"]`
+            )
+        ) {
+            return;
+        }
+
+        const creator =
+            creatorMap[submission.user_id] ||
+            "COMMUNITY";
+
+        const card =
+            document.createElement("div");
+
+        card.className = "card";
+
+        /*
+         * We don't currently store a proper
+         * archive category on community submissions,
+         * so keep it marked READY + COMMUNITY.
+         */
+        card.dataset.category =
+            "community ready";
+
+        card.dataset.creator =
+            creator;
+
+        card.dataset.communityId =
+            submission.id;
+
+        const detailURL =
+            `content.html?id=${encodeURIComponent(
+                submission.id
+            )}`;
+
+        card.innerHTML = `
+
+            <div class="preview">
+
+                <img
+                    src="${escapeVaultHTML(
+                        submission.preview_url || ""
+                    )}"
+                    alt="${escapeVaultHTML(
+                        submission.title ||
+                        "Community Calling Card"
+                    )} Calling Card"
+                >
+
+            </div>
+
+            <h3>
+                ${escapeVaultHTML(
+                    submission.title ||
+                    "Untitled"
+                )}
+            </h3>
+
+            <p>
+                ${escapeVaultHTML(
+                    submission.description ||
+                    "Community Calling Card"
+                )}
+            </p>
+
+            <p class="card-status ready">
+                READY
+            </p>
+
+            <div class="card-meta">
+
+                <span>
+                    CREATOR:
+                    ${escapeVaultHTML(
+                        creator
+                    )}
+                </span>
+
+                <span>
+                    256 × 64
+                </span>
+
+            </div>
+
+            <a
+                href="${detailURL}"
+                class="card-btn"
+            >
+                VIEW DETAILS
+            </a>
+
+        `;
+
+        communityGrid.append(card);
+    });
+
+    setupArchiveVaultButtons();
+    setupMyVault();
+}
+
+// =========================================================
+// COMMUNITY CALLING CARDS - MAIN CALLING CARD ARCHIVE
+// =========================================================
+
+async function setupCommunityCallingCardArchive() {
+
+    const communityGrid =
+        document.getElementById(
+            "approved-calling-cards"
+        );
+
+    if (!communityGrid || !supabaseClient) {
+        return;
+    }
+
+    const {
+        data: submissions,
+        error: submissionError
+    } = await supabaseClient
+        .from("submissions")
+        .select(`
+            id,
+            user_id,
+            title,
+            description,
+            preview_url,
+            download_url,
+            created_at
+        `)
+        .eq("status", "approved")
+        .eq("type", "calling-card")
+        .order("created_at", {
+            ascending: false
+        });
+
+    if (submissionError) {
+
+        console.error(
+            "Unable to load community calling cards:",
+            submissionError
+        );
+
+        return;
+    }
+
+    if (
+        !submissions ||
+        submissions.length === 0
+    ) {
+        return;
+    }
+
+    const userIds = [
+        ...new Set(
+            submissions
+                .map(item => item.user_id)
+                .filter(Boolean)
+        )
+    ];
+
+    let creatorMap = {};
+
+    if (userIds.length > 0) {
+
+        const {
+            data: profiles,
+            error: profileError
+        } = await supabaseClient
+            .from("profiles")
+            .select("id, username")
+            .in("id", userIds);
+
+        if (!profileError && profiles) {
+
+            creatorMap =
+                Object.fromEntries(
+                    profiles.map(profile => [
+                        profile.id,
+                        profile.username
+                    ])
+                );
+        }
+    }
+
+    submissions.forEach(submission => {
+
+        if (
+            communityGrid.querySelector(
+                `[data-community-id="${submission.id}"]`
+            )
+        ) {
+            return;
+        }
+
+        const creator =
+            creatorMap[submission.user_id] ||
+            "COMMUNITY";
+
+        const card =
+            document.createElement("div");
+
+        card.className = "card";
+
+        card.dataset.category =
+            "community ready";
+
+        card.dataset.creator =
+            creator;
+
+        card.dataset.communityId =
+            submission.id;
+
+        const detailURL =
+            `content.html?id=${encodeURIComponent(
+                submission.id
+            )}`;
+
+        card.innerHTML = `
+
+            <div class="preview">
+
+                <img
+                    src="${escapeVaultHTML(
+                        submission.preview_url || ""
+                    )}"
+                    alt="${escapeVaultHTML(
+                        submission.title ||
+                        "Community Calling Card"
+                    )} Calling Card"
+                >
+
+            </div>
+
+            <h3>
+                ${escapeVaultHTML(
+                    submission.title ||
+                    "Untitled"
+                )}
+            </h3>
+
+            <p>
+                ${escapeVaultHTML(
+                    submission.description ||
+                    "Community Calling Card"
+                )}
+            </p>
+
+            <p class="card-status ready">
+                READY
+            </p>
+
+            <div class="card-meta">
+
+                <span>
+                    CREATOR:
+                    ${escapeVaultHTML(
+                        creator
+                    )}
+                </span>
+
+                <span>
+                    256 × 64
+                </span>
+
+            </div>
+
+            <a
+    href="${detailURL}"
+    class="card-btn"
+>
+    VIEW DETAILS
+</a>
+
+<button
+    type="button"
+    class="vault-save-btn"
+    data-vault-id="community-calling-card-${submission.id}"
+    data-vault-type="calling-card"
+    data-vault-title="${escapeVaultHTML(
+        submission.title || "Untitled"
+    )}"
+    data-vault-image="${escapeVaultHTML(
+        submission.preview_url || ""
+    )}"
+    data-vault-url="${detailURL}"
+>
+    ♡ ADD TO MY VAULT
+</button>
+
+        `;
+
+        communityGrid.append(card);
+    });
+
+    setupArchiveVaultButtons();
+    setupMyVault();
+}
+
+// =========================================================
+// COMMUNITY EMBLEMS - MAIN EMBLEM ARCHIVE
+// =========================================================
+
+async function setupCommunityEmblemArchive() {
+
+    const emblemGrid =
+        document.querySelector(
+            ".card-grid.emblem-grid"
+        );
+
+    if (!emblemGrid || !supabaseClient) {
+        return;
+    }
+
+    const {
+        data: submissions,
+        error: submissionError
+    } = await supabaseClient
+        .from("submissions")
+        .select(`
+    id,
+    user_id,
+    title,
+    description,
+    preview_url,
+    download_url,
+    created_at
+`)
+        .eq("status", "approved")
+        .eq("type", "emblem")
+        .order("created_at", {
+            ascending: false
+        });
+
+    if (submissionError) {
+
+        console.error(
+            "Unable to load community emblems:",
+            submissionError
+        );
+
+        return;
+    }
+
+    if (!submissions || submissions.length === 0) {
+        return;
+    }
+
+    const userIds = [
+        ...new Set(
+            submissions
+                .map(item => item.user_id)
+                .filter(Boolean)
+        )
+    ];
+
+    let creatorMap = {};
+
+    if (userIds.length > 0) {
+
+        const {
+            data: profiles,
+            error: profileError
+        } = await supabaseClient
+            .from("profiles")
+            .select("id, username")
+            .in("id", userIds);
+
+        if (!profileError && profiles) {
+
+            creatorMap =
+                Object.fromEntries(
+                    profiles.map(profile => [
+                        profile.id,
+                        profile.username
+                    ])
+                );
+        }
+    }
+
+    submissions.forEach(submission => {
+
+        /*
+         * Prevent the same community item
+         * being added twice.
+         */
+        if (
+            emblemGrid.querySelector(
+                `[data-community-id="${submission.id}"]`
+            )
+        ) {
+            return;
+        }
+
+        const creator =
+            creatorMap[submission.user_id] ||
+            "COMMUNITY";
+
+        const card =
+            document.createElement("div");
+
+        card.className = "card";
+
+        card.dataset.category = "community";
+        card.dataset.creator = creator;
+        card.dataset.communityId =
+            submission.id;
+
+        card.innerHTML = `
+
+    <div class="emblem-preview">
+
+        <img
+            src="${escapeVaultHTML(
+                submission.preview_url || ""
+            )}"
+            alt="${escapeVaultHTML(
+                submission.title || "Community Emblem"
+            )}"
+        >
+
+    </div>
+
+    <h3>
+        ${escapeVaultHTML(
+            submission.title || "Untitled"
+        )}
+    </h3>
+
+    <p>
+        ${escapeVaultHTML(
+            submission.description ||
+            "Community Emblem"
+        )}
+    </p>
+
+    <a
+        href="${escapeVaultHTML(
+            submission.download_url || "#"
+        )}"
+        class="card-btn download-btn"
+        data-download="community-${escapeVaultHTML(
+            submission.id
+        )}"
+        download
+    >
+        DOWNLOAD
+    </a>
+
+    <p
+        class="download-count"
+        data-count-id="community-${escapeVaultHTML(
+            submission.id
+        )}"
+    >
+        0 DOWNLOADS
+    </p>
+
+`;
+
+        /*
+         * Put newest community submissions first.
+         */
+        emblemGrid.append(card);
+    });
+
+setupArchiveVaultButtons();
+setupMyVault();
+await setupDownloadCounters();
+}
+
+// =========================================================
 // CREATOR PROFILE - APPROVED SUBMISSIONS
 // =========================================================
 
@@ -4172,19 +5252,20 @@ async function setupCreatorDirectory() {
     ];
 
     const {
-        data: profiles,
-        error: profileError
-    } = await supabaseClient
-        .from("profiles")
-        .select("id, username")
-        .in("username", [
-            "Ayleus",
-            "Uzi",
-            "Ren",
-            "K2",
-            "Dre",
-            "Slowder"
-        ]);
+    data: allProfiles,
+    error: profileError
+} = await supabaseClient
+    .from("profiles")
+    .select("id, username");
+
+const profiles =
+    (allProfiles || []).filter(profile =>
+        creatorNames.includes(
+            (profile.username || "")
+                .trim()
+                .toLowerCase()
+        )
+    );
 
     if (profileError || !profiles) {
         console.error(
