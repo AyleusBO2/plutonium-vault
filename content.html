@@ -60,15 +60,32 @@
             LIVE ANIMATED PREVIEW
         </p>
 
-        <div class="item-preview">
+<div class="item-preview">
 
-            <img
-                id="content-preview"
-                src=""
-                alt=""
-            >
+    <img
+        id="content-preview"
+        src=""
+        alt=""
+    >
 
-        </div>
+    <img
+        id="content-preview-2"
+        src=""
+        alt=""
+        style="display: none;"
+    >
+
+    <video
+        id="content-preview-video"
+        muted
+        loop
+        playsinline
+        controls
+        autoplay
+        style="display: none;"
+    ></video>
+
+</div>
 
         <p
             class="preview-note"
@@ -467,17 +484,19 @@ async function loadCommunityContent() {
 
         .from("submissions")
 
-        .select(`
-            id,
-            user_id,
-            title,
-            type,
-            description,
-            preview_url,
-            download_url,
-            status,
-            created_at
-        `)
+.select(`
+    id,
+    user_id,
+    title,
+    type,
+    description,
+    preview_url,
+    preview_url_2,
+    download_url,
+    download_url_2,
+    status,
+    created_at
+`)
 
         .eq(
             "id",
@@ -545,22 +564,158 @@ async function loadCommunityContent() {
         "Community Creator";
 
 
-    const isCallingCard =
-        submission.type ===
-        "calling-card";
+const contentTypeConfigs = {
+
+    "calling-card": {
+        label: "CALLING CARD",
+        contentType: "Animated Calling Card",
+        archive: "callingcards.html",
+
+        previewMode: "calling-card",
+        previewLabel: "LIVE ANIMATED PREVIEW",
+        previewNote: "BLACK OPS II FORMAT · 256 × 64",
+
+        resolution: "256 × 64",
+        frames: "32",
+        format: "IWI"
+    },
+
+    "emblem": {
+        label: "EMBLEM",
+        contentType: "Custom Emblem",
+        archive: "emblems.html",
+
+        previewMode: "emblem",
+        previewLabel: "LIVE PREVIEW",
+        previewNote: "BLACK OPS II CUSTOM EMBLEM",
+
+        resolution: "BO2 EMBLEM",
+        frames: "N/A",
+        format: "IWI"
+    },
+
+    "camo": {
+        label: "CAMO",
+        contentType: "Custom Weapon Camo",
+        archive: "camos.html",
+
+        previewMode: "large-video",
+        previewLabel: "IN-GAME CAMO PREVIEW",
+        previewNote: "BLACK OPS II CUSTOM WEAPON CAMO",
+
+        resolution: "IN-GAME",
+        frames: "N/A",
+        format: "IWI"
+    },
+
+    "menu-screen": {
+        label: "MENU SCREEN",
+        contentType: "Custom Menu Screen",
+        archive: "menu-screens.html",
+
+        previewMode: "dual-image",
+        previewLabel: "MENU SCREEN PREVIEWS",
+        previewNote: "BLACK OPS II CUSTOM MENU SCREENS",
+
+        resolution: "IN-GAME",
+        frames: "N/A",
+        format: "IWI"
+    },
+
+    "gloves": {
+        label: "GLOVES",
+        contentType: "Custom Gloves",
+        archive: "gloves.html",
+
+        previewMode: "large-image",
+        previewLabel: "IN-GAME GLOVES PREVIEW",
+        previewNote: "BLACK OPS II CUSTOM GLOVES",
+
+        resolution: "IN-GAME",
+        frames: "N/A",
+        format: "IWI"
+    },
+
+    "prestige-icon": {
+        label: "PRESTIGE ICON",
+        contentType: "Custom Prestige Icon",
+        archive: "prestige-icons.html",
+
+        previewMode: "prestige-icon",
+        previewLabel: "PRESTIGE ICON PREVIEW",
+        previewNote: "BLACK OPS II CUSTOM PRESTIGE ICON",
+
+        resolution: "BO2 ICON",
+        frames: "N/A",
+        format: "IWI"
+    },
+
+    "mod-asset": {
+        label: "MOD ASSET",
+        contentType: "Custom Mod Asset",
+        archive: "mod-assets.html",
+
+        previewMode: "large-image",
+        previewLabel: "IN-GAME MOD ASSET PREVIEW",
+        previewNote: "BLACK OPS II CUSTOM MOD ASSET",
+
+        resolution: "IN-GAME",
+        frames: "N/A",
+        format: "IWI"
+    }
+
+};
 
 
-    const typeLabel =
-        isCallingCard
-            ? "CALLING CARD"
-            : "EMBLEM";
+const typeConfig =
+    contentTypeConfigs[
+        submission.type
+    ] || {
+        label: "CONTENT",
+        contentType: "Custom Content",
+        archive: "index.html",
+
+        previewMode: "large-image",
+        previewLabel: "CONTENT PREVIEW",
+        previewNote: "BLACK OPS II CUSTOM CONTENT",
+
+        resolution: "N/A",
+        frames: "N/A",
+        format: "IWI"
+    };
 
 
-    const contentType =
-        isCallingCard
-            ? "Animated Calling Card"
-            : "Custom Emblem";
+const typeLabel =
+    typeConfig.label;
 
+
+const contentType =
+    typeConfig.contentType;
+
+
+const isCallingCard =
+    submission.type ===
+    "calling-card";
+
+const isCamo =
+    submission.type ===
+    "camo";
+
+const isMenuScreen =
+    submission.type ===
+    "menu-screen";
+
+const isPrestigeIcon =
+    submission.type ===
+    "prestige-icon";
+
+const isGloves =
+    submission.type ===
+    "gloves";
+
+const isModAsset =
+    submission.type ===
+    "mod-asset";
 
     const category =
         "Community";
@@ -596,47 +751,162 @@ async function loadCommunityContent() {
 
     /* PREVIEW */
 
-    const preview =
-        document.getElementById(
-            "content-preview"
-        );
+const preview =
+    document.getElementById(
+        "content-preview"
+    );
+
+const videoPreview =
+    document.getElementById(
+        "content-preview-video"
+    );
+
+ const preview2 =
+    document.getElementById(
+        "content-preview-2"
+    );   
 
 
-    preview.src =
+if (isCamo) {
+
+    preview.style.display = "none";
+    preview2.style.display = "none";
+
+    videoPreview.style.display = "block";
+    videoPreview.src =
         submission.preview_url || "";
 
+    videoPreview
+        .play()
+        .catch(() => {});
+
+} else {
+
+    videoPreview.style.display = "none";
+
+    preview.style.display = "block";
+    preview.src =
+        submission.preview_url || "";
 
     preview.alt =
         `${submission.title} ${typeLabel}`;
 
+if (isPrestigeIcon) {
 
-    if (isCallingCard) {
+    const previewContainer =
+        preview.parentElement;
 
-        document.getElementById(
-            "preview-label"
-        ).textContent =
-            "LIVE ANIMATED PREVIEW";
+    previewContainer.style.display =
+        "flex";
 
+    previewContainer.style.alignItems =
+        "center";
 
-        document.getElementById(
-            "preview-note"
-        ).textContent =
-            "BLACK OPS II FORMAT · 256 × 64";
+    previewContainer.style.justifyContent =
+        "center";
+
+    previewContainer.style.padding =
+        "40px";
+
+    preview.style.width =
+        "128px";
+
+    preview.style.height =
+        "128px";
+
+    preview.style.maxWidth =
+        "128px";
+
+    preview.style.objectFit =
+        "contain";
+
+    preview.style.margin =
+        "0 auto";
+}
+
+    if (
+        isMenuScreen &&
+        submission.preview_url_2
+    ) {
+
+const previewContainer =
+    preview.parentElement;
+
+previewContainer.style.display =
+    "flex";
+
+previewContainer.style.flexDirection =
+    "column";
+
+previewContainer.style.alignItems =
+    "stretch";
+
+previewContainer.style.justifyContent =
+    "center";
+
+previewContainer.style.gap =
+    "18px";
+
+previewContainer.style.padding =
+    "18px";
+
+preview.style.width =
+    "100%";
+
+preview.style.height =
+    "auto";
+
+preview.style.maxWidth =
+    "100%";
+
+preview.style.objectFit =
+    "contain";
+
+preview.style.margin =
+    "0";
+
+        preview2.style.display = "block";
+
+        preview2.src =
+            submission.preview_url_2;
+
+        preview2.alt =
+            `${submission.title} Menu Screen Preview 2`;
+
+preview2.style.width =
+    "100%";
+
+preview2.style.height =
+    "auto";
+
+preview2.style.maxWidth =
+    "100%";
+
+preview2.style.objectFit =
+    "contain";
+
+preview2.style.margin =
+    "0";
 
     } else {
 
-        document.getElementById(
-            "preview-label"
-        ).textContent =
-            "LIVE PREVIEW";
-
-
-        document.getElementById(
-            "preview-note"
-        ).textContent =
-            "BLACK OPS II CUSTOM EMBLEM";
+        preview2.style.display = "none";
+        preview2.removeAttribute("src");
 
     }
+
+}
+
+document.getElementById(
+    "preview-label"
+).textContent =
+    typeConfig.previewLabel;
+
+document.getElementById(
+    "preview-note"
+).textContent =
+    typeConfig.previewNote;
+
 
 
     /* BASIC DETAILS */
@@ -674,26 +944,21 @@ async function loadCommunityContent() {
         contentType;
 
 
-    document.getElementById(
-        "info-resolution"
-    ).textContent =
-        isCallingCard
-            ? "256 × 64"
-            : "BO2 EMBLEM";
+document.getElementById(
+    "info-resolution"
+).textContent =
+    typeConfig.resolution;
 
 
-    document.getElementById(
-        "info-frames"
-    ).textContent =
-        isCallingCard
-            ? "32"
-            : "N/A";
+ document.getElementById(
+    "info-frames"
+).textContent =
+    typeConfig.frames;
 
-
-    document.getElementById(
-        "info-format"
-    ).textContent =
-        "IWI";
+document.getElementById(
+    "info-format"
+).textContent =
+    typeConfig.format;
 
 
     document.getElementById(
@@ -732,12 +997,22 @@ async function loadCommunityContent() {
         `${submission.title} ${typeLabel}`;
 
 
-    document.getElementById(
-        "download-description"
-    ).textContent =
-        isCallingCard
-            ? "IWI file packaged for Black Ops II Plutonium."
-            : "Emblem file packaged for Black Ops II Plutonium.";
+document.getElementById(
+    "download-description"
+).textContent =
+isCallingCard
+    ? "IWI file packaged for Black Ops II Plutonium."
+    : isCamo
+        ? "Camo package for Black Ops II Plutonium."
+        : isMenuScreen
+            ? "Menu Screen package for Black Ops II Plutonium."
+            : isPrestigeIcon
+                ? "Prestige Icon package for Black Ops II Plutonium."
+                : isGloves
+                    ? "Gloves package for Black Ops II Plutonium."
+                    : isModAsset
+                        ? "Mod Asset package for Black Ops II Plutonium."
+                        : "Emblem file packaged for Black Ops II Plutonium.";
 
 
     const download =
@@ -778,10 +1053,8 @@ async function loadCommunityContent() {
         );
 
 
-    backButton.href =
-        isCallingCard
-            ? "callingcards.html"
-            : "emblems.html";
+backButton.href =
+    typeConfig.archive;
 
 
     /* DOWNLOAD NOTE */
@@ -826,33 +1099,163 @@ async function loadCommunityContent() {
 
         `;
 
-    } else {
+} else if (isCamo) {
 
-        installSteps.innerHTML = `
+    installSteps.innerHTML = `
 
-            <li>
-                Download the ${escapeHTML(submission.title)} emblem package.
-            </li>
+        <li>
+            Download the ${escapeHTML(submission.title)} Camo package.
+        </li>
 
-            <li>
-                Extract the downloaded ZIP file.
-            </li>
+        <li>
+            Extract the downloaded ZIP file.
+        </li>
 
-            <li>
-                Open your Black Ops II Plutonium T6 storage folder.
-            </li>
+        <li>
+            Open your Black Ops II Plutonium T6 storage folder.
+        </li>
 
-            <li>
-                Move the supplied IWI file into the correct images folder.
-            </li>
+        <li>
+            Move the supplied Camo files into the required Plutonium folder.
+        </li>
 
-            <li>
-                Launch Plutonium and select the emblem that the custom file replaces.
-            </li>
+        <li>
+            Launch Black Ops II Plutonium and check the weapon in-game.
+        </li>
 
-        `;
+    `;
 
-    }
+} else if (isMenuScreen) {
+
+    installSteps.innerHTML = `
+
+        <li>
+            Download the ${escapeHTML(submission.title)} Menu Screen package.
+        </li>
+
+        <li>
+            Extract the downloaded ZIP file.
+        </li>
+
+        <li>
+            Open your Black Ops II Plutonium T6 storage folder.
+        </li>
+
+        <li>
+            Move both supplied IWI files into the correct images folder.
+        </li>
+
+        <li>
+            Launch Black Ops II Plutonium and check both menu screens in-game.
+        </li>
+
+    `;
+
+} else if (isPrestigeIcon) {
+
+    installSteps.innerHTML = `
+
+        <li>
+            Download the ${escapeHTML(submission.title)} Prestige Icon package.
+        </li>
+
+        <li>
+            Extract the downloaded ZIP file.
+        </li>
+
+        <li>
+            Open your Black Ops II Plutonium T6 storage folder.
+        </li>
+
+        <li>
+            Move both supplied IWI files into the correct images folder.
+        </li>
+
+        <li>
+            Launch Black Ops II Plutonium and check the Prestige Icon in-game.
+        </li>
+
+    `;
+
+} else if (isGloves) {
+
+    installSteps.innerHTML = `
+
+        <li>
+            Download the ${escapeHTML(submission.title)} Gloves package.
+        </li>
+
+        <li>
+            Extract the downloaded ZIP file.
+        </li>
+
+        <li>
+            Open your Black Ops II Plutonium T6 storage folder.
+        </li>
+
+        <li>
+            Move the supplied IWI file into the correct images folder.
+        </li>
+
+        <li>
+            Launch Black Ops II Plutonium and check the custom Gloves in-game.
+        </li>
+
+    `;
+
+} else if (isModAsset) {
+
+    installSteps.innerHTML = `
+
+        <li>
+            Download the ${escapeHTML(submission.title)} Mod Asset package.
+        </li>
+
+        <li>
+            Extract the downloaded ZIP file.
+        </li>
+
+        <li>
+            Open your Black Ops II Plutonium T6 storage folder.
+        </li>
+
+        <li>
+            Move the supplied file into the correct game folder.
+        </li>
+
+        <li>
+            Launch Black Ops II Plutonium and check the Mod Asset in-game.
+        </li>
+
+    `;
+
+} else {
+
+    installSteps.innerHTML = `
+
+        <li>
+            Download the ${escapeHTML(submission.title)} emblem package.
+        </li>
+
+        <li>
+            Extract the downloaded ZIP file.
+        </li>
+
+        <li>
+            Open your Black Ops II Plutonium T6 storage folder.
+        </li>
+
+        <li>
+            Move the supplied IWI file into the correct images folder.
+        </li>
+
+        <li>
+            Launch Plutonium and select the emblem that the custom file replaces.
+        </li>
+
+    `;
+
+}
 
 
     /* RELATED CONTENT */
@@ -911,6 +1314,8 @@ async function loadRelatedContent(
         }
 
     ];
+
+    const normalCamos = [];
 
 
     /*
@@ -983,39 +1388,52 @@ async function loadRelatedContent(
      * INTO RELATED CARDS
      */
 
-    const communityCards =
-        communityContent.map(
-            item => ({
+const communityCards =
+    communityContent.map(
+        item => ({
 
-                url:
-                    `content.html?id=${encodeURIComponent(item.id)}`,
+            url:
+                `content.html?id=${encodeURIComponent(item.id)}`,
 
-                image:
-                    item.preview_url || "",
+            image:
+                item.preview_url || "",
 
-                title:
-                    item.title,
+            title:
+                item.title,
 
-                series:
-                    type === "calling-card"
-                        ? "Community Calling Card"
+            type:
+                item.type,
+
+            series:
+                type === "calling-card"
+                    ? "Community Calling Card"
+                    : type === "camo"
+                        ? "Community Camo"
                         : "Community Emblem"
 
-            })
-        );
+        })
+    );
 
 
     /*
      * COMMUNITY CONTENT COMES FIRST
      */
 
-    const allRelated = [
+const fallbackContent =
+    type === "calling-card"
+        ? normalCallingCards
+        : type === "camo"
+            ? normalCamos
+            : [];
 
-        ...communityCards,
 
-        ...normalCallingCards
+const allRelated = [
 
-    ];
+    ...communityCards,
+
+    ...fallbackContent
+
+];
 
 
     /*
@@ -1055,10 +1473,25 @@ async function loadRelatedContent(
                     class="related-item"
                 >
 
-                    <img
-                        src="${escapeHTML(item.image)}"
-                        alt="${escapeHTML(item.title)}"
-                    >
+${
+    item.type === "camo"
+        ? `
+            <video
+                src="${escapeHTML(item.image)}"
+                muted
+                loop
+                autoplay
+                playsinline
+                preload="metadata"
+            ></video>
+          `
+        : `
+            <img
+                src="${escapeHTML(item.image)}"
+                alt="${escapeHTML(item.title)}"
+            >
+          `
+}
 
                     <div>
 

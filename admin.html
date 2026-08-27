@@ -378,21 +378,41 @@
             autocomplete="off"
         >
 
-        <select id="admin-content-filter">
+<select id="admin-content-filter">
 
-            <option value="all">
-                ALL CONTENT
-            </option>
+    <option value="all">
+        ALL CONTENT
+    </option>
 
-            <option value="calling-card">
-                CALLING CARDS
-            </option>
+    <option value="calling-card">
+        CALLING CARDS
+    </option>
 
-            <option value="emblem">
-                EMBLEMS
-            </option>
+    <option value="emblem">
+        EMBLEMS
+    </option>
 
-        </select>
+    <option value="camo">
+        CAMOS
+    </option>
+
+    <option value="menu-screen">
+        MENU SCREENS
+    </option>
+
+    <option value="gloves">
+        GLOVES
+    </option>
+
+    <option value="prestige-icon">
+        PRESTIGE ICONS
+    </option>
+
+    <option value="mod-asset">
+        MOD ASSETS
+    </option>
+
+</select>
 
     </div>
 
@@ -522,12 +542,38 @@
         </h2>
 
         <div class="admin-submission-view-preview">
-            <img
-                id="admin-submission-view-image"
-                src=""
-                alt=""
-            >
-        </div>
+
+    <img
+        id="admin-submission-view-image"
+        src=""
+        alt=""
+    >
+
+    <video
+        id="admin-submission-view-video"
+        muted
+        loop
+        controls
+        playsinline
+        preload="metadata"
+        style="display: none;"
+    ></video>
+
+</div>
+
+<div
+    id="admin-submission-view-preview-2"
+    class="admin-submission-view-preview"
+    style="display: none;"
+>
+
+    <img
+        id="admin-submission-view-image-2"
+        src=""
+        alt="Second menu screen preview"
+    >
+
+</div>
 
         <div class="admin-submission-view-details">
 
@@ -570,6 +616,17 @@
         >
             DOWNLOAD
         </a>
+
+        <a
+    id="admin-submission-view-download-2"
+    href="#"
+    target="_blank"
+    rel="noopener"
+    class="admin-submission-download"
+    style="display: none;"
+>
+    DOWNLOAD FILE 2
+</a>
 
         <div
     id="admin-submission-view-reason"

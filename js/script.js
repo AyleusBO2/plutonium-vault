@@ -198,6 +198,8 @@ document.addEventListener("DOMContentLoaded", () => {
     setupCreatorProfile();
     setupCreatorDirectory();
     setupGlobalRelatedContent();
+    setupCommunityCamoArchive();
+    setupCommunityExtraContentArchives();
 });
 
 /* =========================================================
@@ -716,11 +718,27 @@ async function loadSearchContent() {
                                     submission.id
                                 )}`,
 
-                            type:
-                                submission.type ===
-                                "calling-card"
-                                    ? "CALLING CARD"
-                                    : "EMBLEM"
+type:
+    submission.type === "calling-card"
+        ? "CALLING CARD"
+        : submission.type === "emblem"
+            ? "EMBLEM"
+            : submission.type === "camo"
+                ? "CAMO"
+                : submission.type === "menu-screen"
+                    ? "MENU SCREEN"
+                    : submission.type === "gloves"
+                        ? "GLOVES"
+                        : submission.type === "prestige-icon"
+                            ? "PRESTIGE ICON"
+                            : submission.type === "mod-asset"
+                                ? "MOD ASSET"
+                                : "CONTENT",
+
+            previewType:
+    submission.type === "camo"
+        ? "video"
+        : "image"
 
                         });
                     }
@@ -849,10 +867,25 @@ results.innerHTML =
 
                 <div class="vault-search-result-preview">
 
-                    <img
-                        src="${item.image}"
-                        alt="${item.name}"
-                    >
+${
+    item.previewType === "video"
+        ? `
+            <video
+                src="${item.image}"
+                muted
+                loop
+                autoplay
+                playsinline
+                preload="metadata"
+            ></video>
+          `
+        : `
+            <img
+                src="${item.image}"
+                alt="${item.name}"
+            >
+          `
+}
 
                 </div>
 
@@ -1162,18 +1195,69 @@ function setupSiteWideVaultNav() {
         </a>
 
         <a
-            href="emblems.html"
-            data-nav-page="emblems.html"
+    href="emblems.html"
+    data-nav-page="emblems.html"
+>
+    Emblems
+</a>
+
+<div class="nav-dropdown">
+
+    <button
+        type="button"
+        class="nav-dropdown-toggle"
+    >
+        Extra Content
+        <span class="nav-dropdown-arrow">▼</span>
+    </button>
+
+    <div class="nav-dropdown-menu">
+
+        <a
+            href="camos.html"
+            data-nav-page="camos.html"
         >
-            Emblems
+            Camos
         </a>
 
         <a
-            href="creators.html"
-            data-nav-page="creators.html"
+            href="menu-screens.html"
+            data-nav-page="menu-screens.html"
         >
-            Creators
+            Menu Screens
         </a>
+
+        <a
+            href="gloves.html"
+            data-nav-page="gloves.html"
+        >
+            Gloves
+        </a>
+
+        <a
+            href="prestige-icons.html"
+            data-nav-page="prestige-icons.html"
+        >
+            Prestige Icons
+        </a>
+
+        <a
+            href="mod-assets.html"
+            data-nav-page="mod-assets.html"
+        >
+            Mod Assets
+        </a>
+
+    </div>
+
+</div>
+
+<a
+    href="creators.html"
+    data-nav-page="creators.html"
+>
+    Creators
+</a>
 
         <a
             href="install.html"
@@ -1612,11 +1696,22 @@ async function setupRecentReleases() {
         card.className =
             `recent-release-card recent-${item.type}`;
 
-        const typeLabel =
-            item.type ===
-            "calling-card"
-                ? "CALLING CARD"
-                : "EMBLEM";
+const typeLabel =
+    item.type === "calling-card"
+        ? "CALLING CARD"
+        : item.type === "emblem"
+            ? "EMBLEM"
+            : item.type === "camo"
+                ? "CAMO"
+                : item.type === "menu-screen"
+                    ? "MENU SCREEN"
+                    : item.type === "gloves"
+                        ? "GLOVES"
+                        : item.type === "prestige-icon"
+                            ? "PRESTIGE ICON"
+                            : item.type === "mod-asset"
+                                ? "MOD ASSET"
+                                : "CONTENT";
 
         card.innerHTML = `
 
@@ -1631,14 +1726,25 @@ async function setupRecentReleases() {
                 class="recent-release-preview"
             >
 
-                <img
-                    src="${escapeVaultHTML(
-                        item.image
-                    )}"
-                    alt="${escapeVaultHTML(
-                        item.name
-                    )}"
-                >
+${
+    item.type === "camo"
+        ? `
+            <video
+                src="${escapeVaultHTML(item.image)}"
+                muted
+                loop
+                autoplay
+                playsinline
+                preload="metadata"
+            ></video>
+          `
+        : `
+            <img
+                src="${escapeVaultHTML(item.image)}"
+                alt="${escapeVaultHTML(item.name)}"
+            >
+          `
+}
 
             </a>
 
@@ -2205,11 +2311,14 @@ async function setupLiveVaultStats() {
     const callingCardsElement =
         document.querySelector("#stat-calling-cards");
 
-    const emblemsElement =
-        document.querySelector("#stat-emblems");
+const emblemsElement =
+    document.querySelector("#stat-emblems");
 
-    const downloadsElement =
-        document.querySelector("#stat-total-downloads");
+const camosElement =
+    document.querySelector("#stat-camos");
+
+const downloadsElement =
+    document.querySelector("#stat-total-downloads");;
 
     const statusTotalElement =
         document.querySelector("#status-total-content");
@@ -2217,21 +2326,23 @@ async function setupLiveVaultStats() {
     const statusDownloadsElement =
         document.querySelector("#status-total-downloads");
 
-    if (
-        !totalElement ||
-        !callingCardsElement ||
-        !emblemsElement ||
-        !downloadsElement
-    ) {
-        return;
-    }
+if (
+    !totalElement ||
+    !callingCardsElement ||
+    !emblemsElement ||
+    !camosElement ||
+    !downloadsElement
+) {
+    return;
+}
 
-    [
-        totalElement,
-        callingCardsElement,
-        emblemsElement,
-        downloadsElement
-    ].forEach(element => {
+[
+    totalElement,
+    callingCardsElement,
+    emblemsElement,
+    camosElement,
+    downloadsElement
+].forEach(element => {
 
         element?.classList.add(
             "vault-stat-loading"
@@ -2346,6 +2457,37 @@ async function setupLiveVaultStats() {
                     "emblem"
             ).length;
 
+            const communityCamos =
+    approvedSubmissions.filter(
+        item =>
+            item.type ===
+            "camo"
+    ).length;
+
+    const communityMenuScreens =
+    approvedSubmissions.filter(
+        item =>
+            item.type === "menu-screen"
+    ).length;
+
+const communityGloves =
+    approvedSubmissions.filter(
+        item =>
+            item.type === "gloves"
+    ).length;
+
+const communityPrestigeIcons =
+    approvedSubmissions.filter(
+        item =>
+            item.type === "prestige-icon"
+    ).length;
+
+const communityModAssets =
+    approvedSubmissions.filter(
+        item =>
+            item.type === "mod-asset"
+    ).length;
+
         const callingCardCount =
             originalCallingCards +
             communityCallingCards;
@@ -2354,9 +2496,17 @@ async function setupLiveVaultStats() {
             originalEmblems +
             communityEmblems;
 
-        const totalContent =
-            callingCardCount +
-            emblemCount;
+            const camoCount =
+    communityCamos;
+
+const totalContent =
+    callingCardCount +
+    emblemCount +
+    communityCamos +
+    communityMenuScreens +
+    communityGloves +
+    communityPrestigeIcons +
+    communityModAssets;
 
         totalElement.textContent =
             totalContent;
@@ -2366,6 +2516,9 @@ async function setupLiveVaultStats() {
 
         emblemsElement.textContent =
             emblemCount;
+
+            camosElement.textContent =
+    camoCount;
 
         if (statusTotalElement) {
             statusTotalElement.textContent =
@@ -2428,29 +2581,25 @@ async function setupLiveVaultStats() {
         /*
          * COMMUNITY CONTENT
          */
-        approvedSubmissions.forEach(
-            submission => {
+approvedSubmissions.forEach(
+    submission => {
 
-                if (
-                    submission.type ===
-                    "calling-card"
-                ) {
+        if (
+            submission.type === "calling-card"
+        ) {
 
-                    contentIDs.add(
-                        `submission-${submission.id}`
-                    );
+            contentIDs.add(
+                `submission-${submission.id}`
+            );
 
-                } else if (
-                    submission.type ===
-                    "emblem"
-                ) {
+        } else {
 
-                    contentIDs.add(
-                        `community-${submission.id}`
-                    );
-                }
-            }
-        );
+            contentIDs.add(
+                `community-${submission.id}`
+            );
+        }
+    }
+);
 
         /*
          * TOTAL DOWNLOADS
@@ -2512,12 +2661,13 @@ async function setupLiveVaultStats() {
 
     } finally {
 
-        [
-            totalElement,
-            callingCardsElement,
-            emblemsElement,
-            downloadsElement
-        ].forEach(element => {
+[
+    totalElement,
+    callingCardsElement,
+    emblemsElement,
+    camosElement,
+    downloadsElement
+].forEach(element => {
 
             element?.classList.remove(
                 "vault-stat-loading"
@@ -3463,14 +3613,17 @@ function setupArchiveVaultButtons() {
         const seriesElement =
             card.querySelector("h3 + p");
 
-        const imageElement =
+const mediaElement =
     card.querySelector(
-        ".preview img, .emblem-preview img"
+        ".preview img, " +
+        ".emblem-preview img, " +
+        ".camo-preview video"
     );
 
 const detailsLink =
     card.querySelector(
-        'a[href$=".html"]'
+        'a[href*="content.html?id="], ' +
+        'a[href$=".html"]:not(.download-btn)'
     );
 
 const downloadLink =
@@ -3500,7 +3653,7 @@ const downloadLink =
         */
         if (
     !nameElement ||
-    !imageElement ||
+    !mediaElement ||
     (!detailsLink && !downloadLink)
 ) {
     return;
@@ -3515,10 +3668,20 @@ const downloadLink =
                 ?.textContent
                 .trim() || "Other";
 
-        const image =
-            imageElement.getAttribute(
-                "src"
-            );
+const media =
+    mediaElement.getAttribute(
+        "src"
+    );
+
+const previewType =
+    mediaElement.tagName === "VIDEO"
+        ? "video"
+        : "image";
+
+const isCamo =
+    card.classList.contains(
+        "camo-card"
+    );
 
         const isEmblem =
     !!downloadLink &&
@@ -3552,7 +3715,12 @@ const url =
         */
         let itemID;
 
-if (isEmblem) {
+if (isCamo) {
+
+    itemID =
+        `camo-${card.dataset.communityId}`;
+
+} else if (isEmblem) {
 
     itemID =
         downloadLink.dataset.download;
@@ -3590,10 +3758,12 @@ if (isEmblem) {
         button.dataset.vaultName =
             name;
 
-        button.dataset.vaultType =
-    isEmblem
-        ? "emblem"
-        : "calling-card";
+button.dataset.vaultType =
+    isCamo
+        ? "camo"
+        : isEmblem
+            ? "emblem"
+            : "calling-card";
 
         button.dataset.vaultSeries =
             series;
@@ -3601,8 +3771,11 @@ if (isEmblem) {
         button.dataset.vaultCreator =
             creator;
 
-        button.dataset.vaultImage =
-            image;
+button.dataset.vaultImage =
+    media;
+
+button.dataset.vaultPreviewType =
+    previewType;
 
         button.dataset.vaultUrl =
             url;
@@ -3695,6 +3868,11 @@ function setupMyVault() {
                         image:
                             button.dataset.vaultImage ||
                             "",
+
+                            previewType:
+    button.dataset.vaultPreviewType ||
+    "image",
+
                         url:
                             button.dataset.vaultUrl ||
                             window.location.href
@@ -3903,15 +4081,22 @@ function showVaultNotification(
 
 function renderMyVaultPage() {
 
-    const callingCardGrid =
-        document.querySelector("#vault-calling-cards");
+const callingCardGrid =
+    document.querySelector("#vault-calling-cards");
 
-    const emblemGrid =
-        document.querySelector("#vault-emblems");
+const emblemGrid =
+    document.querySelector("#vault-emblems");
 
-    if (!callingCardGrid && !emblemGrid) {
-        return;
-    }
+const camoGrid =
+    document.querySelector("#vault-camos");
+
+if (
+    !callingCardGrid &&
+    !emblemGrid &&
+    !camoGrid
+) {
+    return;
+}
 
     const savedItems = getVaultItems();
 
@@ -3924,6 +4109,11 @@ function renderMyVaultPage() {
         savedItems.filter(
             item => item.type === "emblem"
         );
+
+const camos =
+    savedItems.filter(
+        item => item.type === "camo"
+    );
 
     setVaultPageText(
         "#vault-total-count",
@@ -3940,6 +4130,11 @@ function renderMyVaultPage() {
         emblems.length
     );
 
+ setVaultPageText(
+    "#vault-camo-count",
+    camos.length
+);   
+
     setVaultPageText(
         "#vault-calling-card-label",
         formatVaultItemCount(
@@ -3953,6 +4148,13 @@ function renderMyVaultPage() {
             emblems.length
         )
     );
+
+    setVaultPageText(
+    "#vault-camo-label",
+    formatVaultItemCount(
+        camos.length
+    )
+);
 
     const emptyState =
         document.querySelector(
@@ -3997,6 +4199,23 @@ function renderMyVaultPage() {
             emblems
         );
     }
+
+const camoSection =
+    document.querySelector(
+        "#vault-camos-section"
+    );
+
+if (camoSection) {
+    camoSection.hidden =
+        camos.length === 0;
+}
+
+if (camoGrid) {
+    renderVaultItems(
+        camoGrid,
+        camos
+    );
+}    
 }
 
 function setupMyVaultControls() {
@@ -4293,15 +4512,30 @@ function renderVaultItems(
 
         card.innerHTML = `
 
-            <a
-                href="${escapeVaultHTML(item.url)}"
-                class="vault-saved-preview"
-            >
+<a
+    href="${escapeVaultHTML(item.url)}"
+    class="vault-saved-preview"
+>
+    ${
+        item.previewType === "video"
+            ? `
+                <video
+                    src="${escapeVaultHTML(item.image)}"
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    autoplay
+                ></video>
+              `
+            : `
                 <img
                     src="${escapeVaultHTML(item.image)}"
                     alt="${escapeVaultHTML(item.name)}"
                 >
-            </a>
+              `
+    }
+</a>
 
             <div class="vault-saved-content">
 
@@ -4453,6 +4687,10 @@ function formatVaultType(
 
     if (type === "emblem") {
         return "EMBLEM";
+    }
+
+    if (type === "camo") {
+        return "CAMO";
     }
 
     return "CONTENT";
@@ -4647,27 +4885,40 @@ async function setupCommunityCallingCardArchive() {
                 READY
             </p>
 
-            <div class="card-meta">
+<div class="card-meta">
 
-                <span>
-                    CREATOR:
-                    ${escapeVaultHTML(
-                        creator
-                    )}
-                </span>
+    <span>
+        CREATOR:
+        ${escapeVaultHTML(
+            creator
+        )}
+    </span>
 
-                <span>
-                    256 × 64
-                </span>
+    <span>
+        CAMO
+    </span>
 
-            </div>
+</div>
 
-            <a
-                href="${detailURL}"
-                class="card-btn"
-            >
-                VIEW DETAILS
-            </a>
+
+<p
+    class="download-count"
+    data-count-id="camo-${escapeVaultHTML(
+        submission.id
+    )}"
+>
+    0 DOWNLOADS
+</p>
+
+
+<a
+    href="${escapeVaultHTML(
+        detailURL
+    )}"
+    class="card-btn"
+>
+    VIEW DETAILS
+</a>
 
         `;
 
@@ -5659,4 +5910,649 @@ async function setupGlobalRelatedContent() {
 
     }
 
+}
+
+// =========================================================
+// COMMUNITY CAMOS - CAMO ARCHIVE
+// =========================================================
+
+async function setupCommunityCamoArchive() {
+
+    const camoGrid =
+        document.getElementById(
+            "camo-grid"
+        );
+
+    if (
+        !camoGrid ||
+        !supabaseClient
+    ) {
+        return;
+    }
+
+    camoGrid.innerHTML = `
+        <p class="camo-archive-message">
+            LOADING CAMOS...
+        </p>
+    `;
+
+
+    try {
+
+        /* -----------------------------------------
+           LOAD APPROVED CAMOS
+        ----------------------------------------- */
+
+        const {
+            data: submissions,
+            error: submissionError
+        } = await supabaseClient
+            .from("submissions")
+            .select(`
+                id,
+                user_id,
+                title,
+                description,
+                preview_url,
+                preview_type,
+                download_url,
+                created_at
+            `)
+            .eq("status", "approved")
+            .eq("type", "camo")
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+
+        if (submissionError) {
+
+            console.error(
+                "Unable to load camos:",
+                submissionError
+            );
+
+            camoGrid.innerHTML = `
+                <p class="camo-archive-message">
+                    UNABLE TO LOAD CAMOS
+                </p>
+            `;
+
+            return;
+        }
+
+
+        if (
+            !submissions ||
+            submissions.length === 0
+        ) {
+
+            camoGrid.innerHTML = `
+                <p class="camo-archive-message">
+                    NO CAMOS HAVE BEEN PUBLISHED YET
+                </p>
+            `;
+
+            return;
+        }
+
+
+        /* -----------------------------------------
+           GET CREATOR USERNAMES
+        ----------------------------------------- */
+
+        const userIds = [
+            ...new Set(
+                submissions
+                    .map(
+                        submission =>
+                            submission.user_id
+                    )
+                    .filter(Boolean)
+            )
+        ];
+
+
+        let creatorMap = {};
+
+
+        if (userIds.length) {
+
+            const {
+                data: profiles,
+                error: profileError
+            } = await supabaseClient
+                .from("profiles")
+                .select(
+                    "id, username"
+                )
+                .in(
+                    "id",
+                    userIds
+                );
+
+
+            if (profileError) {
+
+                console.error(
+                    "Unable to load Camo creators:",
+                    profileError
+                );
+
+            } else if (profiles) {
+
+                creatorMap =
+                    Object.fromEntries(
+                        profiles.map(
+                            profile => [
+                                profile.id,
+                                profile.username
+                            ]
+                        )
+                    );
+            }
+        }
+
+
+        /* -----------------------------------------
+           BUILD CAMO CARDS
+        ----------------------------------------- */
+
+        camoGrid.innerHTML = "";
+
+
+        submissions.forEach(
+            submission => {
+
+                const creator =
+                    creatorMap[
+                        submission.user_id
+                    ] ||
+                    "COMMUNITY";
+
+
+                const detailURL =
+                    `content.html?id=${encodeURIComponent(
+                        submission.id
+                    )}`;
+
+
+                const card =
+                    document.createElement(
+                        "article"
+                    );
+
+
+                card.className =
+                    "card camo-card";
+
+
+                card.dataset.creator =
+                    creator;
+
+
+                card.dataset.communityId =
+                    submission.id;
+
+
+                card.dataset.createdAt =
+                    submission.created_at || "";
+
+
+                card.dataset.downloadId =
+                    `camo-${submission.id}`;
+
+
+                card.innerHTML = `
+
+                    <div class="camo-preview">
+
+                        <video
+                            src="${escapeVaultHTML(
+                                submission.preview_url ||
+                                ""
+                            )}"
+                            muted
+                            loop
+                            playsinline
+                            preload="metadata"
+                        ></video>
+
+                        <span class="camo-video-badge">
+                            VIDEO PREVIEW
+                        </span>
+
+                    </div>
+
+
+                    <h3>
+                        ${escapeVaultHTML(
+                            submission.title ||
+                            "Untitled Camo"
+                        )}
+                    </h3>
+
+
+                    <p>
+                        ${escapeVaultHTML(
+                            submission.description ||
+                            "Community Camo"
+                        )}
+                    </p>
+
+
+<div class="card-meta">
+
+    <span>
+        CREATOR:
+        ${escapeVaultHTML(
+            creator
+        )}
+    </span>
+
+    <span>
+        CAMO
+    </span>
+
+</div>
+
+
+<p
+    class="download-count"
+    data-count-id="camo-${escapeVaultHTML(
+        submission.id
+    )}"
+>
+    0 DOWNLOADS
+</p>
+
+
+<a
+    href="${escapeVaultHTML(
+        detailURL
+    )}"
+    class="card-btn"
+>
+    VIEW DETAILS
+</a>
+
+                `;
+
+
+                camoGrid.appendChild(
+                    card
+                );
+            }
+        );
+
+
+        /* -----------------------------------------
+           PLAY VIDEOS ONLY WHILE VISIBLE
+        ----------------------------------------- */
+
+        const camoVideos =
+            camoGrid.querySelectorAll(
+                ".camo-preview video"
+            );
+
+
+        const videoObserver =
+            new IntersectionObserver(
+                entries => {
+
+                    entries.forEach(
+                        entry => {
+
+                            const video =
+                                entry.target;
+
+
+                            if (
+                                entry.isIntersecting
+                            ) {
+
+                                video
+                                    .play()
+                                    .catch(
+                                        () => {}
+                                    );
+
+                            } else {
+
+                                video.pause();
+                            }
+
+                        }
+                    );
+
+                },
+                {
+                    threshold: 0.35
+                }
+            );
+
+
+        camoVideos.forEach(
+            video => {
+
+                videoObserver.observe(
+                    video
+                );
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Camo archive error:",
+            error
+        );
+
+        camoGrid.innerHTML = `
+            <p class="camo-archive-message">
+                UNABLE TO LOAD CAMOS
+            </p>
+        `;
+        return;
+    }
+
+    setupArchiveVaultButtons();
+    setupMyVault();
+    await setupDownloadCounters();
+}
+
+// =========================================================
+// COMMUNITY EXTRA CONTENT - IMAGE ARCHIVES
+// Menu Screens / Gloves / Prestige Icons / Mod Assets
+// =========================================================
+
+async function setupCommunityExtraContentArchives() {
+
+    const archiveConfigs = [
+        {
+            gridId: "menu-screen-grid",
+            type: "menu-screen",
+            label: "MENU SCREEN",
+            plural: "MENU SCREENS",
+            cardClass: "menu-screen-card"
+        },
+        {
+            gridId: "gloves-grid",
+            type: "gloves",
+            label: "GLOVES",
+            plural: "GLOVES",
+            cardClass: "gloves-card"
+        },
+        {
+            gridId: "prestige-icon-grid",
+            type: "prestige-icon",
+            label: "PRESTIGE ICON",
+            plural: "PRESTIGE ICONS",
+            cardClass: "prestige-icon-card"
+        },
+        {
+            gridId: "mod-asset-grid",
+            type: "mod-asset",
+            label: "MOD ASSET",
+            plural: "MOD ASSETS",
+            cardClass: "mod-asset-card"
+        }
+    ];
+
+    const config =
+        archiveConfigs.find(item =>
+            document.getElementById(item.gridId)
+        );
+
+    if (!config || !supabaseClient) {
+        return;
+    }
+
+    const grid =
+        document.getElementById(
+            config.gridId
+        );
+
+    grid.innerHTML = `
+        <p class="camo-archive-message">
+            LOADING ${config.plural}...
+        </p>
+    `;
+
+    try {
+
+        const {
+            data: submissions,
+            error: submissionError
+        } = await supabaseClient
+            .from("submissions")
+            .select(`
+                id,
+                user_id,
+                title,
+                description,
+                preview_url,
+                download_url,
+                created_at
+            `)
+            .eq("status", "approved")
+            .eq("type", config.type)
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+        if (submissionError) {
+
+            console.error(
+                `Unable to load ${config.plural}:`,
+                submissionError
+            );
+
+            grid.innerHTML = `
+                <p class="camo-archive-message">
+                    UNABLE TO LOAD ${config.plural}
+                </p>
+            `;
+
+            return;
+        }
+
+        if (
+            !submissions ||
+            submissions.length === 0
+        ) {
+
+            grid.innerHTML = `
+                <p class="camo-archive-message">
+                    NO ${config.plural} HAVE BEEN PUBLISHED YET
+                </p>
+            `;
+
+            return;
+        }
+
+        const userIds = [
+            ...new Set(
+                submissions
+                    .map(
+                        submission =>
+                            submission.user_id
+                    )
+                    .filter(Boolean)
+            )
+        ];
+
+        let creatorMap = {};
+
+        if (userIds.length) {
+
+            const {
+                data: profiles,
+                error: profileError
+            } = await supabaseClient
+                .from("profiles")
+                .select("id, username")
+                .in(
+                    "id",
+                    userIds
+                );
+
+            if (profileError) {
+
+                console.error(
+                    `Unable to load ${config.plural} creators:`,
+                    profileError
+                );
+
+            } else if (profiles) {
+
+                creatorMap =
+                    Object.fromEntries(
+                        profiles.map(
+                            profile => [
+                                profile.id,
+                                profile.username
+                            ]
+                        )
+                    );
+            }
+        }
+
+        grid.innerHTML = "";
+
+        submissions.forEach(
+            submission => {
+
+                const creator =
+                    creatorMap[
+                        submission.user_id
+                    ] ||
+                    "COMMUNITY";
+
+                const detailURL =
+                    `content.html?id=${encodeURIComponent(
+                        submission.id
+                    )}`;
+
+                const downloadID =
+                    `community-${submission.id}`;
+
+                const card =
+                    document.createElement(
+                        "article"
+                    );
+
+                card.className =
+                    `card ${config.cardClass}`;
+
+                card.dataset.creator =
+                    creator;
+
+                card.dataset.communityId =
+                    submission.id;
+
+                card.dataset.createdAt =
+                    submission.created_at || "";
+
+                card.dataset.downloadId =
+                    downloadID;
+
+                card.innerHTML = `
+
+                    <div class="extra-content-preview">
+
+                        <img
+                            src="${escapeVaultHTML(
+                                submission.preview_url ||
+                                ""
+                            )}"
+                            alt="${escapeVaultHTML(
+                                submission.title ||
+                                config.label
+                            )}"
+                            loading="lazy"
+                        >
+
+                    </div>
+
+                    <h3>
+                        ${escapeVaultHTML(
+                            submission.title ||
+                            `Untitled ${config.label}`
+                        )}
+                    </h3>
+
+                    <p>
+                        ${escapeVaultHTML(
+                            submission.description ||
+                            `Community ${config.label}`
+                        )}
+                    </p>
+
+                    <div class="card-meta">
+
+                        <span>
+                            CREATOR:
+                            ${escapeVaultHTML(
+                                creator
+                            )}
+                        </span>
+
+                        <span>
+                            ${config.label}
+                        </span>
+
+                    </div>
+
+                    <p
+                        class="download-count"
+                        data-count-id="${escapeVaultHTML(
+                            downloadID
+                        )}"
+                    >
+                        0 DOWNLOADS
+                    </p>
+
+                    <a
+                        href="${escapeVaultHTML(
+                            detailURL
+                        )}"
+                        class="card-btn"
+                    >
+                        VIEW DETAILS
+                    </a>
+
+                `;
+
+                grid.appendChild(card);
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            `${config.plural} archive error:`,
+            error
+        );
+
+        grid.innerHTML = `
+            <p class="camo-archive-message">
+                UNABLE TO LOAD ${config.plural}
+            </p>
+        `;
+
+        return;
+    }
+
+    setupArchiveVaultButtons();
+    setupMyVault();
+    await setupDownloadCounters();
 }

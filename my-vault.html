@@ -77,6 +77,11 @@
                 <strong id="vault-emblem-count">0</strong>
             </div>
 
+            <div class="vault-page-stat">
+    <span>CAMOS</span>
+    <strong id="vault-camo-count">0</strong>
+</div>
+
         </div>
 
         <div class="vault-toolbar">
@@ -119,6 +124,14 @@
             EMBLEMS
         </button>
 
+        <button
+    type="button"
+    class="vault-filter-btn"
+    data-vault-filter="camo"
+>
+    CAMOS
+</button>
+
     </div>
 
 
@@ -146,19 +159,23 @@
         <h2>NO SAVED CONTENT</h2>
 
         <p>
-            Save Calling Cards and Emblems throughout
-            Plutonium Vault and they will appear here.
+         Save Calling Cards, Emblems and Camos throughout
+Plutonium Vault and they will appear here.   
         </p>
 
         <div class="vault-empty-actions">
 
-            <a href="callingcards.html" class="card-btn">
-                BROWSE CALLING CARDS
-            </a>
+<a href="callingcards.html" class="card-btn">
+    BROWSE CALLING CARDS
+</a>
 
-            <a href="emblems.html" class="secondary-btn">
-                BROWSE EMBLEMS
-            </a>
+<a href="emblems.html" class="card-btn">
+    BROWSE EMBLEMS
+</a>
+
+<a href="camos.html" class="card-btn">
+    BROWSE CAMOS
+</a>
 
         </div>
 
@@ -223,6 +240,35 @@
         ></div>
 
     </section>
+
+ <section
+    id="vault-camos-section"
+    class="vault-content-section"
+    hidden
+>
+
+    <div class="vault-section-heading">
+
+        <div>
+            <p class="menu-label">SAVED CONTENT</p>
+            <h2>CAMOS</h2>
+        </div>
+
+        <span
+            class="vault-section-count"
+            id="vault-camo-label"
+        >
+            0 ITEMS
+        </span>
+
+    </div>
+
+    <div
+        id="vault-camos"
+        class="vault-grid"
+    ></div>
+
+</section>   
 
 </main>
 

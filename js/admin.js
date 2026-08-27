@@ -901,6 +901,16 @@ const adminSubmissionFilter =
 
 let adminSubmissions = [];
 
+const typeLabels = {
+    "calling-card": "CALLING CARD",
+    "emblem": "EMBLEM",
+    "camo": "CAMO",
+    "menu-screen": "MENU SCREEN",
+    "gloves": "GLOVES",
+    "prestige-icon": "PRESTIGE ICON",
+    "mod-asset": "MOD ASSET"
+};
+
 
 /* ---------- LOAD SUBMISSIONS ---------- */
 
@@ -918,19 +928,21 @@ async function loadAdminSubmissions() {
         error
     } = await vaultSupabase
         .from("submissions")
-        .select(`
-            id,
-            user_id,
-            title,
-            type,
-            description,
-            preview_url,
-            download_url,
-            status,
-            rejection_reason,
-            created_at,
-            updated_at
-        `)
+.select(`
+    id,
+    user_id,
+    title,
+    type,
+    description,
+    preview_url,
+    preview_url_2,
+    download_url,
+    download_url_2,
+    status,
+    rejection_reason,
+    created_at,
+    updated_at
+`)
         .order("created_at", {
             ascending: false
         });
@@ -997,10 +1009,13 @@ function renderAdminSubmissions(submissions) {
             const status =
                 submission.status || "pending";
 
-            const type =
-                submission.type === "calling-card"
-                    ? "CALLING CARD"
-                    : "EMBLEM";
+
+const type =
+    typeLabels[submission.type] ||
+    "CONTENT";
+
+const isVideoPreview =
+    submission.type === "camo";
 
             return `
                 <div
@@ -1011,24 +1026,36 @@ function renderAdminSubmissions(submissions) {
                     data-status="${status}"
                 >
 
-                    <div class="admin-submission-preview">
+                   <div class="admin-submission-preview">
 
-                        ${
-                            submission.preview_url
-                                ? `
-                                    <img
-                                        src="${submission.preview_url}"
-                                        alt=""
-                                    >
-                                `
-                                : `
-                                    <span>
-                                        NO PREVIEW
-                                    </span>
-                                `
-                        }
+    ${
+        submission.preview_url
+            ? (
+                isVideoPreview
+                    ? `
+                        <video
+                            src="${submission.preview_url}"
+                            muted
+                            loop
+                            playsinline
+                            preload="metadata"
+                        ></video>
+                      `
+                    : `
+                        <img
+                            src="${submission.preview_url}"
+                            alt=""
+                        >
+                      `
+            )
+            : `
+                <span>
+                    NO PREVIEW
+                </span>
+              `
+    }
 
-                    </div>
+</div> 
 
                     <div class="admin-submission-info">
 
@@ -1393,6 +1420,21 @@ const adminSubmissionViewImage =
         "admin-submission-view-image"
     );
 
+    const adminSubmissionViewImage2 =
+    document.getElementById(
+        "admin-submission-view-image-2"
+    );
+
+const adminSubmissionViewPreview2 =
+    document.getElementById(
+        "admin-submission-view-preview-2"
+    );
+
+const adminSubmissionViewVideo =
+    document.getElementById(
+        "admin-submission-view-video"
+    );   
+
 const adminSubmissionViewType =
     document.getElementById(
         "admin-submission-view-type"
@@ -1416,6 +1458,11 @@ const adminSubmissionViewDescription =
 const adminSubmissionViewDownload =
     document.getElementById(
         "admin-submission-view-download"
+    );
+
+    const adminSubmissionViewDownload2 =
+    document.getElementById(
+        "admin-submission-view-download-2"
     );
 
 
@@ -1451,8 +1498,9 @@ function openAdminSubmissionModal(submission) {
         submission.title ||
         "UNTITLED SUBMISSION";
 
-    adminSubmissionViewType.textContent =
-        type;
+adminSubmissionViewType.textContent =
+    typeLabels[submission.type] ||
+    "CONTENT";
 
     adminSubmissionViewStatus.textContent =
         status.toUpperCase();
@@ -1469,13 +1517,10 @@ function openAdminSubmissionModal(submission) {
 
     if (submission.preview_url) {
 
-        adminSubmissionViewImage.src =
-            submission.preview_url;
+    const isVideoPreview =
+        submission.type === "camo";
 
-        adminSubmissionViewImage.style.display =
-            "block";
-
-    } else {
+    if (isVideoPreview) {
 
         adminSubmissionViewImage.removeAttribute(
             "src"
@@ -1483,9 +1528,83 @@ function openAdminSubmissionModal(submission) {
 
         adminSubmissionViewImage.style.display =
             "none";
+
+        adminSubmissionViewVideo.src =
+            submission.preview_url;
+
+        adminSubmissionViewVideo.style.display =
+            "block";
+
+        adminSubmissionViewVideo.load();
+        adminSubmissionViewVideo
+    .play()
+    .catch(() => {});
+
+    } else {
+
+        adminSubmissionViewVideo.pause();
+
+        adminSubmissionViewVideo.removeAttribute(
+            "src"
+        );
+
+        adminSubmissionViewVideo.style.display =
+            "none";
+
+        adminSubmissionViewImage.src =
+            submission.preview_url;
+
+        adminSubmissionViewImage.style.display =
+            "block";
     }
 
-    if (submission.download_url) {
+} else {
+
+    adminSubmissionViewImage.removeAttribute(
+        "src"
+    );
+
+    adminSubmissionViewImage.style.display =
+        "none";
+
+    adminSubmissionViewVideo.pause();
+
+    adminSubmissionViewVideo.removeAttribute(
+        "src"
+    );
+
+    adminSubmissionViewVideo.style.display =
+        "none";
+}
+
+    const isMenuScreen =
+        submission.type === "menu-screen";
+
+    if (
+        isMenuScreen &&
+        submission.preview_url_2 &&
+        adminSubmissionViewImage2 &&
+        adminSubmissionViewPreview2
+    ) {
+        adminSubmissionViewImage2.src =
+            submission.preview_url_2;
+
+        adminSubmissionViewPreview2.style.display =
+            "block";
+    } else {
+        if (adminSubmissionViewImage2) {
+            adminSubmissionViewImage2.removeAttribute("src");
+        }
+
+        if (adminSubmissionViewPreview2) {
+            adminSubmissionViewPreview2.style.display =
+                "none";
+        }
+    }
+
+    
+
+if (submission.download_url) {
 
         adminSubmissionViewDownload.href =
             submission.download_url;
@@ -1502,6 +1621,23 @@ function openAdminSubmissionModal(submission) {
         adminSubmissionViewDownload.style.display =
             "none";
     }
+
+    if (
+        isMenuScreen &&
+        submission.download_url_2 &&
+        adminSubmissionViewDownload2
+    ) {
+        adminSubmissionViewDownload2.href =
+            submission.download_url_2;
+
+        adminSubmissionViewDownload2.style.display =
+            "inline-block";
+    } else if (adminSubmissionViewDownload2) {
+        adminSubmissionViewDownload2.removeAttribute("href");
+
+        adminSubmissionViewDownload2.style.display =
+            "none";
+    }    
 
     
 
@@ -2294,24 +2430,36 @@ function renderAdminContent() {
                     ).toLowerCase()}"
                 >
 
-                    <div
-                        class="admin-content-preview"
-                    >
-                        ${
-                            item.preview_url
-                                ? `
-                                    <img
-                                        src="${item.preview_url}"
-                                        alt=""
-                                    >
-                                `
-                                : `
-                                    <span>
-                                        NO PREVIEW
-                                    </span>
-                                `
-                        }
-                    </div>
+<div
+    class="admin-content-preview"
+>
+    ${
+        item.preview_url
+            ? (
+                item.type === "camo"
+                    ? `
+                        <video
+                            src="${item.preview_url}"
+                            muted
+                            loop
+                            playsinline
+                            preload="metadata"
+                        ></video>
+                      `
+                    : `
+                        <img
+                            src="${item.preview_url}"
+                            alt=""
+                        >
+                      `
+            )
+            : `
+                <span>
+                    NO PREVIEW
+                </span>
+              `
+    }
+</div>
 
 
                     <div

@@ -49,6 +49,10 @@
             gap: 8px;
         }
 
+        .submit-field[hidden] {
+    display: none !important;
+}
+
         .submit-field label {
             color: #aaa;
             font-size: 12px;
@@ -135,6 +139,272 @@
         .submit-back:hover {
             color: #ff7a00;
         }
+
+      /* =========================================
+   CUSTOM FILE UPLOADS
+========================================= */
+
+.submit-file {
+    position: relative;
+
+    padding: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 122, 0, 0.035),
+            #0b0b0b 45%
+        );
+
+    border: 1px solid #2d2d2d;
+    border-left: 3px solid #ff7a00;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.submit-file:hover {
+    border-color: #444;
+    border-left-color: #ff7a00;
+
+    box-shadow:
+        0 0 18px rgba(255, 122, 0, 0.08);
+}
+
+.submit-file label {
+    margin-bottom: 4px;
+
+    color: #ff7a00;
+
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.submit-file input[type="file"] {
+    padding: 8px;
+
+    background: #080808;
+    color: #bdbdbd;
+
+    border: 1px solid #292929;
+
+    font-size: 12px;
+
+    cursor: pointer;
+}
+
+.submit-file input[type="file"]::file-selector-button {
+    margin-right: 15px;
+    padding: 11px 16px;
+
+    background: #171717;
+    color: #ffffff;
+
+    border: 1px solid #ff7a00;
+
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.submit-file input[type="file"]::file-selector-button:hover {
+    background: #ff7a00;
+    color: #090909;
+
+    box-shadow:
+        0 0 15px rgba(255, 122, 0, 0.25);
+}
+
+.submit-file small {
+    margin-top: 6px;
+
+    color: #666;
+
+    font-size: 10px;
+    letter-spacing: 0.5px;
+}  
+
+/* =========================================
+   PREMIUM UPLOAD FIELD UPGRADE
+========================================= */
+
+.submit-file {
+    padding: 20px 22px 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 122, 0, 0.05),
+            rgba(255, 122, 0, 0.015) 38%,
+            #0b0b0b 72%
+        );
+
+    border: 1px solid #292929;
+    border-left: 3px solid #ff7a00;
+
+    box-shadow:
+        inset 0 0 30px rgba(255, 122, 0, 0.015);
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.submit-file:hover {
+    border-color: #3a3a3a;
+    border-left-color: #ff7a00;
+
+    box-shadow:
+        0 0 22px rgba(255, 122, 0, 0.08),
+        inset 0 0 35px rgba(255, 122, 0, 0.025);
+
+    transform: translateY(-1px);
+}
+
+
+/* FIELD TITLE */
+
+.submit-file label {
+    position: relative;
+
+    margin-bottom: 7px;
+
+    color: #ff7a00;
+
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2.3px;
+}
+
+.submit-file label::before {
+    content: "◆";
+
+    margin-right: 8px;
+
+    color: #ff7a00;
+
+    font-size: 7px;
+}
+
+
+/* FILE INPUT CONTAINER */
+
+.submit-file input[type="file"] {
+    min-height: 52px;
+
+    padding: 7px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #080808,
+            #0c0c0c
+        );
+
+    color: #aaa;
+
+    border: 1px solid #252525;
+
+    font-size: 11px;
+    letter-spacing: 0.3px;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.submit-file input[type="file"]:hover {
+    border-color: #3b3b3b;
+    background: #0d0d0d;
+}
+
+
+/* CHOOSE FILE BUTTON */
+
+.submit-file input[type="file"]::file-selector-button {
+    height: 38px;
+
+    margin-right: 16px;
+    padding: 0 18px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #191919,
+            #101010
+        );
+
+    color: #fff;
+
+    border: 1px solid #ff7a00;
+
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.submit-file input[type="file"]::file-selector-button:hover {
+    background: #ff7a00;
+    color: #070707;
+
+    box-shadow:
+        0 0 16px rgba(255, 122, 0, 0.35);
+}
+
+
+/* HELP TEXT */
+
+.submit-file small {
+    margin-top: 8px;
+
+    color: #565656;
+
+    font-size: 9px;
+    letter-spacing: 0.7px;
+}
+
+
+/* MENU SCREEN SECONDARY FIELDS */
+
+#menu-screen-preview-2-field,
+#menu-screen-download-2-field {
+    margin-top: -6px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 122, 0, 0.025),
+            #0a0a0a 65%
+        );
+
+    border-left-color: #9b4d00;
+}
+
+#menu-screen-preview-2-field label,
+#menu-screen-download-2-field label {
+    color: #d96b00;
+}
     </style>
 </head>
 
@@ -165,17 +435,37 @@
                     CONTENT TYPE
                 </label>
 
-                <select id="submit-type" required>
+<select id="submit-type" required>
 
-                    <option value="calling-card">
-                        CALLING CARD
-                    </option>
+    <option value="calling-card">
+        CALLING CARD
+    </option>
 
-                    <option value="emblem">
-                        EMBLEM
-                    </option>
+    <option value="emblem">
+        EMBLEM
+    </option>
 
-                </select>
+    <option value="camo">
+        CAMO
+    </option>
+
+    <option value="menu-screen">
+        MENU SCREEN
+    </option>
+
+    <option value="gloves">
+        GLOVES
+    </option>
+
+    <option value="prestige-icon">
+        PRESTIGE ICON
+    </option>
+
+    <option value="mod-asset">
+        MOD ASSET
+    </option>
+
+</select>
 
             </div>
 
@@ -213,24 +503,47 @@
             </div>
 
 
-            <div class="submit-field submit-file">
+           <div class="submit-field submit-file">
 
-                <label for="submit-preview">
-                    PREVIEW IMAGE
-                </label>
+    <label
+        for="submit-preview"
+        id="submit-preview-label"
+    >
+        PREVIEW IMAGE
+    </label>
 
-                <input
-                    type="file"
-                    id="submit-preview"
-                    accept="image/png,image/jpeg,image/webp,image/gif"
-                    required
-                >
+    <input
+        type="file"
+        id="submit-preview"
+        accept="image/png,image/jpeg,image/webp,image/gif"
+        required
+    >
 
-                <small>
-                    PNG, JPG, WEBP or GIF.
-                </small>
+    <small id="submit-preview-help">
+        PNG, JPG, WEBP or GIF.
+    </small>
 
-            </div>
+</div>
+
+<div
+    class="submit-field submit-file"
+    id="menu-screen-preview-2-field"
+    hidden
+>
+    <label for="submit-preview-2">
+        MENU SCREEN PREVIEW 2
+    </label>
+
+    <input
+        type="file"
+        id="submit-preview-2"
+        accept="image/png,image/jpeg,image/webp,image/gif"
+    >
+
+    <small>
+        Upload the second menu screen image.
+    </small>
+</div>
 
 
             <div class="submit-field submit-file">
@@ -250,6 +563,27 @@
                 </small>
 
             </div>
+
+            <div
+    class="submit-field submit-file"
+    id="menu-screen-download-2-field"
+    hidden
+>
+
+    <label for="submit-download-2">
+        MENU SCREEN CONTENT FILE 2
+    </label>
+
+    <input
+        type="file"
+        id="submit-download-2"
+    >
+
+    <small>
+        Upload the second menu screen content file.
+    </small>
+
+</div>
 
 
             <div
@@ -284,6 +618,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
 <script src="js/auth.js"></script>
 
 <script>
@@ -303,6 +639,147 @@ const submitButton =
         "submit-content-button"
     );
 
+const typeSelect =
+    document.getElementById(
+        "submit-type"
+    );
+
+const previewInput =
+    document.getElementById(
+        "submit-preview"
+    );
+
+const previewLabel =
+    document.getElementById(
+        "submit-preview-label"
+    );
+
+const previewHelp =
+    document.getElementById(
+        "submit-preview-help"
+    );
+
+    const previewInput2 =
+    document.getElementById(
+        "submit-preview-2"
+    );
+
+const previewField2 =
+    document.getElementById(
+        "menu-screen-preview-2-field"
+    );
+
+    const downloadInput2 =
+    document.getElementById(
+        "submit-download-2"
+    );
+
+const downloadField2 =
+    document.getElementById(
+        "menu-screen-download-2-field"
+    );
+
+
+function updatePreviewRequirements() {
+
+    const selectedType =
+        typeSelect?.value;
+
+      const isMenuScreen =
+    selectedType === "menu-screen";
+
+    const needsSecondDownload =
+    selectedType === "menu-screen" ||
+    selectedType === "prestige-icon";
+
+if (previewField2) {
+    previewField2.hidden =
+        !isMenuScreen;
+}
+
+if (previewInput2) {
+    previewInput2.required =
+        isMenuScreen;
+
+    if (!isMenuScreen) {
+        previewInput2.value = "";
+    }
+}  
+
+if (downloadField2) {
+
+    downloadField2.hidden =
+        !needsSecondDownload;
+
+    const downloadLabel2 =
+        downloadField2.querySelector("label");
+
+    const downloadHelp2 =
+        downloadField2.querySelector("small");
+
+    if (selectedType === "prestige-icon") {
+
+        downloadLabel2.textContent =
+            "PRESTIGE ICON CONTENT FILE 2";
+
+        downloadHelp2.textContent =
+            "Upload the second .IWI file required for the prestige icon.";
+
+    } else {
+
+        downloadLabel2.textContent =
+            "MENU SCREEN CONTENT FILE 2";
+
+        downloadHelp2.textContent =
+            "Upload the second menu screen content file.";
+
+    }
+}
+
+if (downloadInput2) {
+
+    downloadInput2.required =
+        needsSecondDownload;
+
+    if (!needsSecondDownload) {
+        downloadInput2.value = "";
+    }
+
+}
+
+    if (
+        selectedType === "camo"
+    ) {
+
+        previewLabel.textContent =
+            "CAMO PREVIEW VIDEO";
+
+        previewInput.accept =
+            "video/mp4,video/webm";
+
+        previewHelp.textContent =
+            "Upload a short MP4 or WEBM video showing the camo in-game.";
+
+        return;
+    }
+
+    previewLabel.textContent =
+        "PREVIEW IMAGE";
+
+    previewInput.accept =
+        "image/png,image/jpeg,image/webp,image/gif";
+
+    previewHelp.textContent =
+        "PNG, JPG, WEBP or GIF.";
+}
+
+
+typeSelect?.addEventListener(
+    "change",
+    updatePreviewRequirements
+);
+
+updatePreviewRequirements();
 
 form?.addEventListener(
     "submit",
@@ -376,6 +853,21 @@ form?.addEventListener(
                     )
                     .files[0];
 
+                    const previewType =
+    previewFile?.type
+        ?.startsWith("video/")
+        ? "video"
+        : "image";
+
+        const previewFile2 =
+    type === "menu-screen"
+        ? document
+            .getElementById(
+                "submit-preview-2"
+            )
+            .files[0]
+        : null;
+
 
             const downloadFile =
                 document
@@ -383,6 +875,18 @@ form?.addEventListener(
                         "submit-download"
                     )
                     .files[0];
+
+const downloadFile2 =
+    (
+        type === "menu-screen" ||
+        type === "prestige-icon"
+    )
+        ? document
+            .getElementById(
+                "submit-download-2"
+            )
+            .files[0]
+        : null;
 
 
             if (
@@ -396,6 +900,54 @@ form?.addEventListener(
 
             }
 
+            if (
+    type === "menu-screen" &&
+    (
+        !previewFile2 ||
+        !downloadFile2
+    )
+) {
+
+    throw new Error(
+        "MENU SCREENS REQUIRE 2 PREVIEW IMAGES AND 2 CONTENT FILES"
+    );
+
+}
+
+if (
+    type === "prestige-icon" &&
+    !downloadFile2
+) {
+
+    throw new Error(
+        "PRESTIGE ICONS REQUIRE 2 CONTENT FILES"
+    );
+
+}
+
+            if (
+    type === "camo" &&
+    previewType !== "video"
+) {
+
+    throw new Error(
+        "CAMOS REQUIRE AN MP4 OR WEBM PREVIEW VIDEO"
+    );
+
+}
+
+
+if (
+    type !== "camo" &&
+    previewType === "video"
+) {
+
+    throw new Error(
+        "THIS CONTENT TYPE REQUIRES AN IMAGE PREVIEW"
+    );
+
+}
+
 
             const safeTitle =
                 title
@@ -408,6 +960,77 @@ form?.addEventListener(
                         /^-|-$/g,
                         ""
                     );
+
+                    const extraContentTypes = [
+    "camo",
+    "menu-screen",
+    "gloves",
+    "prestige-icon",
+    "mod-asset"
+];
+
+const isExtraContent =
+    extraContentTypes.includes(type);
+
+
+let downloadPackageFile =
+    downloadFile;
+
+
+if (isExtraContent) {
+
+    if (typeof JSZip === "undefined") {
+        throw new Error(
+            "ZIP SYSTEM FAILED TO LOAD"
+        );
+    }
+
+    const zip =
+        new JSZip();
+
+
+    zip.file(
+        downloadFile.name,
+        downloadFile
+    );
+
+
+if (
+    (
+        type === "menu-screen" ||
+        type === "prestige-icon"
+    ) &&
+    downloadFile2
+) {
+
+    zip.file(
+        downloadFile2.name,
+        downloadFile2
+    );
+
+}
+
+
+    const zipBlob =
+        await zip.generateAsync({
+            type: "blob",
+            compression: "DEFLATE",
+            compressionOptions: {
+                level: 6
+            }
+        });
+
+
+    downloadPackageFile =
+        new File(
+            [zipBlob],
+            `Plutonium-Vault-${safeTitle}.zip`,
+            {
+                type: "application/zip"
+            }
+        );
+
+}
 
 
             /*
@@ -467,39 +1090,89 @@ form?.addEventListener(
             const previewUrl =
                 previewUrlData.publicUrl;
 
+                let previewUrl2 = null;
+
+if (
+    type === "menu-screen" &&
+    previewFile2
+) {
+
+    const previewExtension2 =
+        previewFile2.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+    const previewPath2 =
+        `${user.id}/${Date.now()}-${safeTitle}-preview-2.${previewExtension2}`;
+
+    const {
+        error: previewUploadError2
+    } =
+        await vaultSupabase
+            .storage
+            .from("submissions")
+            .upload(
+                previewPath2,
+                previewFile2,
+                {
+                    upsert: false,
+                    contentType:
+                        previewFile2.type
+                }
+            );
+
+    if (previewUploadError2) {
+        throw previewUploadError2;
+    }
+
+    const {
+        data: previewUrlData2
+    } =
+        vaultSupabase
+            .storage
+            .from("submissions")
+            .getPublicUrl(
+                previewPath2
+            );
+
+    previewUrl2 =
+        previewUrlData2.publicUrl;
+}
+
 
             /*
              * DOWNLOAD FILE UPLOAD
              */
 
-            const downloadExtension =
-                downloadFile.name
-                    .split(".")
-                    .pop()
-                    .toLowerCase();
+const downloadExtension =
+    downloadPackageFile.name
+        .split(".")
+        .pop()
+        .toLowerCase();
 
 
-            const downloadPath =
-                `${user.id}/${Date.now()}-${safeTitle}-download.${downloadExtension}`;
+const downloadPath =
+    `${user.id}/${Date.now()}-${safeTitle}-download.${downloadExtension}`;
 
 
-            const {
-                error:
-                    downloadUploadError
-            } =
-                await vaultSupabase
-                    .storage
-                    .from("submissions")
-                    .upload(
-                        downloadPath,
-                        downloadFile,
-                        {
-                            upsert: false,
-                            contentType:
-                                downloadFile.type ||
-                                "application/octet-stream"
-                        }
-                    );
+const {
+    error:
+        downloadUploadError
+} =
+    await vaultSupabase
+        .storage
+        .from("submissions")
+        .upload(
+            downloadPath,
+            downloadPackageFile,
+            {
+                upsert: false,
+                contentType:
+                    downloadPackageFile.type ||
+                    "application/octet-stream"
+            }
+        );
 
 
             if (
@@ -527,6 +1200,8 @@ form?.addEventListener(
                 downloadUrlData.publicUrl;
 
 
+
+
             /*
              * CREATE SUBMISSION
              */
@@ -551,14 +1226,20 @@ form?.addEventListener(
                         description:
                             description,
 
-                        preview_url:
-                            previewUrl,
+preview_url:
+    previewUrl,
 
-                        download_url:
-                            downloadUrl,
+preview_url_2:
+    previewUrl2,
 
-                        status:
-                            "pending"
+preview_type:
+    previewType,
+
+download_url:
+    downloadUrl,
+
+status:
+    "pending"
 
                     });
 
