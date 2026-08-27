@@ -13,7 +13,7 @@ const supabaseClient = window.supabase
     )
     : null;
 
-    /* ---------- PROFILE NAV ---------- */
+ /* ---------- PROFILE NAV ---------- */
 
 async function setupProfileNav() {
 
@@ -24,37 +24,59 @@ async function setupProfileNav() {
         return;
     }
 
-    const {
-        data: {
-            user
+    try {
+
+        const {
+            data: { user },
+            error: userError
+        } = await supabaseClient.auth.getUser();
+
+        /* NOT LOGGED IN */
+
+        if (userError || !user) {
+            profileLink.textContent = "◉ PROFILE";
+            return;
         }
-    } = await supabaseClient.auth.getUser();
 
-    // User is not logged in
-    if (!user) {
-        profileLink.textContent = "◉ PROFILE";
-        return;
+        /* GET LOGGED-IN USER'S PROFILE */
+
+        const {
+            data: profile,
+            error: profileError
+        } = await supabaseClient
+            .from("profiles")
+            .select("username")
+            .eq("id", user.id)
+            .maybeSingle();
+
+        if (profileError) {
+            console.error(
+                "Unable to load profile nav:",
+                profileError
+            );
+        }
+
+        /* SHOW USERNAME */
+
+        const username =
+            profile?.username ||
+            user.user_metadata?.username ||
+            "PROFILE";
+
+        profileLink.textContent =
+            "◉ " + username;
+
+    } catch (error) {
+
+        console.error(
+            "Unable to setup profile nav:",
+            error
+        );
+
+        profileLink.textContent =
+            "◉ PROFILE";
     }
-
-    // Get the user's Vault profile
-    const {
-    data: profile,
-    error: profileError
-} = await supabaseClient
-    .from("profiles")
-    .select("id, username")
-    .ilike("username", creatorUsername)
-    .limit(1)
-    .maybeSingle();
-
-    if (error || !profile) {
-        profileLink.textContent = "◉ PROFILE";
-        return;
-    }
-
-    profileLink.textContent =
-        "◉ " + (profile.username || "PROFILE");
-}
+}   
 
     /* ---------- SHARED VAULT DATA ---------- */
 
@@ -1202,13 +1224,13 @@ function setupSiteWideVaultNav() {
         </a>
 
         <a
-            href="profile.html"
-            id="profile-nav-link"
-            class="profile-nav-link"
-            data-nav-page="profile.html"
-        >
-            ◉ PROFILE
-        </a>
+    href="account.html"
+    id="profile-nav-link"
+    class="profile-nav-link"
+    data-nav-page="account.html"
+>
+    ◉ PROFILE
+</a>
 
     `;
 
