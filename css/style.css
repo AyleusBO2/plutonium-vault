@@ -6507,4 +6507,166 @@ select:disabled {
     width: 100%;
     margin-top: 28px;
 }
+
+/* =========================================
+   ADMIN NSFW BADGE
+========================================= */
+
+.admin-submission-nsfw {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: fit-content;
+    margin-top: 8px;
+    padding: 5px 9px;
+
+    background: rgba(255, 45, 45, 0.08);
+    border: 1px solid rgba(255, 70, 70, 0.55);
+
+    color: #ff5555;
+
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+
+    box-shadow:
+        0 0 12px rgba(255, 50, 50, 0.08);
+}
+
+/* =========================================================
+   GLOBAL NSFW / SENSITIVE CONTENT PROTECTION
+   ========================================================= */
+
+.nsfw-protected {
+    position: relative;
+    overflow: hidden;
+}
+
+
+/* MEDIA THAT IS HIDDEN */
+
+.nsfw-protected .nsfw-media {
+    filter: blur(22px);
+    transform: scale(1.08);
+
+    transition:
+        filter 0.3s ease,
+        transform 0.3s ease;
+}
+
+
+/* DARK WARNING LAYER */
+
+.nsfw-overlay {
+    position: absolute;
+    inset: 0;
+
+    z-index: 20;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0, 0, 0, 0.82),
+            rgba(15, 15, 15, 0.72)
+        );
+
+    backdrop-filter: blur(2px);
+
+    text-align: center;
+}
+
+
+/* WARNING CONTENT */
+
+.nsfw-overlay-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 12px;
+
+    max-width: 320px;
+}
+
+
+/* NSFW LABEL */
+
+.nsfw-label {
+    color: #ff5555;
+
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+
+    text-shadow:
+        0 0 14px rgba(255, 70, 70, 0.35);
+}
+
+
+/* SMALL WARNING TEXT */
+
+.nsfw-warning-text {
+    color: #a5a5a5;
+
+    font-size: 8px;
+    line-height: 1.6;
+    letter-spacing: 1px;
+}
+
+
+/* VIEW CONTENT BUTTON */
+
+.nsfw-view-button {
+    margin-top: 4px;
+    padding: 10px 15px;
+
+    color: #ffffff;
+    background: rgba(255, 70, 70, 0.08);
+
+    border: 1px solid rgba(255, 70, 70, 0.65);
+
+    font-family: "Orbitron", sans-serif;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.nsfw-view-button:hover {
+    color: #ffffff;
+    background: rgba(255, 70, 70, 0.2);
+
+    border-color: #ff5555;
+
+    box-shadow:
+        0 0 18px rgba(255, 70, 70, 0.22);
+}
+
+
+/* AFTER USER CLICKS VIEW CONTENT */
+
+.nsfw-protected.nsfw-revealed .nsfw-media {
+    filter: none;
+    transform: none;
+}
+
+
+.nsfw-protected.nsfw-revealed .nsfw-overlay {
+    display: none;
+}
     

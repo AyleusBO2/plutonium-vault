@@ -934,6 +934,7 @@ async function loadAdminSubmissions() {
     title,
     type,
     description,
+    is_nsfw,
     preview_url,
     preview_url_2,
     download_url,
@@ -1066,11 +1067,21 @@ const isVideoPreview =
                             }
                         </strong>
 
-                        <small>
-                            ${type}
-                            •
-                            SUBMITTED ${submittedDate}
-                        </small>
+<small>
+    ${type}
+    •
+    SUBMITTED ${submittedDate}
+</small>
+
+${
+    submission.is_nsfw
+        ? `
+            <span class="admin-submission-nsfw">
+                NSFW
+            </span>
+          `
+        : ""
+}
 
                         ${
                             submission.description
@@ -1445,6 +1456,11 @@ const adminSubmissionViewStatus =
         "admin-submission-view-status"
     );
 
+const adminSubmissionViewNsfw =
+    document.getElementById(
+        "admin-submission-view-nsfw"
+    );
+
 const adminSubmissionViewDate =
     document.getElementById(
         "admin-submission-view-date"
@@ -1502,14 +1518,27 @@ adminSubmissionViewType.textContent =
     typeLabels[submission.type] ||
     "CONTENT";
 
-    adminSubmissionViewStatus.textContent =
-        status.toUpperCase();
+adminSubmissionViewStatus.textContent =
+    status.toUpperCase();
 
-        adminSubmissionViewStatus.className =
+adminSubmissionViewStatus.className =
     `admin-submission-status-badge ${status}`;
 
-    adminSubmissionViewDate.textContent =
-        submittedDate;
+if (adminSubmissionViewNsfw) {
+
+    adminSubmissionViewNsfw.textContent =
+        submission.is_nsfw
+            ? "NSFW"
+            : "SAFE";
+
+    adminSubmissionViewNsfw.className =
+        submission.is_nsfw
+            ? "admin-submission-nsfw"
+            : "";
+}
+
+adminSubmissionViewDate.textContent =
+    submittedDate;
 
     adminSubmissionViewDescription.textContent =
         submission.description ||

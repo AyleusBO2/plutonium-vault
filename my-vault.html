@@ -82,6 +82,27 @@
     <strong id="vault-camo-count">0</strong>
 </div>
 
+<div class="vault-page-stat">
+    <span>MENU SCREENS</span>
+    <strong id="vault-menu-screen-count">0</strong>
+</div>
+
+<div class="vault-page-stat">
+    <span>GLOVES</span>
+    <strong id="vault-gloves-count">0</strong>
+</div>
+
+<div class="vault-page-stat">
+    <span>PRESTIGE ICONS</span>
+    <strong id="vault-prestige-icon-count">0</strong>
+</div>
+
+<div class="vault-page-stat">
+    <span>MOD ASSETS</span>
+    <strong id="vault-mod-asset-count">0</strong>
+</div>
+
+
         </div>
 
         <div class="vault-toolbar">
@@ -132,8 +153,40 @@
     CAMOS
 </button>
 
-    </div>
 
+<button
+    type="button"
+    class="vault-filter-btn"
+    data-vault-filter="menu-screen"
+>
+    MENU SCREENS
+</button>
+
+<button
+    type="button"
+    class="vault-filter-btn"
+    data-vault-filter="gloves"
+>
+    GLOVES
+</button>
+
+<button
+    type="button"
+    class="vault-filter-btn"
+    data-vault-filter="prestige-icon"
+>
+    PRESTIGE ICONS
+</button>
+
+<button
+    type="button"
+    class="vault-filter-btn"
+    data-vault-filter="mod-asset"
+>
+    MOD ASSETS
+</button>   
+
+</div>
 
     <button
         type="button"
@@ -142,8 +195,6 @@
     >
         CLEAR MY VAULT
     </button>
-
-</div>
 
     </section>
 
@@ -269,6 +320,109 @@ Plutonium Vault and they will appear here.
     ></div>
 
 </section>   
+
+<section
+    id="vault-menu-screens-section"
+    class="vault-content-section"
+    hidden
+>
+    <div class="vault-section-heading">
+        <div>
+            <p class="menu-label">SAVED CONTENT</p>
+            <h2>MENU SCREENS</h2>
+        </div>
+
+        <span
+            class="vault-section-count"
+            id="vault-menu-screen-label"
+        >
+            0 ITEMS
+        </span>
+    </div>
+
+    <div
+        id="vault-menu-screens"
+        class="vault-grid"
+    ></div>
+</section>
+
+
+<section
+    id="vault-gloves-section"
+    class="vault-content-section"
+    hidden
+>
+    <div class="vault-section-heading">
+        <div>
+            <p class="menu-label">SAVED CONTENT</p>
+            <h2>GLOVES</h2>
+        </div>
+
+        <span
+            class="vault-section-count"
+            id="vault-gloves-label"
+        >
+            0 ITEMS
+        </span>
+    </div>
+
+    <div
+        id="vault-gloves"
+        class="vault-grid"
+    ></div>
+</section>
+
+
+<section
+    id="vault-prestige-icons-section"
+    class="vault-content-section"
+    hidden
+>
+    <div class="vault-section-heading">
+        <div>
+            <p class="menu-label">SAVED CONTENT</p>
+            <h2>PRESTIGE ICONS</h2>
+        </div>
+
+        <span
+            class="vault-section-count"
+            id="vault-prestige-icon-label"
+        >
+            0 ITEMS
+        </span>
+    </div>
+
+    <div
+        id="vault-prestige-icons"
+        class="vault-grid"
+    ></div>
+</section>
+
+
+<section
+    id="vault-mod-assets-section"
+    class="vault-content-section"
+    hidden
+>
+    <div class="vault-section-heading">
+        <div>
+            <p class="menu-label">SAVED CONTENT</p>
+            <h2>MOD ASSETS</h2>
+        </div>
+
+        <span
+            class="vault-section-count"
+            id="vault-mod-asset-label"
+        >
+            0 ITEMS
+        </span>
+    </div>
+
+    <div
+        id="vault-mod-assets"
+        class="vault-grid"
+    ></div>
+</section>
 
 </main>
 

@@ -127,6 +127,84 @@
             letter-spacing: 1px;
         }
 
+    .nsfw-submit-field {
+    margin-top: 4px;
+}
+
+.nsfw-submit-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    background: #0b0b0b;
+    border: 1px solid #2b2b2b;
+    border-left: 3px solid #ff7a00;
+    cursor: pointer;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.nsfw-submit-option:hover {
+    border-color: #444;
+    border-left-color: #ff7a00;
+    box-shadow: 0 0 18px rgba(255, 122, 0, 0.08);
+}
+
+.nsfw-submit-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.nsfw-submit-box {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    border: 2px solid #555;
+    background: #111;
+    position: relative;
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.nsfw-submit-option input:checked + .nsfw-submit-box {
+    border-color: #ff7a00;
+    background: #ff7a00;
+    box-shadow: 0 0 14px rgba(255, 122, 0, 0.35);
+}
+
+.nsfw-submit-option input:checked + .nsfw-submit-box::after {
+    content: "✓";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #090909;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.nsfw-submit-text {
+    display: grid;
+    gap: 4px;
+}
+
+.nsfw-submit-text strong {
+    color: #ff7a00;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+.nsfw-submit-text small {
+    color: #777;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+}
+
         .submit-back {
             display: inline-block;
             margin-top: 25px;
@@ -585,6 +663,28 @@
 
 </div>
 
+<div class="submit-field nsfw-submit-field">
+
+    <label class="nsfw-submit-option">
+
+        <input
+            type="checkbox"
+            id="submit-nsfw"
+        >
+
+        <span class="nsfw-submit-box"></span>
+
+        <span class="nsfw-submit-text">
+            <strong>NSFW CONTENT</strong>
+            <small>
+                Mark this if the preview contains adult or sensitive content.
+            </small>
+        </span>
+
+    </label>
+
+</div>
+
 
             <div
                 id="submit-message"
@@ -844,6 +944,13 @@ form?.addEventListener(
                     )
                     .value
                     .trim();
+
+const isNsfw =
+    document
+        .getElementById(
+            "submit-nsfw"
+        )
+        ?.checked || false;                    
 
 
             const previewFile =
@@ -1223,8 +1330,11 @@ const {
                         type:
                             type,
 
-                        description:
-                            description,
+description:
+    description,
+
+is_nsfw:
+    isNsfw,
 
 preview_url:
     previewUrl,

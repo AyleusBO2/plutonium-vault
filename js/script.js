@@ -608,14 +608,15 @@ async function loadSearchContent() {
                 error: submissionError
             } = await supabaseClient
                 .from("submissions")
-                .select(`
-                    id,
-                    user_id,
-                    title,
-                    description,
-                    type,
-                    preview_url
-                `)
+.select(`
+    id,
+    user_id,
+    title,
+    description,
+    type,
+    preview_url,
+    is_nsfw
+`)
                 .eq("status", "approved");
 
             if (submissionError) {
@@ -710,10 +711,13 @@ async function loadSearchContent() {
                             creator:
                                 creator,
 
-                            image:
-                                submission.preview_url,
+image:
+    submission.preview_url,
 
-                            url:
+isNsfw:
+    submission.is_nsfw === true,
+
+url:
                                 `content.html?id=${encodeURIComponent(
                                     submission.id
                                 )}`,
@@ -865,7 +869,7 @@ results.innerHTML =
                 data-search-result="${index}"
             >
 
-                <div class="vault-search-result-preview">
+<div class="vault-search-result-preview ${item.isNsfw ? "js-nsfw-preview" : ""}">
 
 ${
     item.previewType === "video"
@@ -924,7 +928,20 @@ ${
 
         `;
 
-    }).join("");
+}).join("");
+
+
+results
+    .querySelectorAll(
+        ".js-nsfw-preview"
+    )
+    .forEach(preview => {
+
+        applyNsfwProtection(
+            preview
+        );
+
+    });
 
 }
 
@@ -1536,6 +1553,7 @@ async function setupRecentReleases() {
                 type,
                 description,
                 preview_url,
+                is_nsfw,
                 created_at
             `)
             .eq("status", "approved")
@@ -1631,6 +1649,9 @@ async function setupRecentReleases() {
                             submission.preview_url ||
                             "",
 
+                            isNsfw:
+    submission.is_nsfw === true,
+
                         url:
                             `content.html?id=${encodeURIComponent(
                                 submission.id
@@ -1723,7 +1744,7 @@ const typeLabel =
                 href="${escapeVaultHTML(
                     item.url
                 )}"
-                class="recent-release-preview"
+class="recent-release-preview ${item.isNsfw ? "js-nsfw-preview" : ""}"
             >
 
 ${
@@ -1791,8 +1812,21 @@ ${
             </div>
         `;
 
-        grid.appendChild(card);
-    });
+grid.appendChild(card);
+
+if (item.isNsfw) {
+
+    const nsfwPreview =
+        card.querySelector(
+            ".js-nsfw-preview"
+        );
+
+    applyNsfwProtection(
+        nsfwPreview
+    );
+}
+
+});
 }
 
 /* =========================================================
@@ -3617,7 +3651,8 @@ const mediaElement =
     card.querySelector(
         ".preview img, " +
         ".emblem-preview img, " +
-        ".camo-preview video"
+        ".camo-preview video, " +
+        ".extra-content-preview img"
     );
 
 const detailsLink =
@@ -3759,11 +3794,19 @@ if (isCamo) {
             name;
 
 button.dataset.vaultType =
-    isCamo
-        ? "camo"
-        : isEmblem
-            ? "emblem"
-            : "calling-card";
+    card.classList.contains("menu-screen-card")
+        ? "menu-screen"
+        : card.classList.contains("gloves-card")
+            ? "gloves"
+            : card.classList.contains("prestige-icon-card")
+                ? "prestige-icon"
+                : card.classList.contains("mod-asset-card")
+                    ? "mod-asset"
+                    : isCamo
+                        ? "camo"
+                        : isEmblem
+                            ? "emblem"
+                            : "calling-card";
 
         button.dataset.vaultSeries =
             series;
@@ -3773,6 +3816,13 @@ button.dataset.vaultType =
 
 button.dataset.vaultImage =
     media;
+
+button.dataset.vaultNsfw =
+    card.querySelector(
+        ".js-nsfw-preview"
+    )
+        ? "true"
+        : "false";
 
 button.dataset.vaultPreviewType =
     previewType;
@@ -3868,6 +3918,10 @@ function setupMyVault() {
                         image:
                             button.dataset.vaultImage ||
                             "",
+
+                            isNsfw:
+    button.dataset.vaultNsfw ===
+    "true",
 
                             previewType:
     button.dataset.vaultPreviewType ||
@@ -4090,10 +4144,26 @@ const emblemGrid =
 const camoGrid =
     document.querySelector("#vault-camos");
 
+const menuScreenGrid =
+    document.querySelector("#vault-menu-screens");
+
+const glovesGrid =
+    document.querySelector("#vault-gloves");
+
+const prestigeIconGrid =
+    document.querySelector("#vault-prestige-icons");
+
+const modAssetGrid =
+    document.querySelector("#vault-mod-assets");
+
 if (
     !callingCardGrid &&
     !emblemGrid &&
-    !camoGrid
+    !camoGrid &&
+    !menuScreenGrid &&
+    !glovesGrid &&
+    !prestigeIconGrid &&
+    !modAssetGrid
 ) {
     return;
 }
@@ -4115,6 +4185,26 @@ const camos =
         item => item.type === "camo"
     );
 
+const menuScreens =
+    savedItems.filter(
+        item => item.type === "menu-screen"
+    );
+
+const gloves =
+    savedItems.filter(
+        item => item.type === "gloves"
+    );
+
+const prestigeIcons =
+    savedItems.filter(
+        item => item.type === "prestige-icon"
+    );
+
+const modAssets =
+    savedItems.filter(
+        item => item.type === "mod-asset"
+    );    
+
     setVaultPageText(
         "#vault-total-count",
         savedItems.length
@@ -4133,7 +4223,27 @@ const camos =
  setVaultPageText(
     "#vault-camo-count",
     camos.length
-);   
+);  
+
+setVaultPageText(
+    "#vault-menu-screen-count",
+    menuScreens.length
+);
+
+setVaultPageText(
+    "#vault-gloves-count",
+    gloves.length
+);
+
+setVaultPageText(
+    "#vault-prestige-icon-count",
+    prestigeIcons.length
+);
+
+setVaultPageText(
+    "#vault-mod-asset-count",
+    modAssets.length
+);
 
     setVaultPageText(
         "#vault-calling-card-label",
@@ -4153,6 +4263,34 @@ const camos =
     "#vault-camo-label",
     formatVaultItemCount(
         camos.length
+    )
+);
+
+setVaultPageText(
+    "#vault-menu-screen-label",
+    formatVaultItemCount(
+        menuScreens.length
+    )
+);
+
+setVaultPageText(
+    "#vault-gloves-label",
+    formatVaultItemCount(
+        gloves.length
+    )
+);
+
+setVaultPageText(
+    "#vault-prestige-icon-label",
+    formatVaultItemCount(
+        prestigeIcons.length
+    )
+);
+
+setVaultPageText(
+    "#vault-mod-asset-label",
+    formatVaultItemCount(
+        modAssets.length
     )
 );
 
@@ -4215,7 +4353,80 @@ if (camoGrid) {
         camoGrid,
         camos
     );
-}    
+}
+
+
+const menuScreenSection =
+    document.querySelector(
+        "#vault-menu-screens-section"
+    );
+
+if (menuScreenSection) {
+    menuScreenSection.hidden =
+        menuScreens.length === 0;
+}
+
+if (menuScreenGrid) {
+    renderVaultItems(
+        menuScreenGrid,
+        menuScreens
+    );
+}
+
+
+const glovesSection =
+    document.querySelector(
+        "#vault-gloves-section"
+    );
+
+if (glovesSection) {
+    glovesSection.hidden =
+        gloves.length === 0;
+}
+
+if (glovesGrid) {
+    renderVaultItems(
+        glovesGrid,
+        gloves
+    );
+}
+
+
+const prestigeIconSection =
+    document.querySelector(
+        "#vault-prestige-icons-section"
+    );
+
+if (prestigeIconSection) {
+    prestigeIconSection.hidden =
+        prestigeIcons.length === 0;
+}
+
+if (prestigeIconGrid) {
+    renderVaultItems(
+        prestigeIconGrid,
+        prestigeIcons
+    );
+}
+
+
+const modAssetSection =
+    document.querySelector(
+        "#vault-mod-assets-section"
+    );
+
+if (modAssetSection) {
+    modAssetSection.hidden =
+        modAssets.length === 0;
+}
+
+if (modAssetGrid) {
+    renderVaultItems(
+        modAssetGrid,
+        modAssets
+    );
+}
+
 }
 
 function setupMyVaultControls() {
@@ -4289,16 +4500,13 @@ function setupMyVaultControls() {
                 card.dataset.vaultId || "";
 
 
-            const isCallingCard =
-                itemID.endsWith(
-                    "-calling-card"
-                );
-
-
-            const itemType =
-                isCallingCard
-                    ? "calling-card"
-                    : "emblem";
+const itemType =
+    card.dataset.vaultType ||
+    (
+        itemID.endsWith("-calling-card")
+            ? "calling-card"
+            : "emblem"
+    );
 
 
             const matchesSearch =
@@ -4325,62 +4533,52 @@ function setupMyVaultControls() {
 
     }
 
+function updateFilteredVaultSections() {
 
-    function updateFilteredVaultSections() {
+    const sections = [
+        "#vault-calling-cards-section",
+        "#vault-emblems-section",
+        "#vault-camos-section",
+        "#vault-menu-screens-section",
+        "#vault-gloves-section",
+        "#vault-prestige-icons-section",
+        "#vault-mod-assets-section"
+    ];
 
-        const callingCardSection =
+    sections.forEach(selector => {
+
+        const section =
             document.querySelector(
-                "#vault-calling-cards-section"
+                selector
             );
 
-        const emblemSection =
-            document.querySelector(
-                "#vault-emblems-section"
+        if (!section) {
+            return;
+        }
+
+        const cards =
+            Array.from(
+                section.querySelectorAll(
+                    ".vault-saved-card"
+                )
             );
 
+        const hasVisibleCards =
+            cards.some(
+                card =>
+                    card.style.display !==
+                    "none"
+            );
 
-        if (callingCardSection) {
+        section.hidden =
+            !hasVisibleCards;
 
-            const visibleCallingCards =
-                Array.from(
-                    callingCardSection
-                        .querySelectorAll(
-                            ".vault-saved-card"
-                        )
-                ).some(
-                    card =>
-                        card.style.display !==
-                        "none"
-                );
+    });
 
-
-            callingCardSection.hidden =
-                !visibleCallingCards;
-
-        }
+}
+    
 
 
-        if (emblemSection) {
-
-            const visibleEmblems =
-                Array.from(
-                    emblemSection
-                        .querySelectorAll(
-                            ".vault-saved-card"
-                        )
-                ).some(
-                    card =>
-                        card.style.display !==
-                        "none"
-                );
-
-
-            emblemSection.hidden =
-                !visibleEmblems;
-
-        }
-
-    }
 
 
     if (searchInput) {
@@ -4507,14 +4705,17 @@ function renderVaultItems(
         card.className =
             "vault-saved-card";
 
-        card.dataset.vaultId =
-            item.id;
+card.dataset.vaultId =
+    item.id;
 
-        card.innerHTML = `
+card.dataset.vaultType =
+    item.type;
+
+card.innerHTML = `
 
 <a
     href="${escapeVaultHTML(item.url)}"
-    class="vault-saved-preview"
+class="vault-saved-preview ${item.isNsfw ? "js-nsfw-preview" : ""}"
 >
     ${
         item.previewType === "video"
@@ -4596,9 +4797,21 @@ function renderVaultItems(
             </div>
         `;
 
-        container.appendChild(card);
+container.appendChild(card);
 
-    });
+if (item.isNsfw) {
+
+    const nsfwPreview =
+        card.querySelector(
+            ".js-nsfw-preview"
+        );
+
+    applyNsfwProtection(
+        nsfwPreview
+    );
+}
+
+});
 
     setupVaultRemoveButtons();
 }
@@ -4949,15 +5162,16 @@ async function setupCommunityCallingCardArchive() {
         error: submissionError
     } = await supabaseClient
         .from("submissions")
-        .select(`
-            id,
-            user_id,
-            title,
-            description,
-            preview_url,
-            download_url,
-            created_at
-        `)
+.select(`
+    id,
+    user_id,
+    title,
+    description,
+    preview_url,
+    download_url,
+    is_nsfw,
+    created_at
+`)
         .eq("status", "approved")
         .eq("type", "calling-card")
         .order("created_at", {
@@ -5048,7 +5262,7 @@ async function setupCommunityCallingCardArchive() {
 
         card.innerHTML = `
 
-            <div class="preview">
+<div class="preview ${submission.is_nsfw ? "js-nsfw-preview" : ""}">
 
                 <img
                     src="${escapeVaultHTML(
@@ -5110,17 +5324,30 @@ async function setupCommunityCallingCardArchive() {
     data-vault-title="${escapeVaultHTML(
         submission.title || "Untitled"
     )}"
-    data-vault-image="${escapeVaultHTML(
-        submission.preview_url || ""
-    )}"
-    data-vault-url="${detailURL}"
+data-vault-image="${escapeVaultHTML(
+    submission.preview_url || ""
+)}"
+data-vault-nsfw="${submission.is_nsfw === true}"
+data-vault-url="${detailURL}"
 >
     ♡ ADD TO MY VAULT
 </button>
 
         `;
 
-        communityGrid.append(card);
+communityGrid.append(card);
+
+if (submission.is_nsfw) {
+
+    const nsfwPreview =
+        card.querySelector(
+            ".js-nsfw-preview"
+        );
+
+    applyNsfwProtection(
+        nsfwPreview
+    );
+}
     });
 
     setupArchiveVaultButtons();
@@ -5147,13 +5374,14 @@ async function setupCommunityEmblemArchive() {
         error: submissionError
     } = await supabaseClient
         .from("submissions")
-        .select(`
+.select(`
     id,
     user_id,
     title,
     description,
     preview_url,
     download_url,
+    is_nsfw,
     created_at
 `)
         .eq("status", "approved")
@@ -5238,7 +5466,7 @@ async function setupCommunityEmblemArchive() {
 
         card.innerHTML = `
 
-    <div class="emblem-preview">
+<div class="emblem-preview ${submission.is_nsfw ? "js-nsfw-preview" : ""}">
 
         <img
             src="${escapeVaultHTML(
@@ -5291,7 +5519,19 @@ async function setupCommunityEmblemArchive() {
         /*
          * Put newest community submissions first.
          */
-        emblemGrid.append(card);
+emblemGrid.append(card);
+
+if (submission.is_nsfw) {
+
+    const nsfwPreview =
+        card.querySelector(
+            ".js-nsfw-preview"
+        );
+
+    applyNsfwProtection(
+        nsfwPreview
+    );
+}
     });
 
 setupArchiveVaultButtons();
@@ -5349,6 +5589,7 @@ async function setupCreatorProfile() {
     type,
     description,
     preview_url,
+    is_nsfw,
     created_at
 `)  
         .eq("user_id", profile.id)
@@ -5387,8 +5628,8 @@ async function setupCreatorProfile() {
         const item =
             document.createElement("a");
 
-        item.className =
-            "creator-work-item";
+item.className =
+    `creator-work-item ${submission.is_nsfw ? "js-nsfw-preview" : ""}`;
 
         item.href =
     `content.html?id=${encodeURIComponent(
@@ -5433,6 +5674,12 @@ async function setupCreatorProfile() {
 
         item.appendChild(image);
         item.appendChild(content);
+        if (submission.is_nsfw) {
+
+    applyNsfwProtection(
+        item
+    );
+}
 
         if (
             submission.type ===
@@ -5956,6 +6203,7 @@ async function setupCommunityCamoArchive() {
                 preview_url,
                 preview_type,
                 download_url,
+                is_nsfw,
                 created_at
             `)
             .eq("status", "approved")
@@ -6108,7 +6356,7 @@ async function setupCommunityCamoArchive() {
 
                 card.innerHTML = `
 
-                    <div class="camo-preview">
+<div class="camo-preview ${submission.is_nsfw ? "js-nsfw-preview" : ""}">
 
                         <video
                             src="${escapeVaultHTML(
@@ -6182,9 +6430,21 @@ async function setupCommunityCamoArchive() {
                 `;
 
 
-                camoGrid.appendChild(
-                    card
-                );
+camoGrid.appendChild(
+    card
+);
+
+if (submission.is_nsfw) {
+
+    const nsfwPreview =
+        card.querySelector(
+            ".js-nsfw-preview"
+        );
+
+    applyNsfwProtection(
+        nsfwPreview
+    );
+}
             }
         );
 
@@ -6338,6 +6598,7 @@ async function setupCommunityExtraContentArchives() {
                 description,
                 preview_url,
                 download_url,
+                is_nsfw,
                 created_at
             `)
             .eq("status", "approved")
@@ -6467,7 +6728,7 @@ async function setupCommunityExtraContentArchives() {
 
                 card.innerHTML = `
 
-                    <div class="extra-content-preview">
+<div class="extra-content-preview ${submission.is_nsfw ? "js-nsfw-preview" : ""}">
 
                         <img
                             src="${escapeVaultHTML(
@@ -6532,7 +6793,18 @@ async function setupCommunityExtraContentArchives() {
 
                 `;
 
-                grid.appendChild(card);
+
+if (submission.is_nsfw) {
+
+    const nsfwPreview =
+        card.querySelector(
+            ".js-nsfw-preview"
+        );
+
+    applyNsfwProtection(
+        nsfwPreview
+    );
+}
             }
         );
 
@@ -6555,4 +6827,97 @@ async function setupCommunityExtraContentArchives() {
     setupArchiveVaultButtons();
     setupMyVault();
     await setupDownloadCounters();
+}
+
+/* =========================================================
+   GLOBAL NSFW / SENSITIVE CONTENT PROTECTION
+   ========================================================= */
+
+function applyNsfwProtection(container) {
+
+    if (!container) {
+        return;
+    }
+
+    if (
+        container.classList.contains(
+            "nsfw-protected"
+        )
+    ) {
+        return;
+    }
+
+    container.classList.add(
+        "nsfw-protected"
+    );
+
+    const media =
+        container.querySelectorAll(
+            "img, video"
+        );
+
+    media.forEach(item => {
+
+        item.classList.add(
+            "nsfw-media"
+        );
+
+    });
+
+
+    const overlay =
+        document.createElement(
+            "div"
+        );
+
+    overlay.className =
+        "nsfw-overlay";
+
+    overlay.innerHTML = `
+        <div class="nsfw-overlay-content">
+
+            <div class="nsfw-label">
+                NSFW / SENSITIVE CONTENT
+            </div>
+
+            <div class="nsfw-warning-text">
+                THIS PREVIEW MAY CONTAIN ADULT OR SENSITIVE CONTENT.
+            </div>
+
+            <button
+                type="button"
+                class="nsfw-view-button"
+            >
+                VIEW CONTENT
+            </button>
+
+        </div>
+    `;
+
+
+    container.appendChild(
+        overlay
+    );
+
+
+    const viewButton =
+        overlay.querySelector(
+            ".nsfw-view-button"
+        );
+
+
+    viewButton?.addEventListener(
+        "click",
+        event => {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            container.classList.add(
+                "nsfw-revealed"
+            );
+
+        }
+    );
+
 }
